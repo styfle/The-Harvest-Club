@@ -3,6 +3,14 @@
 <head>
 	<title>Grower Registration</title>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script>
+		var property_types = [{"id":"1","name":"Residence"},{"id":"2","name":"Open Space \/ Vacant lot"},{"id":"3","name":"Business"},{"id":"4","name":"Public Property"},{"id":"5","name":"Other"}];
+		var property_relationships = [{"id":"1","name":"Owner & Occupant"},{"id":"2","name":"Renter"},{"id":"3","name":"Renter property owner (landlord)"},{"id":"4","name":"Other"}];
+		var sources = [{"id":"1","name":"Flyer"},{"id":"2","name":"Facebook"},{"id":"3","name":"Twitter"},{"id":"4","name":"Family or Friend"},{"id":"5","name":"Newspaper\/Local Magazine"},{"id":"6","name":"Website\/Search Engine"},{"id":"7","name":"Village Harvest"},{"id":"8","name":"Other"}];
+		var tree_types = [{"id":"1","name":"Orange"},{"id":"2","name":"Tangelo"},{"id":"3","name":"Tangerine"},{"id":"4","name":"Grapefruit"},{"id":"5","name":"Lemon"},{"id":"6","name":"Lime"},{"id":"7","name":"Avocado"},{"id":"8","name":"Persimmon"},{"id":"9","name":"Guava"},{"id":"10","name":"Apple"},{"id":"11","name":"Peach"},{"id":"12","name":"Plum"},{"id":"13","name":"Nectarine"},{"id":"14","name":"Other"}];
+		var tree_heights = [{"id":"1","name":"Under 5 feet"},{"id":"2","name":"5 to 10 feet"},{"id":"3","name":"10 to 15 feet"},{"id":"4","name":"15 to 20 feet"},{"id":"5","name":"20 to 30 feet"},{"id":"6","name":"30 to 40 feet"},{"id":"7","name":"Over 40 feet"}];
+		var months = [{"id":"1","name":"January"},{"id":"2","name":"February"},{"id":"3","name":"March"},{"id":"4","name":"April"},{"id":"5","name":"May"},{"id":"6","name":"June"},{"id":"7","name":"July"},{"id":"8","name":"August"},{"id":"9","name":"September"},{"id":"10","name":"October"},{"id":"11","name":"November"},{"id":"12","name":"December"}];
+	</script>
 </head>
 
 <body>
@@ -30,7 +38,7 @@
     		<label for="email">Email*</label><input id="email" type="email" placeholder="peter@uci.edu" required="required" />
     		<label for="phone">Phone*</label><input id="phone" type="tel" name="phone" placeholder="9495551234" pattern="[0-9]{10}" required="required" />
     		<div>
-				<span>Preferred Contact </span>
+				<label>Preferred Contact </label>
 				&nbsp;
 				<input id="contact-email" name="prefer" type="radio" /><label for="contact-email">Email</label>
 				&nbsp;
@@ -51,7 +59,7 @@
 			<div>
 				<label for="state">State*</label>
 				<select id="state" name="state" required="required"> 
-					<option value="" disabled="disabled">Select...</option><!-- TODO: Force option -->
+					<option value="" disabled="disabled" selected="selected">Select...</option><!-- TODO: Force option -->
 					<option value="AL">Alabama</option> 
 					<option value="AK">Alaska</option> 
 					<option value="AZ">Arizona</option> 
@@ -111,7 +119,7 @@
 			<div>
 				<label for="property">Property type*</label>
 				<select name="property" required="required">
-					<option value="" disabled="disabled">Select...</option><!-- TODO: Force option -->
+					<option value="" disabled="disabled" selected="selected">Select...</option><!-- TODO: Force option -->
 					<option value="residence">Residence</option>
 					<option value="lot">Open space / Vacant lot</option>
 					<option value="business">Business</option>
@@ -123,7 +131,7 @@
 			<div>
 				<label for="landlord">Relationship to property*</label>
 				<select name="landlord" required="required">
-					<option value="" disabled="disabled">Select...</option><!-- TODO: Force option -->
+					<option value="" disabled="disabled" selected="selected">Select...</option><!-- TODO: Force option -->
 					<option value="owner">Owner & Occupant</option>
 					<option value="renter">Renter</option>
 					<option value="landlord">Rental property owner (landlord)</option>
@@ -139,13 +147,13 @@
 			
 			<div>
 				<label>Tools available for volunteers on site</label>
-				<input name="notes" type="text" />
+				<input name="tools" type="text" />
 			</div>
 			
 			<div>
 				<label>How did you hear about us?</label>
 				<select id="hear" name="hear">
-					<option value="" disabled="disabled">Select...</option>
+					<option value="" disabled="disabled" selected="selected">Select...</option>
 					<option value="1">Flyer</option>
 					<option value="2">Facebook</option>
 					<option value="3">Twitter</option>
@@ -157,17 +165,17 @@
 			</div>
 			
 			<div>
-				<label>Any additional notes</label>
-				<textarea name="notes" type="textarea" cols="50" rows="3" placeholder="tree health, taste of fruit, accessibility of fruit, parking, etc"></textarea>
+				<label>Anything else you would like us to know?</label><br/>
+				<textarea name="notes" type="textarea" cols="50" rows="3" placeholder="Describe tree health, taste of fruit, accessibility of fruit, parking, etc"></textarea>
 			</div>
 		</fieldset>
 		
 		<h3>Tree Information</h3>
 		
 		<div>
-			<label for="type-count">Types of trees (Apple, Orange, etc):</label>
+			<label for="type-count">How many different types of trees would you like to register?</label>
 			<select id="type-count" name="type-count" required="required" onchange="changeTreeCount(this);">
-				<option value="" disabled="disabled">Select...</option>
+				<option value="" disabled="disabled" selected="selected">Select...</option>
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -184,7 +192,7 @@
 				<div>
 					<label>Tree Type:</label>
 					<select id="tree-type" name="tree-type" required="required">
-						<option value="" disabled="disabled">Select...</option>
+						<option value="" disabled="disabled" selected="selected">Select...</option>
 						<option value="almond">Almond</option>
 						<option value="apple">Apple</option>
 						<option value="apricot">Asian Pear</option>
@@ -222,25 +230,53 @@
 		
 		var array = [];
 		
-		for (var i=1; i <= count; i++) {
+		for (var i=1; i<=count; i++) {
 			
 			var fieldset = document.createElement('fieldset');
 			var legend = document.createElement('legend');
 			$(legend).text('Tree Type ' + i);
 			
-			var fruit = '<div> <label>Tree Fruit*</label> <select name="trees[tree'+i+'][fruit]" required="required"> <option value="" disabled="disabled">Select...</option> <option value="almond">Almond</option> <option value="apple">Apple</option> <option value="apricot">Asian Pear</option> <option value="blueberry">Blueberry</option> <option value="other">Other</option> </select> </div>';
-			var varietal = '<div> <label>Fruit Varietal (if know)</label> <input name="trees[tree'+i+'][varietal]" type="text" /> </div>';
-			var quantity = '<div> <label>Number of trees of this type*</label> <input name="trees[tree'+i+'][quantity]" type="number" min="1" required="required" /> </div>';
-			var height = '<div> <label>Tree Height*</label> <input name="trees[tree'+i+'][height]" type="text" size="4" pattern="[1-9][0-9]*" required="required" /> </div>';
-			var month = '<div> <label>Harvest Months*</label> <input type="checkbox" name="trees[tree'+i+'][month]" value="1" /> Jan <input type="checkbox" name="trees[tree'+i+'][month]" value="2" /> Feb <input type="checkbox" name="trees[tree'+i+'][month]" value="3" /> Mar <input type="checkbox" name="trees[tree'+i+'][month]" value="4" /> Apr<br />  </div>';
+			var type = '<div> <label>Tree Type* (Orange, Apple, etc.)</label> <select name="trees[tree'+i+'][type]" required="required"> <option value="" disabled="disabled" selected="selected">Select...</option>';
+			for (var j=0; j<tree_types.length; j++) {
+				var o = tree_types[j];
+				type += '<option value="'+o.id+'">'+o.name+'</option>';
+			}
+			type += '</select> </div>';
 			
-			var chemical = '<div> <input type="checkbox" name="trees[tree'+i+'][chemical]" value="1" /> I use chemicals</div>';
+			var varietal = '<div> <label>Fruit Varietal (if known)</label> <input name="trees[tree'+i+'][varietal]" type="text" /> </div>';
+			var quantity = '<div> <label>Number of trees of this type*</label> <input name="trees[tree'+i+'][quantity]" type="number" min="1" required="required" /> </div>';
+			
+			var height = '<div> <label>Tree Height*</label> <select name="trees[tree'+i+'][height]" required="required"> <option value="" disabled="disabled" selected="selected">Select...</option>';//'<div> <label>Tree Height*</label> <input name="trees[tree'+i+'][height]" type="text" size="4" pattern="[1-9][0-9]*" required="required" /> </div>';
+			for (var j=0; j<tree_heights.length; j++) {
+				var o = tree_heights[j];
+				height += '<option value="'+o.id+'">'+o.name+'</option>';
+			}
+			height += '</select> </div>';
+			
+			var month = '<div> <label>Harvest Months</label> <table><tr>';
+			//<input type="checkbox" name="trees[tree'+i+'][month]" value="1" /> Jan <input type="checkbox" name="trees[tree'+i+'][month]" value="2" /> Feb <input type="checkbox" name="trees[tree'+i+'][month]" value="3" /> Mar <input type="checkbox" name="trees[tree'+i+'][month]" value="4" /> Apr<br />  </div>';
+			for (var j=0; j<months.length; j++) {
+				var o = months[j];
+				month += '<td> <input type="checkbox" name="trees[tree'+i+'][month][]" value="'+o.id+'" />' + o.name + '</td>';
+				if ((j+1)%4 == 0)
+					month += '</tr>';
+			}
+			month += '</table></div>';
+			
+			var disease = '<div> <label>Does the tree(s) have any fungus, disease, or pest issues?</label> <input type="text" name="trees[tree'+i+'][disease]" /> </div>';
+			var pruned = '<div> <label>Has the tree(s) been pruned in the past three years? By whom?</label> <input type="text" name="trees[tree'+i+'][pruned]" /> </div>';
+			var chemical = '<div> <label>Has the tree(s) been sprayed in the past 3 years? With what and when?</label> <input type="text" name="trees[tree'+i+'][chemical]" /> </div>';
+			
+			//var chemical = '<div> <input type="checkbox" name="trees[tree'+i+'][chemical]" value="1" /> I use chemicals</div>';
 			
 			$(fieldset).append(legend)
-				.append(fruit)
+				.append(type)
+				.append(varietal)
 				.append(quantity)
 				.append(height)
 				.append(month)
+				.append(disease)
+				.append(pruned)
 				.append(chemical);
 			
 			//var selectType = document.createElement('select');
