@@ -180,6 +180,7 @@ CREATE TABLE donations (
 
 
 -- Sample Queries:
+-- 	General Table Queries:
 -- 	SELECT g.first_name, g.last_name, g.phone, g.email, g.prefer_contact, g.street, g.city, g.state, g.zip, pt.name, pr.name 
 --		FROM growers g LEFT JOIN property_types pt ON g.property_type_id = pt.id
 -- 		LEFT JOIN property_relationships pr ON g.property_relationship_id = pr.id;
@@ -193,6 +194,21 @@ CREATE TABLE donations (
 -- 		FROM staff
 --	SELECT ...
 --		FROM distribution_sites
+--
+-- 	Statistical Queries:
+-- 	SELECT tt.name, sum(h.pounds_harvested)
+-- 		FROM harvested h LEFT JOIN tree_types tt ON h.tree_type_id = tt.id
+-- 		GROUP BY tree_type_id
+-- 	SELECT sum(pounds_harvested)*2.66667 AS "portions"
+-- 		FROM harvested h
+-- 	SELECT g.zip, sum(h.pounds_harvested)
+-- 		FROM growers g LEFT JOIN events e ON g.id = e.grower_id
+-- 		LEFT JOIN harvested h ON e.harvested_id = h.id
+-- 		GROUP BY g.zip
+-- 	SELECT sum(values)
+-- 		FROM donations
+-- 	SELECT count(*)
+-- 		FROM volunteers
 
 
 SET FOREIGN_KEY_CHECKS = 1; -- enable fk constraints!
