@@ -140,7 +140,23 @@ INSERT INTO growers (first_name, last_name, phone, email, prefer_contact, street
 -- end temp insert
 
 
--- TODO Trees table
+
+DROP TABLE IF EXISTS trees;
+CREATE TABLE trees (
+	id 		INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	tree_type 	VARCHAR(64) NOT NULL,		-- reference tree_types table?
+	amount 		INT NOT NULL,
+	height 		VARCHAR(64) NOT NULL,		-- references heights table?
+	ripe_month 	VARCHAR(64) NOT NULL,		-- references months table?
+	issues 		VARCHAR(64) DEFAULT "No",
+	pruned 		VARCHAR(64) DEFAULT "No",
+	sprayed 	VARCHAR(64) DEFAULT "No",
+	notes 		TEXT,
+	grower_id	INT NOT NULL REFERENCES growers(id)
+) ENGINE=innodb;
+
+
+
 -- Please follow naming conventions above (plural table names)
 
 
