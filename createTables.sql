@@ -1,10 +1,13 @@
 -- HARVEST CLUB DDL --
--- For simplicity, some hardcoded values are inserted --
+-- For simplicity, some default values are inserted --
+-- Tables are dropped before inserting for easy debugging --
 
-CREATE DATABASE IF NOT EXISTS theharvestclub CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE
+IF NOT EXISTS theharvestclub
+CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
-SET FOREIGN_KEY_CHECKS = 0; -- remember to enable fk constraints!
+SET FOREIGN_KEY_CHECKS = 0; -- remember to enable fk constraints at the end!
 
 
 DROP TABLE IF EXISTS property_types;
@@ -49,7 +52,6 @@ INSERT INTO tree_types (name) VALUES
 	('Persimmon'),
 	('Guava'),
 	('Apple'),
-	('Avocado'),
 	('Peach'),
 	('Plum'),
 	('Nectarine'),
@@ -127,10 +129,7 @@ CREATE TABLE growers (
 	CONSTRAINT fk_property_relationship FOREIGN KEY (property_relationship_id) REFERENCES property_relationships(id) ON DELETE CASCADE
 ) ENGINE=innodb;
 
--- TODO trees
-
-
--- start insert temp
+-- start temp insert (for debugging front end)
 INSERT INTO growers (first_name, last_name, phone, email, prefer_contact, street, city, state, zip, property_type_id, property_relationship_id) VALUES
 ('Steven', 'Sommers', '(949) 334-1234', 'sommers@uci.edu', 'P', '123 Fake St', 'Irvine', 'CA', '91234', 1, 2),
 ('Lawrence', 'Nanners', '(949) 633-1234', 'nanners@uci.edu', 'P', '313 Fake St', 'Laguna', 'CA', '97234', 3, 2),
@@ -138,8 +137,11 @@ INSERT INTO growers (first_name, last_name, phone, email, prefer_contact, street
 ('Fernanda', 'Vargas', '(949) 533-1234', 'vargas@aol.com', 'E', '23 Real St', 'Irvine', 'CA', '93731', 3, 1),
 ('Billy', 'Bob', '(800) 555-1234', 'bob@aol.com', 'E', '123 Spooner St', 'Springfield', 'IL', '65134', 4, 4)
 ;
--- end insert temp
+-- end temp insert
 
+
+-- TODO Trees table
+-- Please follow naming conventions above (plural table names)
 
 
 
