@@ -143,22 +143,56 @@ INSERT INTO growers (first_name, last_name, phone, email, prefer_contact, street
 
 DROP TABLE IF EXISTS trees;
 CREATE TABLE trees (
-	id 		INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	tree_type 	VARCHAR(64) NOT NULL,		-- reference tree_types table?
+	id 		INT AUTO_INCREMENT PRIMARY KEY,
+	tree_type 	INT NOT NULL FOREIGN KEY REFERENCES tree_types(id),
 	amount 		INT NOT NULL,
-	height 		VARCHAR(64) NOT NULL,		-- references heights table?
-	ripe_month 	VARCHAR(64) NOT NULL,		-- references months table?
+	height 		INT NOT NULL FOREIGN KEY REFERENCES heights(id),
+	ripe_month 	INT NOT NULL FOREIGN KEY REFERENCES months(id), -- May not be necessary: Use 1-12
 	issues 		VARCHAR(64) DEFAULT "No",
 	pruned 		VARCHAR(64) DEFAULT "No",
 	sprayed 	VARCHAR(64) DEFAULT "No",
 	notes 		TEXT,
-	grower_id	INT NOT NULL REFERENCES growers(id)
+	grower_id	INT NOT NULL FOREIGN KEY REFERENCES growers(id)
+) ENGINE=innodb;
+
+
+
+-- TODO: volunteers table
+-- TODO: events table
+-- TODO: staff table
+-- TODO: privileges table
+-- TODO: distribution_sites table
+
+
+
+DROP TABLE IF EXISTS donations;
+CREATE TABLE donations (
+	id		INT AUTO_INCREMENT PRIMARY KEY,
+	donation	VARCHAR(255) NOT NULL,
+	donor		VARCHAR(255) DEFAULT "Anonymous",
+	value		INT
 ) ENGINE=innodb;
 
 
 
 -- Please follow naming conventions above (plural table names)
 
+
+
+-- Sample Queries:
+-- 	SELECT g.first_name, g.last_name, g.phone, g.email, g.prefer_contact, g.street, g.city, g.state, g.zip, pt.name, pr.name 
+--		FROM growers g LEFT JOIN property_types pt ON g.property_type_id = pt.id
+-- 		LEFT JOIN property_relationships pr ON g.property_relationship_id = pr.id;
+-- 	SELECT donor, donation, value 
+-- 		FROM donations
+-- 	SELECT ...
+-- 		FROM volunteers
+-- 	SELECT ...
+-- 		FROM events
+--	SELECT ...
+-- 		FROM staff
+--	SELECT ...
+--		FROM distribution_sites
 
 
 SET FOREIGN_KEY_CHECKS = 1; -- enable fk constraints!
