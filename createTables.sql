@@ -123,6 +123,9 @@ CREATE TABLE growers (
 	city		VARCHAR(255) NOT NULL,
 	state		CHAR(2)		NOT NULL, -- this makes sense right?
 	zip			VARCHAR(5)	NOT NULL, -- can it be bigger?
+	tools		TINYTEXT,
+	hear		TINYTEXT, -- this should probably be another INT type and a FK to a table
+	notes		TEXT,
 	property_type_id INT NOT NULL,
 	property_relationship_id INT NOT NULL,
 	CONSTRAINT fk_property_type FOREIGN KEY (property_type_id) REFERENCES property_types(id) ON DELETE CASCADE,
