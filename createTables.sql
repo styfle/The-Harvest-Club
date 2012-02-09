@@ -158,8 +158,8 @@ INSERT INTO growers (first_name, last_name, phone, email, street, city, state, z
 
 
 
---DROP TABLE IF EXISTS trees;
---CREATE TABLE trees (
+-- DROP TABLE IF EXISTS trees;
+-- CREATE TABLE trees (
 --	id 		INT AUTO_INCREMENT PRIMARY KEY,
 --	tree_type 	INT NOT NULL FOREIGN KEY REFERENCES tree_types(id),
 --	amount 		INT NOT NULL,
@@ -170,7 +170,7 @@ INSERT INTO growers (first_name, last_name, phone, email, street, city, state, z
 --	sprayed 	VARCHAR(64) DEFAULT "No",
 --	notes 		TEXT,
 --	grower_id	INT NOT NULL FOREIGN KEY REFERENCES growers(id)
---) ENGINE=innodb;
+-- ) ENGINE=innodb;
 
 
 
@@ -182,189 +182,187 @@ INSERT INTO growers (first_name, last_name, phone, email, street, city, state, z
 
 DROP TABLE IF EXISTS grower_tree;
 CREATE TABLE grower_tree (
-grower_id INT,
-tree_id INT,
-number INT,
-avgHeight_id INT, 
-sprayed TINYINT NULL, --1 Yes -- 0 No
-pruned TINYINT NULL,  --1 Yes -- 0 No
-diseased TINYINT NULL,--1 Yes -- 0 No
-notes 		TEXT,
-CONSTRAINT fk_grower FOREIGN KEY (grower_id) REFERENCES growers(id),
-CONSTRAINT fk_tree FOREIGN KEY (tree_id) REFERENCES tree_types(id),
-CONSTRAINT fk_height FOREIGN KEY (avgHeight_id) REFERENCES tree_heights(id)
+	grower_id INT,
+	tree_id INT,
+	number INT,
+	avgHeight_id INT, 
+	sprayed TINYINT(1) NULL, -- 1 Yes -- 0 No
+	pruned TINYINT(1) NULL,  -- 1 Yes -- 0 No
+	diseased TINYINT(1) NULL,-- 1 Yes -- 0 No
+	notes 		TEXT,
+	CONSTRAINT fk_grower FOREIGN KEY (grower_id) REFERENCES growers(id),
+	CONSTRAINT fk_tree FOREIGN KEY (tree_id) REFERENCES tree_types(id),
+	CONSTRAINT fk_height FOREIGN KEY (avgHeight_id) REFERENCES tree_heights(id)
 ) ENGINE=innodb;
 
 
 INSERT INTO grower_tree (grower_id, tree_id, number,avgHeight_id, sprayed, pruned, diseased) VALUES
-(1, 2, 5, 2, 0, 0, 0), 
-(2, 3, 10, 5, 0, 1, 0)
-;
+	(1, 2, 5, 2, 0, 0, 0), 
+	(2, 3, 10, 5, 0, 1, 0);
 
 DROP TABLE IF EXISTS month_harvest;
 CREATE TABLE month_harvest (
-grower_id INT,
-tree_type_id INT,
-month_id INT,
-CONSTRAINT pk_month_harvest PRIMARY KEY (grower_id, tree_type_id, month_id),
-CONSTRAINT fk_grower_id FOREIGN KEY (grower_id) REFERENCES growers(id),
-CONSTRAINT fk_tree_type_id FOREIGN KEY (tree_type_id) REFERENCES tree_types(id),
-CONSTRAINT fk_month_id FOREIGN KEY (month_id) REFERENCES months(id)
+	grower_id INT,
+	tree_type_id INT,
+	month_id INT,
+	CONSTRAINT pk_month_harvest PRIMARY KEY (grower_id, tree_type_id, month_id),
+	CONSTRAINT fk_grower_id FOREIGN KEY (grower_id) REFERENCES growers(id),
+	CONSTRAINT fk_tree_type_id FOREIGN KEY (tree_type_id) REFERENCES tree_types(id),
+	CONSTRAINT fk_month_id FOREIGN KEY (month_id) REFERENCES months(id)
 ) ENGINE=innodb;
 
 INSERT INTO month_harvest (grower_id, tree_type_id, month_id) VALUES
-(1, 2, 4),
-(1, 2, 9),
-(2, 3, 7)
-;
+	(1, 2, 4),
+	(1, 2, 9),
+	(2, 3, 7);
 
-DROP TABLE IF EXISTS volunteer_type;
-CREATE TABLE volunteer_type (
-id INT AUTO_INCREMENT PRIMARY KEY,
-type nvarchar(255) NOT NULL
+DROP TABLE IF EXISTS volunteer_types;
+CREATE TABLE volunteer_types (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	type nvarchar(255) NOT NULL
 ) ENGINE=innodb;
 
-INSERT INTO volunteer_type (type) VALUES
-('Harvester'),
-('Harvest Captain '),
-('Driver '),
-('Ambassador'),
-('Tree Scout');
+INSERT INTO volunteer_types (type) VALUES
+	('Harvester'),
+	('Harvest Captain '),
+	('Driver '),
+	('Ambassador'),
+	('Tree Scout');
 
 
 DROP TABLE IF EXISTS volunteers;
 CREATE TABLE volunteers (
-id INT AUTO_INCREMENT PRIMARY KEY,
-first_name nvarchar(255) NOT NULL,
-middle_name nvarchar(255) NULL,
-last_name nvarchar(255) NOT NULL,
-phone nvarchar(17) NOT NULL, 
-email nvarchar(255) NOT NULL, 
-active TINYINT, -- 1-Active, 0-- Inactive
-street nvarchar(255) NOT NULL,
-city nvarchar(255) NOT NULL,
-state CHAR(2) NOT NULL, 
-zip nvarchar(5) NOT NULL 
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	first_name nvarchar(255) NOT NULL,
+	middle_name nvarchar(255) NULL,
+	last_name nvarchar(255) NOT NULL,
+	phone nvarchar(17) NOT NULL, 
+	email nvarchar(255) NOT NULL, 
+	active TINYINT(1), -- 1-Active, 0-Inactive
+	street nvarchar(255) NOT NULL,
+	city nvarchar(255) NOT NULL,
+	state CHAR(2) NOT NULL, 
+	zip nvarchar(5) NOT NULL 
 ) ENGINE=innodb;
 
 
 INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, active, street, city, state, zip) VALUES
-('Du','The', 'Du', '(123) 456-7890', 'dtdu@uci.edu', 1, '456 Fake St', 'Irvine', 'CA', '91234')
+	('Du','The', 'Du', '(123) 456-7890', 'dtdu@uci.edu', 1, '456 Fake St', 'Irvine', 'CA', '91234')
 ;
 
---A volunteer can have many rolls
+-- A volunteer can have many rolls
 DROP TABLE IF EXISTS volunteer_roll;
 CREATE TABLE volunteer_roll (
-volunteer_id INT NOT NULL,
-volunteer_type_id INT NOT NULL,
-CONSTRAINT pk_volunteer_roll PRIMARY KEY (volunteer_id, volunteer_type_id),
-CONSTRAINT fk_volunteer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
-CONSTRAINT fk_volunteer_type_id FOREIGN KEY (volunteer_type_id) REFERENCES volunteer_type(id)
+	volunteer_id INT NOT NULL,
+	volunteer_type_id INT NOT NULL,
+	CONSTRAINT pk_volunteer_roll PRIMARY KEY (volunteer_id, volunteer_type_id),
+	CONSTRAINT fk_volunteer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
+	CONSTRAINT fk_volunteer_type_id FOREIGN KEY (volunteer_type_id) REFERENCES volunteer_types(id)
 ) ENGINE=innodb;
 
 INSERT INTO volunteer_roll(volunteer_id, volunteer_type_id) VALUES
-(1, 2),
-(1, 3)
+	(1, 2),
+	(1, 3)
 ;
 
 DROP TABLE IF EXISTS volunteer_prefer;
 CREATE TABLE volunteer_prefer (
-volunteer_id INT NOT NULL,
-day_id INT NOT NULL,
-CONSTRAINT pk_volunteer_prefer PRIMARY KEY (volunteer_id, day_id),
-CONSTRAINT fk_volunteer_prefer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
-CONSTRAINT fk_day_id FOREIGN KEY (day_id) REFERENCES days(id)
+	volunteer_id INT NOT NULL,
+	day_id INT NOT NULL,
+	CONSTRAINT pk_volunteer_prefer PRIMARY KEY (volunteer_id, day_id),
+	CONSTRAINT fk_volunteer_prefer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
+	CONSTRAINT fk_day_id FOREIGN KEY (day_id) REFERENCES days(id)
 ) ENGINE=innodb;
 
 INSERT INTO volunteer_prefer( volunteer_id, day_id) VALUES
-(1, 2),
-(1, 5);
+	(1, 2),
+	(1, 5);
 
 
 DROP TABLE IF EXISTS events;
 CREATE TABLE events (
-id INT AUTO_INCREMENT PRIMARY KEY,
-name nVARCHAR(255) NOT NULL,
-grower_id INT NOT NULL,
-captain_id INT NOT NULL,
-date datetime,
-CONSTRAINT fk_event_grower_id FOREIGN KEY (grower_id) REFERENCES growers(id),
-CONSTRAINT fk_event_captain_id FOREIGN KEY (captain_id) REFERENCES volunteers(id)
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	name nVARCHAR(255) NOT NULL,
+	grower_id INT NOT NULL,
+	captain_id INT NOT NULL,
+	date datetime,
+	CONSTRAINT fk_event_grower_id FOREIGN KEY (grower_id) REFERENCES growers(id),
+	CONSTRAINT fk_event_captain_id FOREIGN KEY (captain_id) REFERENCES volunteers(id)
 ) ENGINE=innodb;
 
 
 -- This table associated each volunteer with each event.
 DROP TABLE IF EXISTS volunteer_event;
 CREATE TABLE volunteer_event (
-event_id INT NOT NULL,
-volunteer_id INT NOT NULL,
-driver TINYINT NOT NULL,
-CONSTRAINT pk_volunteer_event PRIMARY KEY (volunteer_id, event_id),
-CONSTRAINT fk_volunteer_event_volunteer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
-CONSTRAINT fk_volunteer_event_event_id FOREIGN KEY (event_id) REFERENCES events(id)
+	event_id INT NOT NULL,
+	volunteer_id INT NOT NULL,
+	driver TINYINT NOT NULL,
+	CONSTRAINT pk_volunteer_event PRIMARY KEY (volunteer_id, event_id),
+	CONSTRAINT fk_volunteer_event_volunteer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
+	CONSTRAINT fk_volunteer_event_event_id FOREIGN KEY (event_id) REFERENCES events(id)
 ) ENGINE=innodb;
 
 DROP TABLE IF EXISTS harvest;
 CREATE TABLE harvest (
-event_id INT NOT NULL,
-tree_id INT NOT NULL,
-pound INT NOT NULL,
-CONSTRAINT pk_harvest PRIMARY KEY (tree_id, event_id),
-CONSTRAINT fk_harvest_tree_id FOREIGN KEY (tree_id) REFERENCES tree_types(id),
-CONSTRAINT fk_harvest_event_id FOREIGN KEY (event_id) REFERENCES events(id)
+	event_id INT NOT NULL,
+	tree_id INT NOT NULL,
+	pound INT NOT NULL,
+	CONSTRAINT pk_harvest PRIMARY KEY (tree_id, event_id),
+	CONSTRAINT fk_harvest_tree_id FOREIGN KEY (tree_id) REFERENCES tree_types(id),
+	CONSTRAINT fk_harvest_event_id FOREIGN KEY (event_id) REFERENCES events(id)
 ) ENGINE=innodb;
 
 DROP TABLE IF EXISTS distribution;
 CREATE TABLE distribution (
-id INT AUTO_INCREMENT PRIMARY KEY,
-name nvarchar(255) NOT NULL,
-phone nvarchar(17) NOT NULL, 
-email nvarchar(255) NOT NULL, 
-street nvarchar(255) NOT NULL,
-city nvarchar(255) NOT NULL,
-state CHAR(2) NOT NULL, 
-zip nvarchar(5) NOT NULL ,
-hours nvarchar(255) NOT NULL
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	name nvarchar(255) NOT NULL,
+	phone nvarchar(17) NOT NULL, 
+	email nvarchar(255) NOT NULL, 
+	street nvarchar(255) NOT NULL,
+	city nvarchar(255) NOT NULL,
+	state CHAR(2) NOT NULL, 
+	zip nvarchar(5) NOT NULL ,
+	hours nvarchar(255) NOT NULL
 ) ENGINE=innodb;
 
 
 DROP TABLE IF EXISTS driving;
 CREATE TABLE driving (
-event_id INT NOT NULL,
-tree_id INT NOT NULL,
-volunteer_id INT NOT NULL,
-distribution_id INT NOT NULL,
-pound INT NOT NULL,
-CONSTRAINT pk_driving PRIMARY KEY (tree_id, event_id, volunteer_id, distribution_id),
-CONSTRAINT fk_driving_tree_id FOREIGN KEY (tree_id) REFERENCES tree_types(id),
-CONSTRAINT fk_driving_event_id FOREIGN KEY (event_id) REFERENCES events(id),
-CONSTRAINT fk_driving_volunteer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
-CONSTRAINT fk_driving_distribution_id FOREIGN KEY (distribution_id) REFERENCES distributions(id)
+	event_id INT NOT NULL,
+	tree_id INT NOT NULL,
+	volunteer_id INT NOT NULL,
+	distribution_id INT NOT NULL,
+	pound INT NOT NULL,
+	CONSTRAINT pk_driving PRIMARY KEY (tree_id, event_id, volunteer_id, distribution_id),
+	CONSTRAINT fk_driving_tree_id FOREIGN KEY (tree_id) REFERENCES tree_types(id),
+	CONSTRAINT fk_driving_event_id FOREIGN KEY (event_id) REFERENCES events(id),
+	CONSTRAINT fk_driving_volunteer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
+	CONSTRAINT fk_driving_distribution_id FOREIGN KEY (distribution_id) REFERENCES distributions(id)
 ) ENGINE=innodb;
 
 
 DROP TABLE IF EXISTS donations;
 CREATE TABLE donations (
-id INT AUTO_INCREMENT PRIMARY KEY,
-donation nVARCHAR(255) NOT NULL,
-donor nVARCHAR(255) DEFAULT "Anonymous",
-value double,
-date datetime
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	donation nVARCHAR(255) NOT NULL,
+	donor nVARCHAR(255) DEFAULT "Anonymous",
+	value double,
+	date datetime
 ) ENGINE=innodb;
 
 DROP TABLE IF EXISTS admins;
 CREATE TABLE admins (
-id INT AUTO_INCREMENT PRIMARY KEY,
-first_name nvarchar(255) NOT NULL,
-middle_name nvarchar(255) NULL,
-last_name nvarchar(255) NOT NULL,
-phone nvarchar(17) NOT NULL, 
-email nvarchar(255) NOT NULL, 
-executive TINYINT, -- 1-Yes, 0-- No
-street nvarchar(255) NOT NULL,
-city nvarchar(255) NOT NULL,
-state CHAR(2) NOT NULL, 
-zip nvarchar(5) NOT NULL 
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	first_name nvarchar(255) NOT NULL,
+	middle_name nvarchar(255) NULL,
+	last_name nvarchar(255) NOT NULL,
+	phone nvarchar(17) NOT NULL, 
+	email nvarchar(255) NOT NULL, 
+	executive TINYINT(1), -- 1-Yes, 0-- No
+	street nvarchar(255) NOT NULL,
+	city nvarchar(255) NOT NULL,
+	state CHAR(2) NOT NULL, 
+	zip nvarchar(5) NOT NULL 
 ) ENGINE=innodb;
 
 
