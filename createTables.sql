@@ -180,7 +180,6 @@ INSERT INTO growers (first_name, last_name, phone, email, street, city, state, z
 -- TODO: privileges table
 -- TODO: distribution_sites table
 
---Based on the registration form, we should group all tree type into 1 record
 DROP TABLE IF EXISTS grower_tree;
 CREATE TABLE grower_tree (
 grower_id INT,
@@ -344,7 +343,6 @@ CONSTRAINT fk_driving_distribution_id FOREIGN KEY (distribution_id) REFERENCES d
 ) ENGINE=innodb;
 
 
-
 DROP TABLE IF EXISTS donations;
 CREATE TABLE donations (
 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -353,6 +351,22 @@ donor nVARCHAR(255) DEFAULT "Anonymous",
 value double,
 date datetime
 ) ENGINE=innodb;
+
+DROP TABLE IF EXISTS admins;
+CREATE TABLE admins (
+id INT AUTO_INCREMENT PRIMARY KEY,
+first_name nvarchar(255) NOT NULL,
+middle_name nvarchar(255) NULL,
+last_name nvarchar(255) NOT NULL,
+phone nvarchar(17) NOT NULL, 
+email nvarchar(255) NOT NULL, 
+executive TINYINT, -- 1-Yes, 0-- No
+street nvarchar(255) NOT NULL,
+city nvarchar(255) NOT NULL,
+state CHAR(2) NOT NULL, 
+zip nvarchar(5) NOT NULL 
+) ENGINE=innodb;
+
 
 -- Please follow naming conventions above (plural table names)
 
