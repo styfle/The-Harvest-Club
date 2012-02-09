@@ -358,12 +358,17 @@ CREATE TABLE admins (
 	last_name nvarchar(255) NOT NULL,
 	phone nvarchar(17) NOT NULL, 
 	email nvarchar(255) NOT NULL, 
+	password nvarchar(50) NOT NULL,
 	executive TINYINT(1), -- 1-Yes, 0-- No
 	street nvarchar(255) NOT NULL,
 	city nvarchar(255) NOT NULL,
 	state CHAR(2) NOT NULL, 
 	zip nvarchar(5) NOT NULL 
 ) ENGINE=innodb;
+
+INSERT INTO admins (first_name, middle_name, last_name, phone, email, password, executive, street, city, state, zip) VALUES
+	('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', 'password', 1, '456 Fake St', 'Irvine', 'CA', '91234')
+;
 
 
 -- Please follow naming conventions above (plural table names)
