@@ -371,6 +371,43 @@ INSERT INTO admins (first_name, middle_name, last_name, phone, email, password, 
 ;
 
 
+
+DROP TABLE IF EXISTS review_volunteers;
+CREATE TABLE review_volunteers (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	first_name nvarchar(255) NOT NULL,
+	middle_name nvarchar(255) NULL,
+	last_name nvarchar(255) NOT NULL,
+	phone nvarchar(17) NOT NULL,
+	email nvarchar(255) NOT NULL,
+	street nvarchar(255) NOT NULL,
+	city nvarchar(255) NOT NULL,
+	state CHAR(2) NOT NULL,
+	zip nvarchar(5) NOT NULL,
+	harvester TINYINT(1) ,
+	harvestCaptain TINYINT(1),
+	driver TINYINT(1),
+	ambassador TINYINT(1),
+	treeScout TINYINT(1),
+	monday TINYINT(1),
+	tuesday TINYINT(1),
+	wednesday TINYINT(1),
+	thursday TINYINT(1),
+	friday TINYINT(1),
+	saturday TINYINT(1),
+	sunday TINYINT(1),
+	flyer TINYINT(1),
+	facebook TINYINT(1),
+	twitter TINYINT(1),
+	familyOrFriend TINYINT(1),
+	newspaperOrMagazine TINYINT(1),
+	website TINYINT(1),
+	villageHarvest TINYINT(1),
+	other TINYINT(1),
+	note text
+) ENGINE=innodb;
+
+
 -- Please follow naming conventions above (plural table names)
 
 
