@@ -35,19 +35,20 @@
 	<script type="text/javascript" src="js/script.js"></script>
 </head>
 
-<body>
+<body id="dt_example">
 	<header>
 		<h1>The Harvest Club - CPanel</h1>
 		<span style="font-size:9px;">"The harvest is plentiful but the workers are few"</span>
 	</header>
 	
 	<div id="main" role="main">
-	<p>Welcome. This is just a test but feel free to mess around.</p>
-		
-		<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
-			<!-- table is filled dynamically -->
-		</table>
-		
+		<div id="container">
+			<p>Welcome. This is just a test but feel free to mess around.</p>
+				
+			<table id="dt" cellpadding="0" cellspacing="0" border="0" class="display">
+				<!-- table is filled dynamically -->
+			</table>
+		</div>
 	</div> <!-- end main -->
 	
 	<footer>
@@ -62,21 +63,28 @@
 	<!-- Asynchronous Google Analytics snippet. Change UA-XXXXX-X to be your site's ID.
 			 mathiasbynens.be/notes/async-analytics-snippet -->
 	<script type="text/javascript">
+	var dt;
 	
 	$(document).ready(function() {
 		$.ajax( {
 			'dataType': 'json', 
 			'type': 'GET', 
-			'url': 'data.json', 
+			'url': 'ajax.php?cmd=volunteers', 
 			'success': function (data) {
-				//console.log(data);
-				$('#example').dataTable({
+				console.log(data);
+				if (data.status != 200)
+					return alert('Oops. Ajax request failed: ' + data.message);
+				dt = $('#dt').dataTable({
 					'bJQueryUI': true,
 					'sPaginationType': 'full_numbers',
 					'bProcessing': true,
-					'aaData': data.aaData,
-					'aoColumns': data.aoColumns,
+					'bAutoWidth': true,
+					'aaData': data.datatable.aaData,
+					'aoColumns': data.datatable.aoColumns,
 				});
+			},
+			'error': function (e) {
+				alert('Error: ' + e);
 			}
 		});
 		
@@ -100,12 +108,12 @@
 		});
 		
 		// all rows in the table will open dialog onclick
-		$('#example tbody tr').live('click',function(e) {
+		$('#dt tbody tr').live('click',function(e) {
+			var row = (dt.fnGetData(this));
 			var s = '<p>Form goes here, for example:</p>';
-			var cells = $(this).find('td');
 			
-			for (var i=0; i<cells.length; i++)
-				s += cells[i].innerText + '<br/>';
+			for (var i=0; i<row.length; i++)
+				s +=  '"' + row[i] + '"<br/>';
 			
 			$('#edit-modal')
 				.dialog('open') // show dialog

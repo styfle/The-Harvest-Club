@@ -38,7 +38,5 @@ intermediate
 publish
 .idea
 
-# secret PHP folder
-include
-include/
-include/*
+# include your own DB config
+include/config.inc.php
