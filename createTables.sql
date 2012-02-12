@@ -180,38 +180,37 @@ INSERT INTO growers (first_name, last_name, phone, email, street, city, state, z
 -- TODO: privileges table
 -- TODO: distribution_sites table
 
-DROP TABLE IF EXISTS grower_tree;
-CREATE TABLE grower_tree (
+DROP TABLE IF EXISTS grower_trees;
+CREATE TABLE grower_trees (
 	grower_id INT,
 	tree_id INT,
 	number INT,
 	avgHeight_id INT, 
-	sprayed TINYINT(1) NULL, -- 1 Yes -- 0 No
-	pruned TINYINT(1) NULL,  -- 1 Yes -- 0 No
-	diseased TINYINT(1) NULL,-- 1 Yes -- 0 No
+	chemicaled TINYINT(1) NULL, -- 1 Yes -- 0 No	
 	notes 		TEXT,
-	CONSTRAINT fk_grower FOREIGN KEY (grower_id) REFERENCES growers(id),
-	CONSTRAINT fk_tree FOREIGN KEY (tree_id) REFERENCES tree_types(id),
-	CONSTRAINT fk_height FOREIGN KEY (avgHeight_id) REFERENCES tree_heights(id)
+	CONSTRAINT fk_grower_trees_grower FOREIGN KEY (grower_id) REFERENCES growers(id),
+	CONSTRAINT fk_grower_trees_tree FOREIGN KEY (tree_id) REFERENCES tree_types(id),
+	CONSTRAINT fk_grower_trees_height FOREIGN KEY (avgHeight_id) REFERENCES tree_heights(id)
 ) ENGINE=innodb;
 
 
-INSERT INTO grower_tree (grower_id, tree_id, number,avgHeight_id, sprayed, pruned, diseased) VALUES
-	(1, 2, 5, 2, 0, 0, 0), 
-	(2, 3, 10, 5, 0, 1, 0);
+INSERT INTO grower_trees (grower_id, tree_id, number,avgHeight_id, chemicaled) VALUES
+	(1, 2, 5, 2, 0), 
+	(1, 4, 1, 4, 1), 
+	(2, 3, 10, 5, 0);
 
-DROP TABLE IF EXISTS month_harvest;
-CREATE TABLE month_harvest (
+DROP TABLE IF EXISTS month_harvests;
+CREATE TABLE month_harvests (
 	grower_id INT,
 	tree_type_id INT,
 	month_id INT,
-	CONSTRAINT pk_month_harvest PRIMARY KEY (grower_id, tree_type_id, month_id),
-	CONSTRAINT fk_grower_id FOREIGN KEY (grower_id) REFERENCES growers(id),
-	CONSTRAINT fk_tree_type_id FOREIGN KEY (tree_type_id) REFERENCES tree_types(id),
-	CONSTRAINT fk_month_id FOREIGN KEY (month_id) REFERENCES months(id)
+	CONSTRAINT pk_month_harvests_month_harvest PRIMARY KEY (grower_id, tree_type_id, month_id),
+	CONSTRAINT fk_month_harvests_grower_id FOREIGN KEY (grower_id) REFERENCES growers(id),
+	CONSTRAINT fk_month_harvests_tree_type_id FOREIGN KEY (tree_type_id) REFERENCES tree_types(id),
+	CONSTRAINT fk_month_harvests_month_id FOREIGN KEY (month_id) REFERENCES months(id)
 ) ENGINE=innodb;
 
-INSERT INTO month_harvest (grower_id, tree_type_id, month_id) VALUES
+INSERT INTO month_harvests (grower_id, tree_type_id, month_id) VALUES
 	(1, 2, 4),
 	(1, 2, 9),
 	(2, 3, 7);
@@ -228,6 +227,46 @@ INSERT INTO volunteer_types (type) VALUES
 	('Driver '),
 	('Ambassador'),
 	('Tree Scout');
+    
+-- DROP TABLE IF EXISTS privileges;
+-- CREATE TABLE privileges (
+-- id INT AUTO_INCREMENT PRIMARY KEY,
+-- title NVARCHAR(255),
+-- can_login TINYINT(1),
+-- view_volunteer TINYINT(1),
+-- edit_volunteer TINYINT(1),
+-- delete_volunteer TINYINT(1),
+-- view_captain TINYINT(1),
+-- edit_captain TINYINT(1),
+-- delete_captain TINYINT(1),
+-- view_admin TINYINT(1),
+-- edit_admin TINYINT(1),
+-- delete_admin TINYINT(1),
+-- view_executive TINYINT(1),
+-- edit_executive TINYINT(1),
+-- delete_executive TINYINT(1),
+-- create_event TINYINT(1),	
+-- edit_event TINYINT(1),
+-- delete_event TINYINT(1),
+-- ) ENGINE=innodb;
+-- INSERT INTO privileges (title, can_login, view_volunteer, edit_volunteer, delete_volunteer, view_captain, edit_captain, delete_captain, view_admin, edit_admin, delete_admin, view_executive, edit_executive, delete_executive, create_event, view_event, edit_event, delete_event) VALUES
+-- ("volunteer", 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+-- ("captain",1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+-- ("captain",1,1,0,0,0,0,0,0,0,0,0,0,0),
+    
+DROP TABLE IF EXISTS privileges;
+CREATE TABLE privileges (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	title NVARCHAR(255) NOT NULL
+) ENGINE=innodb;
+
+
+INSERT INTO privileges (title) VALUES
+('Volunteer'),
+('Harvest Captain'),
+('Admin'),
+('Executive')
+;
 
 
 DROP TABLE IF EXISTS volunteers;
@@ -238,16 +277,24 @@ CREATE TABLE volunteers (
 	last_name nvarchar(255) NOT NULL,
 	phone nvarchar(17) NOT NULL, 
 	email nvarchar(255) NOT NULL, 
+	password nvarchar(255) NULL, 
 	active TINYINT(1), -- 1-Active, 0-Inactive
 	street nvarchar(255) NOT NULL,
 	city nvarchar(255) NOT NULL,
 	state CHAR(2) NOT NULL, 
-	zip nvarchar(5) NOT NULL 
+	zip nvarchar(5) NOT NULL, 
+	privilege_id INT NOT NULL,
+	CONSTRAINT fk_privilege_id FOREIGN KEY (privilege_id) REFERENCES privileges(id)
 ) ENGINE=innodb;
 
 
-INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, active, street, city, state, zip) VALUES
-	('Du','The', 'Du', '(123) 456-7890', 'dtdu@uci.edu', 1, '456 Fake St', 'Irvine', 'CA', '91234')
+
+
+INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, active, street, city, state, zip, privilege_id) VALUES
+	('Du','The', 'Du', '(123) 456-7890', 'dtdu@uci.edu', null, 1, '456 Fake St', 'Irvine', 'CA', '91234', 1), 
+	('Duy','', 'Thuy', '(546) 542-5454', 'duy@uci.edu', password('123456'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 2),
+  ('Tom','', 'Jerry', '(123) 456-7890', 'tom@uci.edu', password('abcdef'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 3),
+  ('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', password('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 4)
 ;
 
 -- A volunteer can have many rolls
@@ -261,8 +308,8 @@ CREATE TABLE volunteer_roll (
 ) ENGINE=innodb;
 
 INSERT INTO volunteer_roll(volunteer_id, volunteer_type_id) VALUES
-	(1, 2),
-	(1, 3)
+(1, 2),
+(1, 3)
 ;
 
 DROP TABLE IF EXISTS volunteer_prefer;
@@ -350,62 +397,8 @@ CREATE TABLE donations (
 	date datetime
 ) ENGINE=innodb;
 
-DROP TABLE IF EXISTS admins;
-CREATE TABLE admins (
-	id INT AUTO_INCREMENT PRIMARY KEY,
-	first_name nvarchar(255) NOT NULL,
-	middle_name nvarchar(255) NULL,
-	last_name nvarchar(255) NOT NULL,
-	phone nvarchar(17) NOT NULL, 
-	email nvarchar(255) NOT NULL, 
-	password nvarchar(255) NOT NULL,
-	executive TINYINT(1), -- 1-Yes, 0-- No
-	street nvarchar(255) NOT NULL,
-	city nvarchar(255) NOT NULL,
-	state CHAR(2) NOT NULL, 
-	zip nvarchar(5) NOT NULL 
-) ENGINE=innodb;
-
-INSERT INTO admins (first_name, middle_name, last_name, phone, email, password, executive, street, city, state, zip) VALUES
-	('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', password('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234')
-;
 
 
-
-DROP TABLE IF EXISTS review_volunteers;
-CREATE TABLE review_volunteers (
-	id INT AUTO_INCREMENT PRIMARY KEY,
-	first_name nvarchar(255) NOT NULL,
-	middle_name nvarchar(255) NULL,
-	last_name nvarchar(255) NOT NULL,
-	phone nvarchar(17) NOT NULL,
-	email nvarchar(255) NOT NULL,
-	street nvarchar(255) NOT NULL,
-	city nvarchar(255) NOT NULL,
-	state CHAR(2) NOT NULL,
-	zip nvarchar(5) NOT NULL,
-	harvester TINYINT(1) ,
-	harvestCaptain TINYINT(1),
-	driver TINYINT(1),
-	ambassador TINYINT(1),
-	treeScout TINYINT(1),
-	monday TINYINT(1),
-	tuesday TINYINT(1),
-	wednesday TINYINT(1),
-	thursday TINYINT(1),
-	friday TINYINT(1),
-	saturday TINYINT(1),
-	sunday TINYINT(1),
-	flyer TINYINT(1),
-	facebook TINYINT(1),
-	twitter TINYINT(1),
-	familyOrFriend TINYINT(1),
-	newspaperOrMagazine TINYINT(1),
-	website TINYINT(1),
-	villageHarvest TINYINT(1),
-	other TINYINT(1),
-	note text
-) ENGINE=innodb;
 
 
 -- Please follow naming conventions above (plural table names)
