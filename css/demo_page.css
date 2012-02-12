@@ -19,8 +19,10 @@
 
 
 #dt_example #footer {
-	margin: 50px auto 0 auto;
+	margin: 30px auto 0 auto;
 	padding: 0;
+	text-align: center;
+	border-top: 1px solid #B0BED9;
 }
 
 #dt_example #demo {
@@ -54,13 +56,14 @@
 }
 
 #dt_example h1 {
-	margin-top: 2em;
-	font-size: 1.3em;
+	margin: 0;
+	font-size: 3em;
 	font-weight: normal;
-	line-height: 1.6em;
-	color: #4E6CA3;
+	line-height: 1em;
+	color: #5E8CBE;
 	border-bottom: 1px solid #B0BED9;
 	clear: both;
+	text-shadow: hsl(0,0%,85%) 1px 1px, hsl(0,0%,85%) 2px 2px, hsl(0,0%,85%) 2px 2px;
 }
 
 #dt_example h2 {
@@ -104,4 +107,9 @@
 	height: 100px;
 	width: 100%;
 	overflow: auto;
+}
+
+#quote {
+	font-size: 9px;
+	margin: 0px 0px 20px 6px;
 }

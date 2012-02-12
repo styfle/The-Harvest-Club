@@ -54,14 +54,18 @@ function getTable($sql) {
 
 }
 
-if ($cmd == 'home') {
+if ($cmd == 'get_notifications') {
 	$data['title'] = 'Notifications';
 	$data['content'] = '';
-} else if ($cmd == 'volunteers') {
+} else if ($cmd == 'get_volunteers') {
 	$sql = "SELECT * FROM volunteers;";
 	$data['title'] = 'Volunteers';
 	getTable($sql);
-} else if ($cmd == 'get_grower_email') {
+} else if ($cmd == 'get_growers') {
+	$sql = "SELECT * FROM growers;";
+	$data['title'] = 'Growers';
+	getTable($sql);
+} else if ($cmd == 'send_grower_email') {
 	date_default_timezone_set("America/Los_Angeles");
 	$data['date'] = date('F d, Y');
 	//$data['name'] = getName();
