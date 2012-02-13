@@ -66,14 +66,114 @@
 	</footer>
 	
 	<div id="edit-dialog">
-		<p>Need a form, for example:</p>
+		
+		<form id="volunteer">
+		<p><b>Volunteer</b></p>
+		<div>
+			<div><label for="firstname">First Name</label></div>
+			<div><input type="text" name="firstname" id="firstname" value=""/></div>
+		</div>
+		<div>
+			<div><label for="middlename">Middle Name</label></div>
+			<div><input type="text" name="middlename" id="middlename" /></div>
+		</div>
+		<div>
+			<div><label for="lastname">Last Name</label></div>
+			<div><input type="text" name="lastname" id="lastname" /></div>
+		</div>
+		<div>
+			<div><label for="phone">Phone</label></div>
+			<div><input type="tel" name="phone" id="phone" /></div>
+		</div>
+		<div>
+			<div><label for="email">Email</label></div>
+			<div><input type="text" name="email" id="email" value=""/></div>
+		</div>
+		<div>
+			<div><label for="password">Password</label></div>
+			<div><input type="password" name="password" id="password" value=""/></div>
+		</div>	
+		<div>
+			<div><label for="street">Street</label></div>
+			<div><input type="text" name="street" id="street" value=""/></div>
+		</div>
+		<div>
+			<div><label for="city">City</label></div>
+			<div><input type="text" name="city" id="city" value=""/></div>
+		</div>	
+		<div>
+			<div><label for="zip">Zip</label></div>
+			<div><input type="text" name="zip" id="zip" value=""/></div>
+		</div>			
+		</form>
+		
+		<form id="grower" style="visibility:hidden">
+		<p><b>Grower</b></p>
+		<div>
+			<div><label for="firstname">First Name</label></div>
+			<div><input type="text" name="firstname" id="firstname1" /></div>
+		</div>
+		<div>
+			<div><label for="middlename">Middle Name</label></div>
+			<div><input type="text" name="middlename" id="middlename1" /></div>
+		</div>
+		<div>
+			<div><label for="lastname">Last Name</label></div>
+			<div><input type="text" name="lastname" id="lastname1" /></div>
+		</div>
+		<div>
+			<div><label for="phone">Phone</label></div>
+			<div><input type="tel" name="phone" id="phone1" /></div>
+		</div>
+		<div>
+			<div><label for="email">Email</label></div>
+			<div><input type="text" name="email" id="email1" value=""/></div>
+		</div>
+		<div>
+			<div><label for="street">Street</label></div>
+			<div><input type="text" name="street" id="street1" value=""/></div>
+		</div>	
+		<div>
+			<div><label for="city">City</label></div>
+			<div><input type="text" name="city" id="city1" value=""/></div>
+		</div>	
+		<div>
+			<div><label for="zip">Zip</label></div>
+			<div><input type="text" name="zip" id="zip1" value=""/></div>
+		</div>
+		<div>
+			<div><label for="tool">Tools</label></div>
+			<div><input type="text" name="tool" id="tool" value=""/></div>
+		</div>		
+		<div>
+			<div><label for="hear">Hear</label></div>
+			<div><input type="text" name="hear" id="hear" value=""/></div>
+		</div>
+		<div>
+			<div><label for="note">Notes</label></div>
+			<div><input type="text" name="note" id="note" value=""/></div>
+		</div>	
+		<div>
+			<div><label for="pti">Property Type ID</label></div>
+			<div><input type="text" name="pti" id="pti" value=""/></div>
+		</div>
+		<div>
+			<div><label for="pri">Property Relationship ID</label></div>
+			<div><input type="text" name="pri" id="pri" value=""/></div>
+		</div>		
+		</form>
 		<div id="additional"></div>
-	</div>
-
+	</div>	
+	
+	
+	
+	
 	<script type="text/javascript">
 	var dt; // global datatable variable
 	
 	$(document).ready(function() {
+		var currentTable = 'v'; //keeps track if volunteer (v) or grower (g) table is selected.
+	
 		dt = $('#dt').dataTable({
 			'bJQueryUI': true, // style using jQuery UI
 			'sPaginationType': 'full_numbers', // full pagination
@@ -99,6 +199,10 @@
 
 		$('#nav input').click(function() {
 			var cmd = this.id; // button id is the ajax command
+			if(cmd == "get_volunteers")
+				currentTable = 'v';
+			else if(cmd == "get_growers")
+				currentTable = 'g';
 			$.ajax( {
 				'dataType': 'json', 
 				'type': 'GET', 
@@ -173,15 +277,48 @@
 		
 		// all rows in the table will open dialog onclick
 		$('#dt tbody tr').live('click',function(e) {
+			//var type = dt.get
 			var row = (dt.fnGetData(this));
-			var s = '<p>Form goes here, for example:</p>';
+			var s =  $('#edit-dialog').html();
 			
-			for (var i=0; i<row.length; i++)
-				s +=  '"' + row[i] + '"<br/>';
+			// for (var i=0; i<row.length; i++)
+				// s +=  '"' + row[i] + '"<br/>';
+			
+			if(currentTable == 'v'){
+			$('#grower').css({"visibility":"hidden"});
+			$('#volunteer').css({"visibility":"visible", top: "5px", left: "5px"});
+			$('#firstname').val(row[1]);
+			$('#middlename').val(row[2]);
+			$('#lastname').val(row[3]);
+			$('#phone').val(row[4]);
+			$('#email').val(row[5]);
+			$('#street').val(row[8]);
+			$('#city').val(row[9]);
+			$('#state').val(row[10]);			
+			$('#zip').val(row[11]);
+			}
+			else if (currentTable == 'g'){
+			$('#volunteer').css({visibility:"hidden"});
+			$('#grower').css({visibility:"visible", position: "absolute", top: "5px", left: "5px"});
+			$('#firstname1').val(row[1]);
+			$('#middlename1').val('');
+			$('#lastname1').val(row[2]);
+			$('#phone1').val(row[3]);
+			$('#email1').val(row[4]);
+			$('#street1').val(row[5]);
+			$('#city1').val(row[6]);
+			$('#state1').val(row[7]);			
+			$('#zip1').val(row[8]);
+			$('#tool').val(row[9]);
+			$('#hear').val(row[10]);
+			$('#note').val(row[11]);
+			$('#pti').val(row[12]);
+			$('#pri').val(row[13]);
+			}
 			
 			$('#edit-dialog')
 				.dialog('open') // show dialog
-				.html(s); // create form
+				// .html(s); // create form
 		});
 	});
 
