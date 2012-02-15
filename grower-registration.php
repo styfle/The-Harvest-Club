@@ -37,8 +37,9 @@ $months = $r->buildArray();
 <html>
 <head>
 	<title>Grower Registration</title>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="js/jquery-1.7.1.min.js"></script>
 	<script>
+		var optionSelect = '<option value="" disabled="disabled" selected="selected">Select...</option>';
 		var property_types = <?php echo json_encode($property_types); ?>;
 		var property_relationships = <?php echo json_encode($property_relationships); ?>;
 		var sources = <?php echo json_encode($sources); ?>;
@@ -99,7 +100,7 @@ $months = $r->buildArray();
 					<option value="AK">Alaska</option> 
 					<option value="AZ">Arizona</option> 
 					<option value="AR">Arkansas</option> 
-					<option value="CA">California</option> 
+					<option value="CA" selected="selected">California</option> 
 					<option value="CO">Colorado</option> 
 					<option value="CT">Connecticut</option> 
 					<option value="DE">Delaware</option> 
@@ -153,24 +154,13 @@ $months = $r->buildArray();
 			
 			<div>
 				<label for="property">Property type*</label>
-				<select name="property" required="required">
-					<option value="" disabled="disabled" selected="selected">Select...</option><!-- TODO: Force option -->
-					<option value="residence">Residence</option>
-					<option value="lot">Open space / Vacant lot</option>
-					<option value="business">Business</option>
-					<option value="public">Public Property</option>
-					<option value="other">Other</option>
+				<select id="property" name="property" required="required">
 				</select>
 			</div>
 			
 			<div>
-				<label for="landlord">Relationship to property*</label>
-				<select name="landlord" required="required">
-					<option value="" disabled="disabled" selected="selected">Select...</option><!-- TODO: Force option -->
-					<option value="owner">Owner & Occupant</option>
-					<option value="renter">Renter</option>
-					<option value="landlord">Rental property owner (landlord)</option>
-					<option value="other">Other</option>
+				<label for="relationship">Relationship to property*</label>
+				<select id="relationship" name="relationship" required="required">
 				</select>
 			</div>
 		
@@ -181,27 +171,19 @@ $months = $r->buildArray();
 			<legend>Optional</legend>
 			
 			<div>
-				<label>Tools available for volunteers on site</label>
+				<label for="tools">Tools available for volunteers on site</label>
 				<input name="tools" type="text" />
 			</div>
 			
 			<div>
-				<label>How did you hear about us?</label>
-				<select id="hear" name="hear">
-					<option value="" disabled="disabled" selected="selected">Select...</option>
-					<option value="1">Flyer</option>
-					<option value="2">Facebook</option>
-					<option value="3">Twitter</option>
-					<option value="4">Family / Friend</option>
-					<option value="5">Newspaper / Local Magazine</option>
-					<option value="6">Village Harvest</option>
-					<option value="7">Other</option>
+				<label for="source">How did you hear about us?</label>
+				<select id="source" name="source">
 				</select>
 			</div>
 			
 			<div>
 				<label>Anything else you would like us to know?</label><br/>
-				<textarea name="notes" type="textarea" cols="50" rows="3" placeholder="Describe tree health, taste of fruit, accessibility of fruit, parking, etc"></textarea>
+				<textarea name="notes" type="textarea" cols="50" rows="3" placeholder="Tree health, taste of fruit, accessibility of fruit, parking, etc"></textarea>
 			</div>
 		</fieldset>
 		
@@ -221,32 +203,7 @@ $months = $r->buildArray();
 		</div>
 		
 		<div id="dynamic">
-			<!-- 
-			<fieldset>
-				<legend>Tree Type 1</legend>
-				<div>
-					<label>Tree Type:</label>
-					<select id="tree-type" name="tree-type" required="required">
-						<option value="" disabled="disabled" selected="selected">Select...</option>
-						<option value="almond">Almond</option>
-						<option value="apple">Apple</option>
-						<option value="apricot">Asian Pear</option>
-						<option value="blueberry">Blueberry</option>
-						<option value="other">Other</option>
-					</select>
-				</div>
-				
-				<div>
-					<label>Quantity:</label>
-					<input name="tree-count" type="text" size="4" pattern="[1-9][0-9]*" required="required" />
-				</div>
-				
-				<div>
-					<label>Tree Height:</label>
-					<input name="tree-height" type="text" size="4" pattern="[1-9][0-9]*" required="required" />
-				</div>
-			</fieldset>
-			 -->
+			<!-- Javascript fills this div -->
 		</div>
 
 		<fieldset>
@@ -256,7 +213,25 @@ $months = $r->buildArray();
 	</form>
 </div>
 
-<script>
+<script type="text/javascript">
+	// populate drop downs
+	$(document).ready(function() {
+		$('#property').html(options(property_types));
+		$('#relationship').html(options(property_relationships));
+		$('#source').html(options(sources));
+	});
+	
+	// create select options from key value pairs
+	function options(data) {
+		var s = optionSelect; // first option is always select...
+		for (var i=0; i<data.length; i++) {
+			var o = data[i];
+			s += '<option value="'+o.id+'">'+o.name+'</option>';
+		}
+		return s;
+	}
+	
+	
 	/* Show and hide tree entry form using jQuery */
 	function changeTreeCount(s) {
 		var dynamic = document.getElementById('dynamic')
@@ -271,21 +246,15 @@ $months = $r->buildArray();
 			var legend = document.createElement('legend');
 			$(legend).text('Tree Type ' + i);
 			
-			var type = '<div> <label>Tree Type* (Orange, Apple, etc.)</label> <select name="trees[tree'+i+'][type]" required="required"> <option value="" disabled="disabled" selected="selected">Select...</option>';
-			for (var j=0; j<tree_types.length; j++) {
-				var o = tree_types[j];
-				type += '<option value="'+o.id+'">'+o.name+'</option>';
-			}
-			type += '</select> </div>';
+			var type = '<div> <label>Tree Type* (Orange, Apple, etc.)</label> <select name="trees[tree'+i+'][type]" required="required"> ';
+			type += options(tree_types);
+			type += '</select> </div>'; // <input type="text" placeholder="If other, specify" /></div>';
 			
-			var varietal = '<div> <label>Fruit Varietal (if known)</label> <input name="trees[tree'+i+'][varietal]" type="text" /> </div>';
+			var varietal = '<div> <label>Fruit varietal or other type</label> <input name="trees[tree'+i+'][varietal]" type="text" /> </div>';
 			var quantity = '<div> <label>Number of trees of this type*</label> <input name="trees[tree'+i+'][quantity]" type="number" min="1" required="required" /> </div>';
 			
-			var height = '<div> <label>Tree Height*</label> <select name="trees[tree'+i+'][height]" required="required"> <option value="" disabled="disabled" selected="selected">Select...</option>';//'<div> <label>Tree Height*</label> <input name="trees[tree'+i+'][height]" type="text" size="4" pattern="[1-9][0-9]*" required="required" /> </div>';
-			for (var j=0; j<tree_heights.length; j++) {
-				var o = tree_heights[j];
-				height += '<option value="'+o.id+'">'+o.name+'</option>';
-			}
+			var height = '<div> <label>Tree Height*</label> <select name="trees[tree'+i+'][height]" required="required">';//'<div> <label>Tree Height*</label> <input name="trees[tree'+i+'][height]" type="text" size="4" pattern="[1-9][0-9]*" required="required" /> </div>';
+			height += options(tree_heights);
 			height += '</select> </div>';
 			
 			var month = '<div> <label>Harvest Months</label> <table><tr>';
@@ -298,11 +267,7 @@ $months = $r->buildArray();
 			}
 			month += '</table></div>';
 			
-			var disease = '<div> <label>Does the tree(s) have any fungus, disease, or pest issues?</label> <input type="text" name="trees[tree'+i+'][disease]" /> </div>';
-			var pruned = '<div> <label>Has the tree(s) been pruned in the past three years? By whom?</label> <input type="text" name="trees[tree'+i+'][pruned]" /> </div>';
-			var chemical = '<div> <label>Has the tree(s) been sprayed in the past 3 years? With what and when?</label> <input type="text" name="trees[tree'+i+'][chemical]" /> </div>';
-			
-			//var chemical = '<div> <input type="checkbox" name="trees[tree'+i+'][chemical]" value="1" /> I use chemicals</div>';
+			var chemical = '<div> <label>Have chemicals been used on or around your tree(s)?</label> <input type="text" name="trees[tree'+i+'][chemical]" placeholder="If yes, specify" /> </div>';
 			
 			$(fieldset).append(legend)
 				.append(type)
@@ -310,11 +275,7 @@ $months = $r->buildArray();
 				.append(quantity)
 				.append(height)
 				.append(month)
-				.append(disease)
-				.append(pruned)
 				.append(chemical);
-			
-			//var selectType = document.createElement('select');
 			
 			array.push(fieldset);
 		}
