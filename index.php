@@ -69,43 +69,79 @@
 		
 		<form id="volunteer">
 		<p><b>Volunteer</b></p>
-		<div>
-			<div><label for="firstname">First Name</label></div>
-			<div><input type="text" name="firstname" id="firstname" value=""/></div>
-		</div>
-		<div>
-			<div><label for="middlename">Middle Name</label></div>
-			<div><input type="text" name="middlename" id="middlename" /></div>
-		</div>
-		<div>
-			<div><label for="lastname">Last Name</label></div>
-			<div><input type="text" name="lastname" id="lastname" /></div>
-		</div>
-		<div>
-			<div><label for="phone">Phone</label></div>
-			<div><input type="tel" name="phone" id="phone" /></div>
-		</div>
-		<div>
-			<div><label for="email">Email</label></div>
-			<div><input type="text" name="email" id="email" value=""/></div>
-		</div>
-		<div>
-			<div><label for="password">Password</label></div>
-			<div><input type="password" name="password" id="password" value=""/></div>
-		</div>	
-		<div>
-			<div><label for="street">Street</label></div>
-			<div><input type="text" name="street" id="street" value=""/></div>
-		</div>
-		<div>
-			<div><label for="city">City</label></div>
-			<div><input type="text" name="city" id="city" value=""/></div>
-		</div>	
-		<div>
-			<div><label for="zip">Zip</label></div>
-			<div><input type="text" name="zip" id="zip" value=""/></div>
-		</div>			
-		</form>
+		<table style="margin-top:5px;">
+    <tr>
+        <td><label for="firstname" >First</label></td>
+        <td><label for="middlename">Middle</label></td>
+        <td><label for="lastname">Last</label></td>
+    </tr>
+    <tr>
+        <td><input id="firstname" name="firstname" type="text" class="" value="" size="15"/></td>
+        <td><input id="middlename" name="middlename" type="text" class="" value=" " size="7"/></td>
+        <td><input id="lastname" name="lastname" type="text" class="" value="" size="15"/></td>
+    </tr>	
+	
+	</table>
+	<table style="margin-top:5px;">
+	<tr>
+        <td><label for="password">Password</label></td>
+        <td><label for="signedup">Signed-Up</label></td>
+    </tr>
+    <tr>
+        <td><input type="password" name="password" id="password" class="" value=""/></td>
+        <td><input type="text" name="signedup" id="signedup" class="" value=""/></td>
+    </tr>	
+	</table >
+	<table style="margin-top:5px;">
+	<tr>
+        <td><label for="phone">Phone</label></td>
+        <td><label for="email">Email</label></td>
+    </tr>
+    <tr>
+        <td><input type="tel" name="phone" id="phone" /></td>
+        <td><input type="text" name="email" id="email" value=""/></td>
+    </tr>
+	</table>
+	<table style="margin-top:5px;">
+    <tr>
+        <td><label for="street">Street</label></td>
+        <td><label for="city">City</label></td>
+        <td><label for="zip">Zip</label></td>
+    </tr>
+    <tr>
+        <td><input type="text" name="street" id="street" value=""/></td>
+        <td><input type="text" name="city" id="city" value="" size="9"/></td>
+        <td><input type="text" name="zip" id="zip" value="" size="8"/></td>
+    </tr>
+	</table>
+
+	<table style="margin-top:5px;">
+    <tr>
+        <td><label for="status">Status</label></td>
+        <td><label for="privilige">Privilidge</label></td>
+    </tr>
+    <tr >
+        <td>
+			<select id="status" name="status">
+				<option value="1">Active</option>
+				<option value="0">Inactive</option>					
+			</select>
+		</td>
+        <td>
+			<select id="privilidge" name="privilidge">
+				<option value="1">Volunteer</option>	
+				<option value="2">Harvest Captain</option>								
+			</select>
+		</td>
+    </tr>
+	</table>	
+	
+	<div style="margin-top:5px;">
+		<div><label for="note">Notes</label></div>
+		<div><textarea name="note" id="note" rows="10" cols="30"></textarea></div>
+	</div>	
+	</form>
+	
 		
 		<form id="grower" style="visibility:hidden">
 		<p><b>Grower</b></p>
@@ -259,8 +295,8 @@
 		$('#edit-dialog').dialog({
 			autoOpen: false,
 			title: 'Edit Record',
-			height: 300,
-			width: 380,
+			height: 500,
+			width: 600,
 			modal: true,
 			close: function() {
 				console.log('dialog closed');
@@ -292,10 +328,16 @@
 			$('#lastname').val(row[3]);
 			$('#phone').val(row[4]);
 			$('#email').val(row[5]);
+			$('#password').val(row[6]);
 			$('#street').val(row[8]);
 			$('#city').val(row[9]);
 			$('#state').val(row[10]);			
 			$('#zip').val(row[11]);
+			$('#signedup').val(row[13]);			
+			$('#note').val(row[14]);
+			
+			$('#status').val(row[7]);
+			$('#privilidge').val(row[12]); // should only be 1 or 2 (volunteer or HC), should not be 3 or 4
 			}
 			else if (currentTable == 'g'){
 			$('#volunteer').css({visibility:"hidden"});
