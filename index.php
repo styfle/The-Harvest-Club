@@ -65,141 +65,7 @@
 		?>
 	</footer>
 	
-	<div id="edit-dialog">
-		
-		<form id="volunteer">
-		<p><b>Volunteer</b></p>
-		<table style="margin-top:5px;">
-    <tr>
-        <td><label for="firstname" >First</label></td>
-        <td><label for="middlename">Middle</label></td>
-        <td><label for="lastname">Last</label></td>
-    </tr>
-    <tr>
-        <td><input id="firstname" name="firstname" type="text" class="" value="" size="15"/></td>
-        <td><input id="middlename" name="middlename" type="text" class="" value=" " size="7"/></td>
-        <td><input id="lastname" name="lastname" type="text" class="" value="" size="15"/></td>
-    </tr>	
 	
-	</table>
-	<table style="margin-top:5px;">
-	<tr>
-        <td><label for="password">Password</label></td>
-        <td><label for="signedup">Signed-Up</label></td>
-    </tr>
-    <tr>
-        <td><input type="password" name="password" id="password" class="" value=""/></td>
-        <td><input type="text" name="signedup" id="signedup" class="" value=""/></td>
-    </tr>	
-	</table >
-	<table style="margin-top:5px;">
-	<tr>
-        <td><label for="phone">Phone</label></td>
-        <td><label for="email">Email</label></td>
-    </tr>
-    <tr>
-        <td><input type="tel" name="phone" id="phone" /></td>
-        <td><input type="text" name="email" id="email" value=""/></td>
-    </tr>
-	</table>
-	<table style="margin-top:5px;">
-    <tr>
-        <td><label for="street">Street</label></td>
-        <td><label for="city">City</label></td>
-        <td><label for="zip">Zip</label></td>
-    </tr>
-    <tr>
-        <td><input type="text" name="street" id="street" value=""/></td>
-        <td><input type="text" name="city" id="city" value="" size="9"/></td>
-        <td><input type="text" name="zip" id="zip" value="" size="8"/></td>
-    </tr>
-	</table>
-
-	<table style="margin-top:5px;">
-    <tr>
-        <td><label for="status">Status</label></td>
-        <td><label for="privilige">Privilidge</label></td>
-    </tr>
-    <tr >
-        <td>
-			<select id="status" name="status">
-				<option value="1">Active</option>
-				<option value="0">Inactive</option>					
-			</select>
-		</td>
-        <td>
-			<select id="privilidge" name="privilidge">
-				<option value="1">Volunteer</option>	
-				<option value="2">Harvest Captain</option>								
-			</select>
-		</td>
-    </tr>
-	</table>	
-	
-	<div style="margin-top:5px;">
-		<div><label for="note">Notes</label></div>
-		<div><textarea name="note" id="note" rows="10" cols="30"></textarea></div>
-	</div>	
-	</form>
-	
-		
-		<form id="grower" style="visibility:hidden">
-		<p><b>Grower</b></p>
-		<div>
-			<div><label for="firstname">First Name</label></div>
-			<div><input type="text" name="firstname" id="firstname1" /></div>
-		</div>
-		<div>
-			<div><label for="middlename">Middle Name</label></div>
-			<div><input type="text" name="middlename" id="middlename1" /></div>
-		</div>
-		<div>
-			<div><label for="lastname">Last Name</label></div>
-			<div><input type="text" name="lastname" id="lastname1" /></div>
-		</div>
-		<div>
-			<div><label for="phone">Phone</label></div>
-			<div><input type="tel" name="phone" id="phone1" /></div>
-		</div>
-		<div>
-			<div><label for="email">Email</label></div>
-			<div><input type="text" name="email" id="email1" value=""/></div>
-		</div>
-		<div>
-			<div><label for="street">Street</label></div>
-			<div><input type="text" name="street" id="street1" value=""/></div>
-		</div>	
-		<div>
-			<div><label for="city">City</label></div>
-			<div><input type="text" name="city" id="city1" value=""/></div>
-		</div>	
-		<div>
-			<div><label for="zip">Zip</label></div>
-			<div><input type="text" name="zip" id="zip1" value=""/></div>
-		</div>
-		<div>
-			<div><label for="tool">Tools</label></div>
-			<div><input type="text" name="tool" id="tool" value=""/></div>
-		</div>		
-		<div>
-			<div><label for="hear">Hear</label></div>
-			<div><input type="text" name="hear" id="hear" value=""/></div>
-		</div>
-		<div>
-			<div><label for="note">Notes</label></div>
-			<div><input type="text" name="note" id="note" value=""/></div>
-		</div>	
-		<div>
-			<div><label for="pti">Property Type ID</label></div>
-			<div><input type="text" name="pti" id="pti" value=""/></div>
-		</div>
-		<div>
-			<div><label for="pri">Property Relationship ID</label></div>
-			<div><input type="text" name="pri" id="pri" value=""/></div>
-		</div>		
-		</form>
-		<div id="additional"></div>
-	</div>	
 	
 	
 	
@@ -295,8 +161,8 @@
 		$('#edit-dialog').dialog({
 			autoOpen: false,
 			title: 'Edit Record',
-			height: 500,
-			width: 600,
+			height: 530,
+			width: 400,
 			modal: true,
 			close: function() {
 				console.log('dialog closed');
@@ -311,18 +177,17 @@
 			} // end buttons
 		});
 		
+		// after we force a dialog, hidden is handled by jqueryUI
+		$('#edit-dialog').removeClass('hidden');
+		
 		// all rows in the table will open dialog onclick
 		$('#dt tbody tr').live('click',function(e) {
-			//var type = dt.get
 			var row = (dt.fnGetData(this));
-			var s =  $('#edit-dialog').html();
 			
-			// for (var i=0; i<row.length; i++)
-				// s +=  '"' + row[i] + '"<br/>';
-			
+			// we don't need this stuff
 			if(currentTable == 'v'){
-			$('#grower').css({"visibility":"hidden"});
-			$('#volunteer').css({"visibility":"visible", top: "5px", left: "5px"});
+			$('#grower').addClass('hidden');
+			$('#volunteer').removeClass('hidden'); //for css see style.css
 			$('#firstname').val(row[1]);
 			$('#middlename').val(row[2]);
 			$('#lastname').val(row[3]);
@@ -340,8 +205,8 @@
 			$('#privilidge').val(row[12]); // should only be 1 or 2 (volunteer or HC), should not be 3 or 4
 			}
 			else if (currentTable == 'g'){
-			$('#volunteer').css({visibility:"hidden"});
-			$('#grower').css({visibility:"visible", position: "absolute", top: "5px", left: "5px"});
+			$('#volunteer').addClass('hidden');
+			$('#grower').removeClass('hidden');
 			$('#firstname1').val(row[1]);
 			$('#middlename1').val('');
 			$('#lastname1').val(row[2]);
@@ -358,21 +223,21 @@
 			$('#pri').val(row[13]);
 			}
 			
-			$('#edit-dialog')
-				.dialog('open') // show dialog
-				// .html(s); // create form
+			$('#edit-dialog').dialog('open') // show dialog
 		});
 	});
 
 	</script>
 
-	<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
-			 chromium.org/developers/how-tos/chrome-frame-getting-started -->
+	<!-- Prompt IE 6 users to install Chrome Frame. -->
 	<!--[if lt IE 7 ]>
 		<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
 		<script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
 	<![endif]-->
 
 </div> <!-- container -->
+
+<?php require_once('include/forms.php'); ?>
+
 </body>
 </html>
