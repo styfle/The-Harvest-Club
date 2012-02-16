@@ -186,41 +186,44 @@
 			
 			// we don't need this stuff
 			if(currentTable == 'v'){
-			$('#grower').addClass('hidden');
-			$('#volunteer').removeClass('hidden'); //for css see style.css
-			$('#firstname').val(row[1]);
-			$('#middlename').val(row[2]);
-			$('#lastname').val(row[3]);
-			$('#phone').val(row[4]);
-			$('#email').val(row[5]);
-			$('#password').val(row[6]);
-			$('#street').val(row[8]);
-			$('#city').val(row[9]);
-			$('#state').val(row[10]);			
-			$('#zip').val(row[11]);
-			$('#signedup').val(row[13]);			
-			$('#note').val(row[14]);
-			
-			$('#status').val(row[7]);
-			$('#privilidge').val(row[12]); // should only be 1 or 2 (volunteer or HC), should not be 3 or 4
+				$('#grower').addClass('hidden');
+				$('#volunteer').removeClass('hidden'); //for css see style.css
+				for(var i = 0; i < row.length; i++)
+					$('#volunteer' + i).val(row[i]);				
+					// $('#firstname').val(row[1]);
+					// $('#middlename').val(row[2]);
+					// $('#lastname').val(row[3]);
+					// $('#phone').val(row[4]);
+					// $('#email').val(row[5]);
+					// $('#password').val(row[6]);
+					// $('#street').val(row[8]);
+					// $('#city').val(row[9]);
+					// $('#state').val(row[10]);			
+					// $('#zip').val(row[11]);
+					// $('#signedup').val(row[13]);			
+					// $('#note').val(row[14]);			
+					// $('#status').val(row[7]);
+					// $('#privilidge').val(row[12]); 
 			}
 			else if (currentTable == 'g'){
-			$('#volunteer').addClass('hidden');
-			$('#grower').removeClass('hidden');
-			$('#firstname1').val(row[1]);
-			$('#middlename1').val('');
-			$('#lastname1').val(row[2]);
-			$('#phone1').val(row[3]);
-			$('#email1').val(row[4]);
-			$('#street1').val(row[5]);
-			$('#city1').val(row[6]);
-			$('#state1').val(row[7]);			
-			$('#zip1').val(row[8]);
-			$('#tool').val(row[9]);
-			$('#hear').val(row[10]);
-			$('#note').val(row[11]);
-			$('#pti').val(row[12]);
-			$('#pri').val(row[13]);
+				$('#volunteer').addClass('hidden');
+				$('#grower').removeClass('hidden');
+				for(var i = 0; i < row.length; i++)
+					$('#grower' + i).val(row[i]);
+					// $('#firstname1').val(row[1]);
+					// $('#middlename1').val('');
+					// $('#lastname1').val(row[2]);
+					// $('#phone1').val(row[3]);
+					// $('#email1').val(row[4]);
+					// $('#street1').val(row[5]);
+					// $('#city1').val(row[6]);
+					// $('#state1').val(row[7]);			
+					// $('#zip1').val(row[8]);
+					// $('#tool').val(row[9]);
+					// $('#hear').val(row[10]);
+					// $('#note').val(row[11]);
+					// $('#pti').val(row[12]);
+					// $('#pri').val(row[13]);
 			}
 			
 			$('#edit-dialog').dialog('open') // show dialog
