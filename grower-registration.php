@@ -51,10 +51,10 @@ $months = $r->buildArray();
 
 <body>
 <div id="main" role="main">
-	<h2>Grower Registration</h2>
+	<h1>Grower Registration</h1>
 	<p>If you have fruit trees and/or other crops that produce more than you can use, donating part to The Harvest Club gleaners is a great way to make a difference and strengthen your community ties. This form provides us with the essential contact information and your harvest preferences.</p>
     <form id="grower" action="" method="post">
-    	<h3>Grower Information</h3>
+    	<h2>Grower Information</h2>
     	
     	<fieldset>
     		<legend>Name</legend>
@@ -166,7 +166,7 @@ $months = $r->buildArray();
 		
 		</fieldset> <!-- end Address -->
 		
-		<h3>Misc Information</h3>
+		<h2>Misc Information</h2>
 		<fieldset>
 			<legend>Optional</legend>
 			
@@ -187,7 +187,7 @@ $months = $r->buildArray();
 			</div>
 		</fieldset>
 		
-		<h3>Tree Information</h3>
+		<h2>Tree Information</h2>
 		
 		<div>
 			<label for="type-count">How many different types of trees would you like to register?</label>
@@ -250,15 +250,17 @@ $months = $r->buildArray();
 			type += options(tree_types);
 			type += '</select> </div>'; // <input type="text" placeholder="If other, specify" /></div>';
 			
-			var varietal = '<div> <label>Fruit varietal or other type</label> <input name="trees[tree'+i+'][varietal]" type="text" /> </div>';
-			var quantity = '<div> <label>Number of trees of this type*</label> <input name="trees[tree'+i+'][quantity]" type="number" min="1" required="required" /> </div>';
+			var varietal = '<div>If you selected a fruit and know the varietal,<br/>';
+			varietal += 'OR If you selected "other" please specify below</div>';
+			varietal += '<div> <input name="trees[tree'+i+'][varietal]" type="text" size="55" placeholder="Fruit varietal or other fruit type or vegetable" /> </div>';
+
+			var quantity = '<div> <label>Number of trees of this type</label> <input name="trees[tree'+i+'][quantity]" type="number" min="1" /> </div>';
 			
-			var height = '<div> <label>Tree Height*</label> <select name="trees[tree'+i+'][height]" required="required">';//'<div> <label>Tree Height*</label> <input name="trees[tree'+i+'][height]" type="text" size="4" pattern="[1-9][0-9]*" required="required" /> </div>';
+			var height = '<div> <label>Tree Height</label> <select name="trees[tree'+i+'][height]" required="required">';
 			height += options(tree_heights);
 			height += '</select> </div>';
 			
 			var month = '<div> <label>Harvest Months</label> <table><tr>';
-			//<input type="checkbox" name="trees[tree'+i+'][month]" value="1" /> Jan <input type="checkbox" name="trees[tree'+i+'][month]" value="2" /> Feb <input type="checkbox" name="trees[tree'+i+'][month]" value="3" /> Mar <input type="checkbox" name="trees[tree'+i+'][month]" value="4" /> Apr<br />  </div>';
 			for (var j=0; j<months.length; j++) {
 				var o = months[j];
 				month += '<td> <input type="checkbox" name="trees[tree'+i+'][month][]" value="'+o.id+'" />' + o.name + '</td>';
