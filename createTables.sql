@@ -91,7 +91,7 @@ INSERT INTO months (name) VALUES
 	('October'),
 	('November'),
 	('December'),
-  ('None');
+	('None');
 
 DROP TABLE IF EXISTS days;
 CREATE TABLE days (
@@ -131,7 +131,7 @@ DROP TABLE IF EXISTS growers;
 CREATE TABLE growers (
 	id			INT AUTO_INCREMENT PRIMARY KEY,
 	first_name	VARCHAR(255) NOT NULL,
-  middle_name	VARCHAR(255) NOT NULL,
+	middle_name	VARCHAR(255) NOT NULL,
 	last_name	VARCHAR(255) NOT NULL,
 	phone		VARCHAR(17) NOT NULL, -- maybe (http://stackoverflow.com/q/75105/266535)
 	email		VARCHAR(255) NOT NULL, -- max is actually 320, but so rare	
@@ -140,9 +140,9 @@ CREATE TABLE growers (
 	state		CHAR(2)		NOT NULL, -- this makes sense right?
 	zip			VARCHAR(5)	NOT NULL, -- can it be bigger?
 	tools		TINYTEXT,
-	hear		TINYTEXT, -- this should probably be another INT type and a FK to a table
+	source		TINYTEXT, -- this should probably be another INT type and a FK to a table
 	notes		TEXT,
-  pending TINYINT(1), -- 1-Yes 0-No     
+  	pending TINYINT(1), -- 1-Yes 0-No     
 	property_type_id INT NULL,
 	property_relationship_id INT NULL,
 	CONSTRAINT fk_property_type FOREIGN KEY (property_type_id) REFERENCES property_types(id) ON DELETE CASCADE,
@@ -164,7 +164,7 @@ DROP TABLE IF EXISTS grower_trees;
 CREATE TABLE grower_trees (
 	grower_id INT,
 	tree_id INT,
-  varietal TEXT,  
+  	varietal TEXT,  
 	number INT,
 	avgHeight_id INT, 
 	chemicaled TINYINT(1) NULL, -- 1 Yes -- 0 No	   
@@ -179,7 +179,7 @@ DROP TABLE IF EXISTS month_harvests;
 CREATE TABLE month_harvests (
 	grower_id INT,
 	tree_type_id INT,
-  varietal nvarchar(255),  
+  	varietal nvarchar(255),  
 	month_id INT,
 	CONSTRAINT pk_month_harvests_month_harvest PRIMARY KEY (grower_id, tree_type_id, varietal, month_id),
 	CONSTRAINT fk_month_harvests_grower_id FOREIGN KEY (grower_id) REFERENCES growers(id),
@@ -197,52 +197,66 @@ CREATE TABLE volunteer_types (
 
 INSERT INTO volunteer_types (type) VALUES
 	('Harvester'),
-	('Harvest Captain '),
-	('Driver '),
+	('Harvest Captain'),
+	('Driver'),
 	('Ambassador'),
-	('Tree Scout');
-    
--- DROP TABLE IF EXISTS privileges;
--- CREATE TABLE privileges (
--- id INT AUTO_INCREMENT PRIMARY KEY,
--- title NVARCHAR(255),
--- can_login TINYINT(1),
--- view_volunteer TINYINT(1),
--- edit_volunteer TINYINT(1),
--- delete_volunteer TINYINT(1),
--- view_captain TINYINT(1),
--- edit_captain TINYINT(1),
--- delete_captain TINYINT(1),
--- view_admin TINYINT(1),
--- edit_admin TINYINT(1),
--- delete_admin TINYINT(1),
--- view_executive TINYINT(1),
--- edit_executive TINYINT(1),
--- delete_executive TINYINT(1),
--- create_event TINYINT(1),	
--- edit_event TINYINT(1),
--- delete_event TINYINT(1),
--- ) ENGINE=innodb;
--- INSERT INTO privileges (title, can_login, view_volunteer, edit_volunteer, delete_volunteer, view_captain, edit_captain, delete_captain, view_admin, edit_admin, delete_admin, view_executive, edit_executive, delete_executive, create_event, view_event, edit_event, delete_event) VALUES
--- ("volunteer", 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
--- ("captain",1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
--- ("captain",1,1,0,0,0,0,0,0,0,0,0,0,0),
+	('Tree Scout')
+;
     
 DROP TABLE IF EXISTS privileges;
 CREATE TABLE privileges (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	title NVARCHAR(255) NOT NULL
+	name 			NVARCHAR(255),
+	can_login 		TINYINT(1)	DEFAULT 0,
+
+	view_volunteer	TINYINT(1)	DEFAULT 0,
+	edit_volunteer	TINYINT(1)	DEFAULT 0,
+	del_volunteer	TINYINT(1)	DEFAULT 0,
+	exp_volunteer	TINYINT(1)	DEFAULT 0,
+
+	view_grower		TINYINT(1)	DEFAULT 0, -- grower implies trees too
+	edit_grower		TINYINT(1)	DEFAULT 0,
+	del_grower		TINYINT(1)	DEFAULT 0,
+	exp_grower		TINYINT(1)	DEFAULT 0,
+
+	view_event		TINYINT(1)	DEFAULT 0,
+	edit_event		TINYINT(1)	DEFAULT 0,
+	del_event		TINYINT(1)	DEFAULT 0,
+	exp_event		TINYINT(1)	DEFAULT 0,
+
+	view_distrib	TINYINT(1)	DEFAULT 0,
+	edit_distrib	TINYINT(1)	DEFAULT 0,
+	del_distrib		TINYINT(1)	DEFAULT 0,
+	exp_distrib		TINYINT(1)	DEFAULT 0,
+
+	view_donor		TINYINT(1)	DEFAULT 0,
+	edit_donor		TINYINT(1)	DEFAULT 0,
+	del_donor		TINYINT(1)	DEFAULT 0,
+	exp_donor		TINYINT(1)	DEFAULT 0,
+
+	send_email		TINYINT(1)	DEFAULT 0,
+	recv_email		TINYINT(1)	DEFAULT 0,
+
+	change_priv		TINYINT(1)	DEFAULT 0	-- can change this table
+
 ) ENGINE=innodb;
 
-
-INSERT INTO privileges (title) VALUES
-('Volunteer'),
-('Harvest Captain'),
-('Admin'),
-('Executive'),
-('Pending')
+INSERT INTO privileges (name, can_login, view_volunteer, view_grower, send_email, recv_email, exp_grower, exp_volunteer, view_event, edit_event, view_distrib, edit_distrib) VALUES
+	("Pending",			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+	("Volunteer",		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+	("Harvest Captain",	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+	-- Admin
+	-- Executive
 ;
 
+-- TODO: this copies permissions from harvest captain to admin, but we still need to update new perms
+INSERT INTO privileges
+(name, can_login, view_volunteer, view_grower, send_email, recv_email, exp_grower, exp_volunteer, view_event, edit_event, view_distrib, edit_distrib)
+	(SELECT 'Admin', can_login, view_volunteer, view_grower, send_email, recv_email, exp_grower, exp_volunteer, view_event, edit_event, view_distrib, edit_distrib
+	FROM privileges WHERE name = 'Harvest Captain');
+
+INSERT INTO privileges VALUES
+	(NULL, 'Executive', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 DROP TABLE IF EXISTS volunteers;
 CREATE TABLE volunteers (
@@ -259,8 +273,8 @@ CREATE TABLE volunteers (
 	state CHAR(2) NOT NULL, 
 	zip nvarchar(5) NOT NULL, 
 	privilege_id INT NOT NULL,
-  signed_up Date,
-  notes text,
+	signed_up DATE,
+	notes TEXT,
 	CONSTRAINT fk_privilege_id FOREIGN KEY (privilege_id) REFERENCES privileges(id)
 ) ENGINE=innodb;
 
