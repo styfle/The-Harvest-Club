@@ -121,26 +121,12 @@
 					if (!data.datatable || !data.datatable.aoColumns || !data.datatable.aaData)
 						return alert('There is no column and row data!');
 					
-					console.log('Successful ajax!');
-					dt.fnDestroy(); // destroy datatable
+					// destroy datatable on each click
+					dt.fnDestroy(); // destroy
 					
-					/*
-					var html = '<tr>';
-					for (var i=0; i<data.datatable.aoColumns.length; i++)
-						html += '<th>'+data.datatable.aoColumns[i].sTitle+'</th>';
-					html += '</tr>';
-					*/
 					
+					// clear out data in table head and body
 					$('#dt thead').html('');
-					
-					/*html = '';
-					for (var i=0; i<data.datatable.aaData.length; i++) {
-						html += '<tr>';
-						for (var j=0; j<data.datatable.aaData[i].length; j++)
-							html += '<td>'+data.datatable.aaData[i][j]+'</td>';
-						html += '</tr>';
-					}*/
-					
 					$('#dt tbody').html('');
 					
 					
@@ -150,6 +136,8 @@
 						'bProcessing': true, // show loading bar text
 						'bAutoWidth': true, // auto column size
 						'aaSorting': [], // disable initial sort
+						"aLengthMenu": [[10, 25, 50, 100, -1], // sort length
+										[10, 25, 50, 100, "All"]], // sort name
 						'aoColumns': data.datatable.aoColumns,
 						'aaData': data.datatable.aaData,
 					});
@@ -185,55 +173,39 @@
 		$('#edit-dialog').removeClass('hidden');
 		
 		// all rows in the table will open dialog onclick
-		// note that .live() is depracated in favor of .on()
+		// note that .live() is deprecated in favor of .on()
 		$(document).on('click', '#dt tbody tr',function(e) {
 			var row = (dt.fnGetData(this));
 			
 			// we don't need this stuff
-			if(currentTable == 'v'){
+			if (currentTable == 'v'){
 				$('#grower').addClass('hidden');
 				$('#volunteer').removeClass('hidden'); //for css see style.css
-				for(var i = 0; i < row.length; i++)
+				for (var i = 0; i < row.length; i++)
 					$('#volunteer' + i).val(row[i]);				
-					// $('#firstname').val(row[1]);
-					// $('#middlename').val(row[2]);
-					// $('#lastname').val(row[3]);
-					// $('#phone').val(row[4]);
-					// $('#email').val(row[5]);
-					// $('#password').val(row[6]);
-					// $('#street').val(row[8]);
-					// $('#city').val(row[9]);
-					// $('#state').val(row[10]);			
-					// $('#zip').val(row[11]);
-					// $('#signedup').val(row[13]);			
-					// $('#note').val(row[14]);			
-					// $('#status').val(row[7]);
-					// $('#privilidge').val(row[12]); 
-			}
-			else if (currentTable == 'g'){
+			} else if (currentTable == 'g'){
 				$('#volunteer').addClass('hidden');
 				$('#grower').removeClass('hidden');
-				for(var i = 0; i < row.length; i++)
+				for (var i = 0; i < row.length; i++)
 					$('#grower' + i).val(row[i]);
-					// $('#firstname1').val(row[1]);
-					// $('#middlename1').val('');
-					// $('#lastname1').val(row[2]);
-					// $('#phone1').val(row[3]);
-					// $('#email1').val(row[4]);
-					// $('#street1').val(row[5]);
-					// $('#city1').val(row[6]);
-					// $('#state1').val(row[7]);			
-					// $('#zip1').val(row[8]);
-					// $('#tool').val(row[9]);
-					// $('#hear').val(row[10]);
-					// $('#note').val(row[11]);
-					// $('#pti').val(row[12]);
-					// $('#pri').val(row[13]);
 			}
 			
 			$('#edit-dialog').dialog('open') // show dialog
-		});
-	});
+		}); // on.click tr
+
+		$(document).on('click', 'input[name=select-row]', function(e) {
+			e.stopPropagation();
+		}); // on.click() checkbox row
+
+		$(document).on('click', 'input[name=select-all]', function(e) {
+			var c = this.checked;
+			$('input[name=select-row]').each(function(i) {
+				this.checked = c;
+			});
+			e.stopPropagation();
+		}); // on.click() checkbox all
+
+	}); // document.ready()
 
 	</script>
 

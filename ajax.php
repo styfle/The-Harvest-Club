@@ -29,8 +29,17 @@ function getTable($sql) {
 	if (getError($r))
 		return $data;
 	
+	// get result as giant array
 	$a = $r->buildArray();
 
+	// first column is select-all checkbox
+	$data['datatable']['aoColumns'][] = array(
+		'sTitle' => '<input type="checkbox" name="select-all" />',
+		'sWidth' => '1%',
+		'bSortable' => false
+	);
+
+	// add column data
 	foreach ($a[0] as $k => $v) {
 		$column = array();
 		$column['sTitle'] = $k;
@@ -38,13 +47,17 @@ function getTable($sql) {
 			$column['bSearchable'] = false;
 			$column['bVisible'] = false;
 		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip') {
-			$column['bVisible'] = false; // hide street
+			$column['bVisible'] = false; // hide but still searchable
+		} else if ($k == 'notes') {
+			$column['sClass'] = 'left'; // align left
 		}
 		$data['datatable']['aoColumns'][] = $column;
 	}
 	
+	// add row data
 	foreach ($a as $v) {
-		$record = array();
+		// add a checkbox to each row (might need unique names)
+		$record = array('<input type="checkbox" name="select-row" />');
 		foreach ($v as $name=>$value) {
 			$record[] = $value;
 		}
@@ -57,12 +70,12 @@ if ($cmd == 'get_notifications') {
 	$data['title'] = 'Notifications';
 	$data['content'] = '';
 } else if ($cmd == 'get_volunteers') {
-	$sql = "SELECT * FROM volunteers;";
 	$data['title'] = 'Volunteers';
+	$sql = "SELECT * FROM volunteers;";
 	getTable($sql);
 } else if ($cmd == 'get_growers') {
-	$sql = "SELECT * FROM growers;";
 	$data['title'] = 'Growers';
+	$sql = "SELECT * FROM growers;";
 	getTable($sql);
 } else if ($cmd == 'send_grower_email') {
 	date_default_timezone_set("America/Los_Angeles");
