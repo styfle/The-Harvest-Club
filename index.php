@@ -155,7 +155,7 @@
 					});
 				},
 				'error': function (e) {
-					alert('Error: ' + e);
+					alert('Ajax Error!\n' + e.responseText);
 				}
 			});
 		});
