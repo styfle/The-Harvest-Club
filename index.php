@@ -199,9 +199,17 @@
 
 		$(document).on('click', 'input[name=select-all]', function(e) {
 			var c = this.checked;
+			var count = 0;
 			$('input[name=select-row]').each(function(i) {
 				this.checked = c;
+				count++;
 			});
+			// show info on selection
+			if (c)
+				$('#dt_info').text('Selected ' + count + ' entries.');
+			else
+				$('#dt_info').text('Deselected ' + count + ' entries.');
+
 			e.stopPropagation();
 		}); // on.click() checkbox all
 
