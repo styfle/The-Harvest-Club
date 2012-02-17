@@ -34,11 +34,10 @@ function getTable($sql) {
 	foreach ($a[0] as $k => $v) {
 		$column = array();
 		$column['sTitle'] = $k;
-		//$data['datatable']['aoColumns'][]['sTitle'] = $k;
-		if ($k == 'id') {
+		if ($k == 'id' || $k == 'password') {
 			$column['bSearchable'] = false;
 			$column['bVisible'] = false;
-		} else if ($k == 'street') {
+		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip') {
 			$column['bVisible'] = false; // hide street
 		}
 		$data['datatable']['aoColumns'][] = $column;

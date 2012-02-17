@@ -185,7 +185,8 @@
 		$('#edit-dialog').removeClass('hidden');
 		
 		// all rows in the table will open dialog onclick
-		$('#dt tbody tr').live('click',function(e) {
+		// note that .live() is depracated in favor of .on()
+		$(document).on('click', '#dt tbody tr',function(e) {
 			var row = (dt.fnGetData(this));
 			
 			// we don't need this stuff
