@@ -76,7 +76,7 @@ if ($cmd == 'get_notifications') {
 	//$data['fruit'] = getFruit();
 } else {
 	$data['status'] = 404; // Not found
-	$data['error'] = "Unknown ajax command: $cmd";
+	$data['message'] = "Unknown ajax command: $cmd";
 }
 
 echo json_encode($data);

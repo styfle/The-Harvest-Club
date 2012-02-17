@@ -45,6 +45,10 @@
 				<input type="radio" id="get_notifications" name="radio" checked="checked" /><label for="get_notifications">Home</label>
 				<input type="radio" id="get_volunteers" name="radio" /><label for="get_volunteers">Volunteers</label>
 				<input type="radio" id="get_growers" name="radio" /><label for="get_growers">Growers</label>
+				<input type="radio" id="get_trees" name="radio" /><label for="get_trees">Trees</label>
+				<input type="radio" id="get_distribs" name="radio" /><label for="get_distribs">Distribution Sites</label>
+				<input type="radio" id="get_events" name="radio" /><label for="get_events">Events</label>
+				<input type="radio" id="get_donors" name="radio" /><label for="get_donors">Donors</label>
 			</div>
 		</form>
 	</header>
@@ -113,7 +117,7 @@
 					if (!data || !data.status)
 						return alert('Error: Corrupt data returned from server!');
 					if (data.status != 200)
-						return alert('Oops. Ajax request failed: ' + data.message);
+						return alert('Status '+ data.status + '\n' + data.message);
 					if (!data.datatable || !data.datatable.aoColumns || !data.datatable.aaData)
 						return alert('There is no column and row data!');
 					
