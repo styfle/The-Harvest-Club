@@ -34,7 +34,7 @@ $sources = $r->buildArray();
     <p>Privacy: Information entered here is used solely by The Harvest Club; we do not share, sell, or otherwise distribute your personal information.</p>
     <h2>Volunteer Registration Form</h2>
     <p>Please complete the form. * Indicates required fields.</p>
-    <form method="post" action="" id="volunteer">
+    <form method="post" action="submit-volunteer.php" id="volunteer">
 		<fieldset>
     		<legend>Name</legend>
     		<label for="firstname">First*:</label>
@@ -47,7 +47,7 @@ $sources = $r->buildArray();
 		</fieldset>
 		<fieldset>
     		<legend>Contact</legend>
-    		<label for="email">Email*:</label><input id="email" type="email" placeholder="peter@uci.edu" required="required" />
+    		<label for="email">Email*:</label><input id="email" type="email" name="email" placeholder="peter@uci.edu" required="required" />
     		<label for="phone">Phone*:</label><input id="phone" type="tel" name="phone" placeholder="9495551234" pattern="[0-9]{10}" required="required"/>
     	</fieldset>
     	<fieldset>
@@ -65,12 +65,12 @@ $sources = $r->buildArray();
 				<input type="text" name="city" id="city" placeholder="Irvine"  size="10" required="required" />
 				<label for="state">State:</label>
 				<select id="state" name="state" required="required"> 
-					<option value="" disabled="disabled">Select...</option><!-- TODO: Force option -->
+					<!-- <option value="" disabled="disabled">Select...</option> --> <!-- TODO: Force option -->
 					<option value="AL">Alabama</option> 
 					<option value="AK">Alaska</option> 
 					<option value="AZ">Arizona</option> 
 					<option value="AR">Arkansas</option> 
-					<option value="CA">California</option> 
+					<option value="CA" selected="yes">California</option> 
 					<option value="CO">Colorado</option> 
 					<option value="CT">Connecticut</option> 
 					<option value="DE">Delaware</option> 
@@ -127,20 +127,20 @@ $sources = $r->buildArray();
     		<legend>Volunteer Role</legend>
 			<p><i>Choose all that applies.</i></p>
 			<span>
-			<input name="harvester" type="checkbox" id="harvester" value="harvester"><label for="harvester">Harvester</label>
+			<input name="Role[]" type="checkbox" id="harvester" value="harvester"><label for="harvester">Harvester</label>
 			 - volunteers at harvesting events
 			</span>
 			<br />
 			<span>
-			<input name="harvestcaptain" type="checkbox" id="havestcaptain" value="harvestcaptain"><label for="harvestcaptain">Harvest Captain</label>
+			<input name="Role[]" type="checkbox" id="havestcaptain" value="harvestcaptain"><label for="harvestcaptain">Harvest Captain</label>
 			 - leads a harvest crew
 			</span>
 			<br />
-			<input name="driver" type="checkbox" id="driver" value="driver"><label for="driver">Driver</label>
+			<input name="Role[]" type="checkbox" id="driver" value="driver"><label for="driver">Driver</label>
 			- transports donated food to local food pantries
 			<br />
 			<span>
-			<input name="ambassador" type="checkbox" id="ambassador" value="ambassador"><label for="ambassador">Ambassador</label>
+			<input name="Role[]" type="checkbox" id="ambassador" value="ambassador"><label for="ambassador">Ambassador</label>
 			- canvasses neighborhoods and hands out leaflets to homes with visible fruit trees
 			</span>
 			
@@ -149,31 +149,31 @@ $sources = $r->buildArray();
     		<legend>Preffered Days to Volunteer</legend>
 			<p><i>Note: Harvest Events usually takes two hours long and generally take place over the weekends.</i></p>
 			<span title="Monday">
-			<input name="monday" type="checkbox" id="monday" value="monday"><label for="monday">Mon</label>
+			<input name="Day[]" type="checkbox" id="monday" value="monday"><label for="monday">Mon</label>
 			</span>
 			&nbsp;
 			<span title="Tuesday">
-			<input name="tuesday" type="checkbox" id="tuesday" value="tuesday"><label for="tuesday">Tue</label>
+			<input name="Day[]" type="checkbox" id="tuesday" value="tuesday"><label for="tuesday">Tue</label>
 			</span>
 			&nbsp;
 			<span title="Wednesday">
-			<input name="wednesday" type="checkbox" id="wednesday" value="wednesday"><label for="wednesday">Wed</label>
+			<input name="Day[]" type="checkbox" id="wednesday" value="wednesday"><label for="wednesday">Wed</label>
 			</span>
 			&nbsp;
 			<span title="Thursday">
-			<input name="thursday" type="checkbox" id="thursday" value="thursday"><label for="thursday">Thu</label>
+			<input name="Day[]" type="checkbox" id="thursday" value="thursday"><label for="thursday">Thu</label>
 			</span>
 			&nbsp;
 			<span title="Friday">
-			<input name="friday" type="checkbox" id="friday" value="friday"><label for="friday">Fri</label>
+			<input name="Day[]" type="checkbox" id="friday" value="friday"><label for="friday">Fri</label>
 			</span>
 			&nbsp;
 			<span title="Saturday">
-			<input name="saturday" type="checkbox" id="saturday" value="saturday"><label for="saturday">Sat</label>
+			<input name="Day[]" type="checkbox" id="saturday" value="saturday"><label for="saturday">Sat</label>
 			</span>
 			&nbsp;
 			<span title="Sunday">
-			<input name="sunday" type="checkbox" id="sunday" value="sunday"><label for="sunday">Sun</label>
+			<input name="Day[]" type="checkbox" id="sunday" value="sunday"><label for="sunday">Sun</label>
 			</span>
 			&nbsp;
 			
@@ -183,7 +183,7 @@ $sources = $r->buildArray();
 		<fieldset>
 			<legend>Group Registration</legend>
 			<label for="group-number">How many people?</label>
-			<input id="group-number" type="number" pattern="[0-9]{10}" min="0" max="99" placeholder="10"/>
+			<input id="group-number" name="group-number" type="number" pattern="[0-9]{10}" min="0" max="99" placeholder="10"/>
 			<br />
 			<label for="group-age">What is the age range?</label>
 			<input id="group-age" name="group-age" type="text" placeholder="18-23" size="9"/>
@@ -200,7 +200,7 @@ $sources = $r->buildArray();
 
 		<fieldset>
 			<legend>Optional</legend>
-			<label for="hearby">How did you first hear about The Harvest Club?</label>
+			<label for="heardby">How did you first hear about The Harvest Club?</label>
 			<select id="heardby" name="heardby">
 					<option value="" disabled="disabled" selected="selected">Select...</option>
   					<option value="flyer">Flyer</option>
@@ -221,8 +221,9 @@ $sources = $r->buildArray();
 		<br />
 		<fieldset>
 			<legend>Register</legend>
-					<div><input value="Register as Volunteer" type="submit" id = "submit" disabled="disabled"></div>
+					<div><input name="Submit" value="Register as Volunteer" type="submit" id = "submit"></div>
 		</fieldset>			
     </form>
-</div></body>
+</div>
+</body>
 </html>
