@@ -346,10 +346,13 @@ CREATE TABLE distributions (
 	street nvarchar(255) NOT NULL,
 	city nvarchar(255) NOT NULL,
 	state CHAR(2) NOT NULL, 
-	zip nvarchar(5) NULL ,
-	hours nvarchar(255) NOT NULL,
+	zip nvarchar(5) NULL ,	
   notes TEXT
 ) ENGINE=innodb;
+
+INSERT INTO distributions (name, phone, email, street, city, state, zip) VALUES
+	("Rock Star",'123-546-8797','rockstar@yahoo.com',' 123 ABC St', 'ABC', 'CA', '91000')
+;
 
 DROP TABLE IF EXISTS distribution_hours;
 CREATE TABLE distribution_hours (

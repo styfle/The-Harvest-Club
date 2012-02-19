@@ -105,10 +105,20 @@
 
 		$('#nav input').click(function() {
 			var cmd = this.id; // button id is the ajax command
-			if(cmd == "get_volunteers")
-				currentTable = 'v';
-			else if(cmd == "get_growers")
-				currentTable = 'g';
+			switch (cmd)
+			{
+				case "get_volunteers":
+					currentTable = 'v';
+					break;
+					
+				case "get_growers":
+					currentTable = 'g';
+					break;
+					
+				case "get_distribs":
+					currentTable = 'd';
+					break;
+			}			
 			$.ajax( {
 				'dataType': 'json', 
 				'type': 'GET', 
@@ -161,7 +171,35 @@
 			},
 			buttons: {
 				'Save': function() {
-					alert('This feature is not implemented yet!');
+					switch (currentTable)
+					{
+						case 'v':						
+							break;
+							
+						case 'g':						
+							break;
+							
+						case 'd':
+							$.ajax({							
+							'type': 'GET',
+							'url': 'ajax.php?cmd=update_distribution&id='+$('#distribution1').val()+'&name='+$('#distribution2').val()+'&phone='+$('#distribution3').val()+'&email='+$('#distribution4').val()+
+							'&street='+$('#distribution5').val()+'&city='+$('#distribution6').val()+'&state='+$('#distribution7').val()+'&zip='+$('#distribution8').val()+'&note='+$('#distribution9').val()+
+							'&oh1='+$('#distributionHour1-OpenHour').val()+'&om1='+$('#distributionHour1-OpenMin').val()+'&ch1='+ $('#distributionHour1-CloseHour').val()+'&cm1='+$('#distributionHour1-CloseMin').val()+
+							'&oh2='+$('#distributionHour2-OpenHour').val()+'&om2='+$('#distributionHour2-OpenMin').val()+'&ch2='+ $('#distributionHour2-CloseHour').val()+'&cm2='+$('#distributionHour2-CloseMin').val()+
+							'&oh3='+$('#distributionHour3-OpenHour').val()+'&om3='+$('#distributionHour3-OpenMin').val()+'&ch3='+ $('#distributionHour3-CloseHour').val()+'&cm3='+$('#distributionHour3-CloseMin').val()+
+							'&oh4='+$('#distributionHour4-OpenHour').val()+'&om4='+$('#distributionHour4-OpenMin').val()+'&ch4='+ $('#distributionHour4-CloseHour').val()+'&cm4='+$('#distributionHour4-CloseMin').val()+
+							'&oh5='+$('#distributionHour5-OpenHour').val()+'&om5='+$('#distributionHour5-OpenMin').val()+'&ch5='+ $('#distributionHour5-CloseHour').val()+'&cm5='+$('#distributionHour5-CloseMin').val()+
+							'&oh6='+$('#distributionHour6-OpenHour').val()+'&om6='+$('#distributionHour6-OpenMin').val()+'&ch6='+ $('#distributionHour6-CloseHour').val()+'&cm6='+$('#distributionHour6-CloseMin').val()+
+							'&oh7='+$('#distributionHour7-OpenHour').val()+'&om7='+$('#distributionHour7-OpenMin').val()+'&ch7'+ $('#distributionHour7-CloseHour').val()+'&cm7='+$('#distributionHour7-CloseMin').val(),
+							'success': function (data) {
+								alert('Information is updated!');
+							                  },
+							'error': function(e) {
+								alert('Ajax Error!\n' + e.responseText);
+								}
+							});							
+							break;
+					}						
 				},
 				Cancel: function() {
 					$(this).dialog('close');
@@ -176,19 +214,63 @@
 		// note that .live() is deprecated in favor of .on()
 		$(document).on('click', '#dt tbody tr',function(e) {
 			var row = (dt.fnGetData(this));
-			
-			// we don't need this stuff
-			if (currentTable == 'v'){
+			switch (currentTable)
+			{
+				case 'v': //volunteer
 				$('#grower').addClass('hidden');
+				$('#distribution').addClass('hidden');
 				$('#volunteer').removeClass('hidden'); //for css see style.css
 				for (var i = 0; i < row.length; i++)
-					$('#volunteer' + i).val(row[i]);				
-			} else if (currentTable == 'g'){
+					$('#volunteer' + i).val(row[i+1]);				
+				break;
+				
+				case 'g': // grower
 				$('#volunteer').addClass('hidden');
+				$('#distribution').addClass('hidden');
 				$('#grower').removeClass('hidden');
-				for (var i = 0; i < row.length; i++)
-					$('#grower' + i).val(row[i]);
-			}
+				for (var i = 1; i < row.length; i++)
+					$('#grower' + i).val(row[i+1]);
+				break;
+				
+				case 'd': // distribution
+                    $('#volunteer').addClass('hidden');
+                    $('#grower').addClass('hidden');
+                    $('#distribution').removeClass('hidden');
+                    for (var i = 0; i < row.length; i++)
+                        $('#distribution' + i).val(row[i]);                                                                            
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'GET',
+                        'url': 'ajax.php?cmd=get_distribution_times&id='+row[1],
+                        'success': function (data) {
+							for ( var i=0; i< 8; ++i )   // clear data
+							{
+								$('#distributionHour' +i+'-OpenHour').val('');
+								$('#distributionHour' +i+'-OpenMin').val('');
+								$('#distributionHour' +i+'-CloseHour').val('');
+								$('#distributionHour' +i+'-CloseMin').val('');
+							}
+							if( data.datatable != null) 							
+								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
+								{
+									var myData = data.datatable.aaData[i];
+									var dateID = myData[1];
+									var open   = myData[2].split(":",3);
+									var close  = myData[3].split(":",3);																			
+									$('#distributionHour' +dateID+'-OpenHour').val(open[0]);
+									$('#distributionHour' +dateID+'-OpenMin').val(open[1]);
+									$('#distributionHour' +dateID+'-CloseHour').val(close[0]);
+									$('#distributionHour' +dateID+'-CloseMin').val(close[1]);
+								}							
+                        },
+                        'error': function(e) {
+                            alert('Ajax Error!\n' + e.responseText);
+                        }
+                    });
+				break;
+		
+			}			
+			
 			
 			$('#edit-dialog').dialog('open') // show dialog
 		}); // on.click tr
