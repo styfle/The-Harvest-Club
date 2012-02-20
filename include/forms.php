@@ -1,7 +1,6 @@
 <!-- all hidden forms go here -->
 <div id="edit-dialog" class="hidden">
-		
-		
+	
 	<!--------------- Volunteer form ----------------->	
 	<form id="volunteer" class="hidden">
 		<h3>Volunteer</h3>

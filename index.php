@@ -88,40 +88,46 @@
 			'bJQueryUI': true, // style using jQuery UI
 			'sPaginationType': 'full_numbers', // full pagination
 			'bProcessing': true, // show loading bar text
-			'bAutoWidth': true, // auto column size
+			//'bAutoWidth': true, // auto column size
 			'aaSorting': [], // disable initial sort
+			"sScrollX": "100%",
+			"sScrollXInner": "110%",
+			"bScrollCollapse": true
 			//'aaData': [],
 			//'aoColumns': [],
-		}).makeEditable({
-//									sUpdateURL: "UpdateData.php",
-//									sAddURL: "AddData.php",
-//									sAddHttpMethod: "GET", //Used only on google.code live example because google.code server do not support POST request
-//									sDeleteURL: "DeleteData.php",
-									oAddNewRowButtonOptions: {	label: "Add...",
-													icons: {primary:'ui-icon-plus'} 
-									},
-									oDeleteRowButtonOptions: {	label: "Remove", 
-													icons: {primary:'ui-icon-trash'}
-									},
-									oAddNewRowOkButtonOptions: {	label: "Confirm",
-													icons: {primary:'ui-icon-check'},
-													name:"action",
-													value:"add-new"
-									},
-									oAddNewRowCancelButtonOptions: { label: "Close",
-													 class: "back-class",
-													 name:"action",
-													 value:"cancel-add",
-													 icons: {primary:'ui-icon-close'}
-									},
-									oAddNewRowFormOptions: { 	title: 'Add Record',
-													show: "blind",
-													hide: "explode",
-													height: 530,
-													width: 400,
-									},
-									sAddDeleteToolbarSelector: ".dataTables_length"	
 		});
+
+		dt.makeEditable({
+//				sUpdateURL: "UpdateData.php",
+				sAddURL: "AddData.php",
+				sAddHttpMethod: "GET", //Used only on google.code live example because google.code server do not support POST request
+//				sDeleteURL: "DeleteData.php",
+				sAddNewRowFormId: "formAddNewRow",
+				oAddNewRowButtonOptions: {	label: "Add...",
+								icons: {primary:'ui-icon-plus'} 
+				},
+				oDeleteRowButtonOptions: {	label: "Remove", 
+								icons: {primary:'ui-icon-trash'}
+				},
+				oAddNewRowOkButtonOptions: {	label: "Confirm",
+								icons: {primary:'ui-icon-check'},
+								name:"action",
+								value:"add-new"
+				},
+				oAddNewRowCancelButtonOptions: { label: "Close",
+								 class: "back-class",
+								 name:"action",
+								 value:"cancel-add",
+								 icons: {primary:'ui-icon-close'}
+				},
+				oAddNewRowFormOptions: { 	title: 'Add Record',
+								show: "blind",
+								hide: "explode",
+								height: 530,
+								width: 400,
+				},
+				sAddDeleteToolbarSelector: ".dataTables_length"	
+			});
 	
 		$('#nav') // set up navigation
 			.buttonset() // turn into buttons
@@ -164,13 +170,48 @@
 						'bJQueryUI': true, // style using jQuery UI
 						'sPaginationType': 'full_numbers', // full pagination
 						'bProcessing': true, // show loading bar text
-						'bAutoWidth': true, // auto column size
+						//'bAutoWidth': true, // auto column size
 						'aaSorting': [], // disable initial sort
 						"aLengthMenu": [[10, 25, 50, 100, -1], // sort length
 										[10, 25, 50, 100, "All"]], // sort name
 						'aoColumns': data.datatable.aoColumns,
 						'aaData': data.datatable.aaData,
+						"sScrollX": "100%",
+						"sScrollXInner": "110%",
+						"bScrollCollapse": true
 					});
+
+		dt.makeEditable({
+//				sUpdateURL: "UpdateData.php",
+				sAddURL: "AddData.php",
+				sAddHttpMethod: "GET", //Used only on google.code live example because google.code server do not support POST request
+//				sDeleteURL: "DeleteData.php",
+				sAddNewRowFormId: "formAddNewRow",
+				oAddNewRowButtonOptions: {	label: "Add...",
+								icons: {primary:'ui-icon-plus'} 
+				},
+				oDeleteRowButtonOptions: {	label: "Remove", 
+								icons: {primary:'ui-icon-trash'}
+				},
+				oAddNewRowOkButtonOptions: {	label: "Confirm",
+								icons: {primary:'ui-icon-check'},
+								name:"action",
+								value:"add-new"
+				},
+				oAddNewRowCancelButtonOptions: { label: "Close",
+								 class: "back-class",
+								 name:"action",
+								 value:"cancel-add",
+								 icons: {primary:'ui-icon-close'}
+				},
+				oAddNewRowFormOptions: { 	title: 'Add Record',
+								show: "blind",
+								hide: "explode",
+								height: 530,
+								width: 400,
+				},
+				sAddDeleteToolbarSelector: ".dataTables_length"	
+			});
 					
 					currentTable = data.id; // set current table after it is populated
 					$('#page_title').text(data.title); // set page title
@@ -359,40 +400,82 @@
 <?php require_once('include/forms.php'); ?>
 
 <!-- Adding a row Form -->
-	<form id="formAddNewRow" action="#" title="Add a new browser" >
+	<form id="formAddNewRow" action="#" title="Add New Row" >
 
-	<h3>Volunteer</h3>
-		<label for="firstname" >First</label><input id="firstname" name="firstname" type="text" class="required" rel="0"/>
-		<label for="lastname">Last</label><input id="lastname" name="lastname" type="text" class="required" rel="1"/>
-		<br />
-		<label for="password">Password</label><input type="password" name="password" id="password" />
-		<label for="signedup">Signed-Up</label><input type="text" name="signedup" id="signedup" size="10" />
-		<br />
-		<label for="phone">Phone</label><input type="tel" name="phone" id="phone" size="12" />
-		<label for="email">Email</label><input type="text" name="email" id="email" size="17" />
-		<br />
-		<label for="volunteer8">Street</label><input type="text" name="street" id="volunteer8" size="33"/>
-		<br />
-		<label for="city">City</label><input type="text" name="city" id="city" size="12"/>
-		<label for="state">State</label><input type="text" name="state" id="state" size="2"/>
-		<label for="zip">Zip</label><input type="text" name="zip" id="zip" size="8"/>
-		<br />
-		<label for="status">Status</label>
-			<select id="status" name="status">
-				<option value="1">Active</option>
-				<option value="0">Inactive</option>					
-			</select>
-		<label for="priv">Privilege</label>
-			<select id="priv" name="privilege"> 
-				<option value="1">Volunteer</option>	
-				<option value="2">Harvest Captain</option>								
-			</select>
+		<h3>Volunteer</h3>
+		<table>
+		<tr>
+			<input type="hidden" id="checkbox" name="checkbox" rel="0" />
+			<td colspan="3" style = "display:none"><input id="volunteer1" name="id" type="text" size="2" rel="1"/></td>
+		</tr>
+		<tr>
+			<td><label for="volunteer2" >First</label></td>
+			<td><label for="volunteer3">Middle</label></td>
+			<td><label for="volunteer4">Last</label></td>
+		</tr>
+		<tr>
+			<td><input id="volunteer2" name="firstname" type="text" size="12" rel="2"/></td>
+			<td><input id="volunteer3" name="middlename" type="text" size="4" rel="3"/></td>
+			<td><input id="volunteer4" name="lastname" type="text" size="10" rel="4"/></td>
+		</tr>
+		<tr>
+			<td colspan="2"><label for="volunteer7">Password</label></td>
+			<td><label for="volunteer14">Signed-Up</label></td>
+		</tr>
+		<tr>
+			<td colspan="2"><input type="password" name="password" id="volunteer7" rel="7"/></td>
+			<td><input type="text" name="signedup" id="volunteer14" size="10" rel="14"/></td>
+		</tr>
+		<tr>
+			<td><label for="volunteer5">Phone</label></td>
+			<td colspan="2"><label for="volunteer6">Email</label></td>
+		</tr>
+		<tr>
+			<td><input type="tel" name="phone" id="volunteer5" size="12" rel="5"/></td>
+			<td colspan="2"><input type="text" name="email" id="volunteer6" size="17" rel="6"/></td>
+		</tr>
+		<tr>
+			<td colspan="3"><label for="volunteer9">Street</label></td>			
+		</tr>
+		<tr>
+			<td colspan="3"><input type="text" name="street" id="volunteer9" rel="9" size="33"/></td>			
+		</tr>
+		<tr>
+			<td><label for="volunteer10">City</label></td>
+			<td><label for="volunteer11">State</label></td>
+			<td><label for="volunteer12">Zip</label></td>
+		</tr>
+		<tr>			
+			<td><input type="text" name="city" id="volunteer10" size="12" rel="10"/></td>
+			<td><input type="text" name="state" id="volunteer11" size="2" rel="11"/></td>
+			<td><input type="text" name="zip" id="volunteer12" size="8" rel="12"/></td>
+		</tr>
+		<tr>
+			<td><label for="volunteer8">Status</label></td>
+			<td colspan="2"><label for="volunteer13">Privilege</label></td>
+		</tr>
+		<tr>
+			<td>
+				<select id="volunteer8" name="status" rel="8">
+					<option value="1">Active</option>
+					<option value="0">Inactive</option>					
+				</select>
+			</td>
+			<td colspan="2">
+				<select id="volunteer13" name="privilege" rel="13"> 
+					<option value="1">Volunteer</option>	
+					<option value="2">Harvest Captain</option>								
+				</select>
+			</td>
+		</tr>
+		</table>	
+	<input type="hidden" id="user_type" name="user_type" rel="16" />
 	<div style="margin-top:5px;">
 		<div><label for="volunteer14">Notes</label></div>
-		<div><textarea name="note" id="volunteer14" rows="5" cols="30"></textarea></div>
+		<div><textarea name="note" id="volunteer14" rows="5" cols="30" rel="15"></textarea></div>
 	</div>	
-
 	</form>
+	
 
 </body>
 </html>
