@@ -7,6 +7,9 @@
 		<h3>Volunteer</h3>
 		<table>
 		<tr>
+			<td colspan="3" style = "display:none"><input id="volunteer1" name="id" type="text" size="2"/></td>
+		</tr>
+		<tr>
 			<td><label for="volunteer2" >First</label></td>
 			<td><label for="volunteer3">Middle</label></td>
 			<td><label for="volunteer4">Last</label></td>
@@ -78,6 +81,9 @@
 	<form id="grower" class="hidden">
 		<h3>Grower</h3>
 		<table>
+		<tr>
+			<td colspan="3" style = "display:none"><input id="grower1" name="id" type="text" size="2"/></td>
+		</tr>
 		<tr>
 			<td><label for="grower2" >First</label></td>
 			<td><label for="grower3">Middle</label></td>
