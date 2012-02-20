@@ -51,7 +51,7 @@ function getTable($sql) {
 	foreach ($a[0] as $k => $v) {
 		$column = array();
 		$column['sTitle'] = $k;
-		if ($k == 'id' || $k == 'password') {
+		if ($k == 'id' || $k == 'password' || $k == 'property_type_id' || $k == 'property_relationship_id' || $k == 'privilege_id') {
 			$column['bSearchable'] = false;
 			$column['bVisible'] = false;
 		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip') {
@@ -191,13 +191,17 @@ switch ($cmd)
 	case 'get_growers':
 		$data['id'] = 2;
 		$data['title'] = 'Growers';
-		$sql = "SELECT * FROM growers;";
+		$sql = "SELECT g.*, pt.name AS property_type, pr.name AS property_relationship
+				FROM growers g, property_types pt, property_relationships pr
+				WHERE g.id = pt.id AND g.id = pr.id;";
 		getTable($sql);
 		break;
 	case 'get_trees':
 		$data['id'] = 3;
 		$data['title'] = 'Trees';
-		$sql = "SELECT * FROM grower_trees;";
+		$sql = "SELECT g.id, g.last_name AS grower_lname, tt.name AS tree, gt.varietal, mh.month_id, gt.number, gt.notes, gt.chemicaled
+			FROM grower_trees gt, month_harvests mh, tree_types tt, growers g
+			WHERE g.id = gt.grower_id AND gt.grower_id = mh.grower_id AND gt.tree_id = mh.tree_type_id AND gt.varietal = mh.varietal AND gt.tree_id=tt.id;";
 		getTable($sql);
 		break;
 	case 'get_distribs':
