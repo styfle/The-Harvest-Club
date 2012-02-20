@@ -227,8 +227,8 @@
 		$('#edit-dialog').dialog({
 			autoOpen: false,
 			title: 'Edit Record',
-			height: 530,
-			width: 400,
+			height: 550,
+			width: 600,
 			modal: true,
 			close: function() {
 				console.log('dialog closed');
@@ -240,28 +240,53 @@
 						case 0:		//				
 							break;
 							
-						case 1:		//Volunteers Tab							
-							for(var i = 2; i < 16; i++){
+						case 1:		//Volunteers Tab
+							for(var i = 2; i < 16; i++){								
 								row[i]=$('#volunteer'+i).val();								
 							}
-							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
+							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
 							
 							//Update DB
+							var para = $('#volunteer').serialize();
+							$.ajax({							
+							'type': 'GET',
+							'url': 'ajax.php?cmd=update_volunteer&'+para,
+							'success': function (data) {
+								alert('Information is updated!');
+							                  },
+							'error': function(e) {
+								alert('Ajax Error!\n' + e.responseText);
+								}
+							});
+							
+																
 							break;
 						
-						case 2:							
-							for(var i = 2; i < 16; i++){
+						case 2:	
+							for(var i = 2; i < 17; i++){
 								row[i]=$('#grower'+i).val();								
 							}
 							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
 							
 							//Update DB
-						
+							var para = $('#grower').serialize();
+							$.ajax({							
+							'type': 'GET',
+							'url': 'ajax.php?cmd=update_grower&'+para,
+							'success': function (data) {
+								alert('Information is updated!');
+								
+							                  },
+							'error': function(e) {
+								alert('Ajax Error!\n' + e.responseText);
+								}
+							});
 							break;
 						case 3:
 							break;
 							
 						case 4:
+							var para = $('#distribution').serialize();															
 							for(var i = 1; i < row.length; i++){
 								row[i]=$('#distribution'+i).val();								
 							}
@@ -270,15 +295,7 @@
 							//Update DB
 							$.ajax({							
 							'type': 'GET',
-							'url': 'ajax.php?cmd=update_distribution&id='+$('#distribution1').val()+'&name='+$('#distribution2').val()+'&phone='+$('#distribution3').val()+'&email='+$('#distribution4').val()+
-							'&street='+$('#distribution5').val()+'&city='+$('#distribution6').val()+'&state='+$('#distribution7').val()+'&zip='+$('#distribution8').val()+'&note='+$('#distribution9').val()+
-							'&oh1='+$('#distributionHour1-OpenHour').val()+'&om1='+$('#distributionHour1-OpenMin').val()+'&ch1='+ $('#distributionHour1-CloseHour').val()+'&cm1='+$('#distributionHour1-CloseMin').val()+
-							'&oh2='+$('#distributionHour2-OpenHour').val()+'&om2='+$('#distributionHour2-OpenMin').val()+'&ch2='+ $('#distributionHour2-CloseHour').val()+'&cm2='+$('#distributionHour2-CloseMin').val()+
-							'&oh3='+$('#distributionHour3-OpenHour').val()+'&om3='+$('#distributionHour3-OpenMin').val()+'&ch3='+ $('#distributionHour3-CloseHour').val()+'&cm3='+$('#distributionHour3-CloseMin').val()+
-							'&oh4='+$('#distributionHour4-OpenHour').val()+'&om4='+$('#distributionHour4-OpenMin').val()+'&ch4='+ $('#distributionHour4-CloseHour').val()+'&cm4='+$('#distributionHour4-CloseMin').val()+
-							'&oh5='+$('#distributionHour5-OpenHour').val()+'&om5='+$('#distributionHour5-OpenMin').val()+'&ch5='+ $('#distributionHour5-CloseHour').val()+'&cm5='+$('#distributionHour5-CloseMin').val()+
-							'&oh6='+$('#distributionHour6-OpenHour').val()+'&om6='+$('#distributionHour6-OpenMin').val()+'&ch6='+ $('#distributionHour6-CloseHour').val()+'&cm6='+$('#distributionHour6-CloseMin').val()+
-							'&oh7='+$('#distributionHour7-OpenHour').val()+'&om7='+$('#distributionHour7-OpenMin').val()+'&ch7='+ $('#distributionHour7-CloseHour').val()+'&cm7='+$('#distributionHour7-CloseMin').val(),
+							'url': 'ajax.php?cmd=update_distribution&'+para,
 							'success': function (data) {
 								alert('Information is updated!');
 							},
@@ -309,8 +326,45 @@
 				$('#grower').addClass('hidden');
 				$('#distribution').addClass('hidden');
 				$('#volunteer').removeClass('hidden'); //for css see style.css
-				for (var i = 1; i < row.length; i++)
-					$('#volunteer' + i).val(row[i]);				
+				for (var i = 0; i < row.length; i++)
+					$('#volunteer' + i).val(row[i]);
+
+				$.ajax({
+                        'dataType': 'json',
+                        'type': 'GET',
+                        'url': 'ajax.php?cmd=get_volunteer_role&id='+row[1],
+                        'success': function (data) {
+							for ( var i=1; i< 5; ++i )   // clear data
+							  $('#volunteerRole'+i).prop("checked", false);
+							
+							if( data.datatable != null) 							
+					   		 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
+								$('#volunteerRole'+data.datatable.aaData[i][0]).prop("checked", true);									
+									
+                        },
+                        'error': function(e) {
+                            alert('Ajax Error!\n' + e.responseText);
+                        }
+                    });
+					
+				$.ajax({
+                        'dataType': 'json',
+                        'type': 'GET',
+                        'url': 'ajax.php?cmd=get_volunteer_prefer&id='+row[1],
+                        'success': function (data) {
+							for ( var i=1; i< 8; ++i )   // clear data
+							  $('#volunteerDay'+i).prop("checked", false);
+							
+							if( data.datatable != null) 							
+					   		 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
+								$('#volunteerDay'+data.datatable.aaData[i][0]).prop("checked", true);									
+									
+                        },
+                        'error': function(e) {
+                            alert('Ajax Error!\n' + e.responseText);
+                        }
+                    });
+					
 				break;
 				
 				case 2: // grower
