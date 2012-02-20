@@ -33,7 +33,13 @@
 	<script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
 	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
-</head>
+
+	<script type="text/javascript" src="js/jquery.jeditable.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/jquery.validate.js"></script>
+	<script type="text/javascript" src="js/jquery.dataTables.editable.js"></script>
+	
+	</head>
 
 <body id="dt_example">
 <div id="container">
@@ -72,9 +78,7 @@
 	
 	
 	
-	
-	
-	<script type="text/javascript">
+	<script type="text/javascript" charset="utf-8">
 	var dt; // global datatable variable
 	
 	$(document).ready(function() {
@@ -88,6 +92,35 @@
 			'aaSorting': [], // disable initial sort
 			//'aaData': [],
 			//'aoColumns': [],
+		}).makeEditable({
+//									sUpdateURL: "UpdateData.php",
+//									sAddURL: "AddData.php",
+//									sAddHttpMethod: "GET", //Used only on google.code live example because google.code server do not support POST request
+//									sDeleteURL: "DeleteData.php",
+									oAddNewRowButtonOptions: {	label: "Add...",
+													icons: {primary:'ui-icon-plus'} 
+									},
+									oDeleteRowButtonOptions: {	label: "Remove", 
+													icons: {primary:'ui-icon-trash'}
+									},
+									oAddNewRowOkButtonOptions: {	label: "Confirm",
+													icons: {primary:'ui-icon-check'},
+													name:"action",
+													value:"add-new"
+									},
+									oAddNewRowCancelButtonOptions: { label: "Close",
+													 class: "back-class",
+													 name:"action",
+													 value:"cancel-add",
+													 icons: {primary:'ui-icon-close'}
+									},
+									oAddNewRowFormOptions: { 	title: 'Add Record',
+													show: "blind",
+													hide: "explode",
+													height: 530,
+													width: 400,
+									},
+									sAddDeleteToolbarSelector: ".dataTables_length"	
 		});
 	
 		$('#nav') // set up navigation
@@ -226,6 +259,42 @@
 </div> <!-- container -->
 
 <?php require_once('include/forms.php'); ?>
+
+<!-- Adding a row Form -->
+	<form id="formAddNewRow" action="#" title="Add a new browser" >
+
+	<h3>Volunteer</h3>
+		<label for="firstname" >First</label><input id="firstname" name="firstname" type="text" class="required" rel="0"/>
+		<label for="lastname">Last</label><input id="lastname" name="lastname" type="text" class="required" rel="1"/>
+		<br />
+		<label for="password">Password</label><input type="password" name="password" id="password" />
+		<label for="signedup">Signed-Up</label><input type="text" name="signedup" id="signedup" size="10" />
+		<br />
+		<label for="phone">Phone</label><input type="tel" name="phone" id="phone" size="12" />
+		<label for="email">Email</label><input type="text" name="email" id="email" size="17" />
+		<br />
+		<label for="volunteer8">Street</label><input type="text" name="street" id="volunteer8" size="33"/>
+		<br />
+		<label for="city">City</label><input type="text" name="city" id="city" size="12"/>
+		<label for="state">State</label><input type="text" name="state" id="state" size="2"/>
+		<label for="zip">Zip</label><input type="text" name="zip" id="zip" size="8"/>
+		<br />
+		<label for="status">Status</label>
+			<select id="status" name="status">
+				<option value="1">Active</option>
+				<option value="0">Inactive</option>					
+			</select>
+		<label for="priv">Privilege</label>
+			<select id="priv" name="privilege"> 
+				<option value="1">Volunteer</option>	
+				<option value="2">Harvest Captain</option>								
+			</select>
+	<div style="margin-top:5px;">
+		<div><label for="volunteer14">Notes</label></div>
+		<div><textarea name="note" id="volunteer14" rows="5" cols="30"></textarea></div>
+	</div>	
+
+	</form>
 
 </body>
 </html>
