@@ -1,7 +1,12 @@
 <?php 
-
-require_once('config.inc.php');
-// see readme for mail constants
+// this class requires a config file with defined constants
+$config = 'include/config.inc.php';
+if (file_exists($config)) {
+	require_once('include/config.inc.php');
+} else {
+	header("HTTP/1.1 500 Internal Server Error");
+	die('File missing: ' . $config);
+} // degrade gracefully when config is missing
 
 class Mail
 {
