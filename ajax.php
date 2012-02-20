@@ -32,6 +32,13 @@ function getTable($sql) {
 	// get result as giant array
 	$a = $r->buildArray();
 	
+	// if empty return empty result
+	if (!$a) {
+		$data['datatable']['aoColumns'][] = array('sTitle'=>'Oh no');
+		$data['datatable']['aaData'][] = array('No results found.');
+		return; 
+	}
+	
 	// first column is select-all checkbox
 	$data['datatable']['aoColumns'][] = array(
 		'sTitle' => '<input type="checkbox" name="select-all" />',
@@ -69,7 +76,6 @@ function getTable($sql) {
 function getDistribution_Hours($sql) {
 	global $db;
 	global $data;
-	//$data['datatable'] = array('aoColumns', 'aaData');
 
 	$r = $db->q($sql);
 	if (getError($r))
@@ -78,10 +84,7 @@ function getDistribution_Hours($sql) {
 	// get result as giant array
 	$a = $r->buildArray();
 	
-	
-	
 	foreach ($a as $v) {
-		// add a checkbox to each row (might need unique names)
 		$record = array();
 		foreach ($v as $name=>$value) {
 			$record[] = $value;
@@ -94,29 +97,38 @@ function getDistribution_Hours($sql) {
 switch ($cmd)
 {
 	case 'get_notifications':
+		$data['id'] = 0;
 		$data['title'] = 'Notifications';
-		$data['content'] = '';		
+		$data['content'] = '';
 		break;
 	case 'get_volunteers':
+		$data['id'] = 1;
 		$data['title'] = 'Volunteers';
-		$sql = "SELECT * FROM volunteers;";
+		$sql = "SELECT v.*, p.name AS user_type FROM volunteers v LEFT JOIN privileges p ON v.privilege_id = p.id;";
 		getTable($sql);
 		break;
 	case 'get_growers':
+		$data['id'] = 2;
 		$data['title'] = 'Growers';
 		$sql = "SELECT * FROM growers;";
 		getTable($sql);
 		break;
+	case 'get_trees':
+		$data['id'] = 3;
+		$data['title'] = 'Trees';
+		$sql = "SELECT * FROM grower_trees;";
+		getTable($sql);
+		break;
 	case 'get_distribs':
+		$data['id'] = 4;
 		$data['title'] = 'Distributions';
 		$sql = "SELECT * FROM distributions d;";
 		getTable($sql);
-		// echo $data['datatable']['aaData'][2][1];
 		break;
 	case 'get_distribution_times':
 		$id = $_REQUEST['id'];
 		$data['title'] = 'Hours';
-		$sql = "SELECT h.* FROM distributions d, distribution_hours h Where h.distribution_id = d.id And d.id=".$id;				
+		$sql = "SELECT h.* FROM distributions d, distribution_hours h WHERE h.distribution_id = d.id AND d.id=$id";				
 		getDistribution_Hours($sql);
 		break;
 	case 'update_distribution':
