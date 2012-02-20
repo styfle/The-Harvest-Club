@@ -44,11 +44,11 @@
 <body id="dt_example">
 <div id="container">
 	<header>
-		<h1>The Harvest Club - CPanel</h1>
+		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Page Title<span></h1>
 		<div id="quote">"The harvest is plentiful but the workers are few"</div>
 		<form>
 			<div id="nav">
-				<input type="radio" id="get_notifications" name="radio" checked="checked" /><label for="get_notifications">Home</label>
+				<input type="radio" id="get_notifications" name="radio" checked="checked" /><label for="get_notifications">Notifications</label>
 				<input type="radio" id="get_volunteers" name="radio" /><label for="get_volunteers">Volunteers</label>
 				<input type="radio" id="get_growers" name="radio" /><label for="get_growers">Growers</label>
 				<input type="radio" id="get_trees" name="radio" /><label for="get_trees">Trees</label>
@@ -80,9 +80,9 @@
 	
 	<script type="text/javascript" charset="utf-8">
 	var dt; // global datatable variable
+	var currentTable = 0; // global id of current data table
 	
 	$(document).ready(function() {
-		var currentTable = 'v'; //keeps track if volunteer (v) or grower (g) table is selected.
 	
 		dt = $('#dt').dataTable({
 			'bJQueryUI': true, // style using jQuery UI
@@ -138,10 +138,9 @@
 
 		$('#nav input').click(function() {
 			var cmd = this.id; // button id is the ajax command
-			if(cmd == "get_volunteers")
-				currentTable = 'v';
-			else if(cmd == "get_growers")
-				currentTable = 'g';
+			var aPos;
+			var row;
+			
 			$.ajax( {
 				'dataType': 'json', 
 				'type': 'GET', 
@@ -157,11 +156,9 @@
 					// destroy datatable on each click
 					dt.fnDestroy(); // destroy
 					
-					
 					// clear out data in table head and body
 					$('#dt thead').html('');
 					$('#dt tbody').html('');
-					
 					
 					dt = $('#dt').dataTable({
 						'bJQueryUI': true, // style using jQuery UI
@@ -174,6 +171,9 @@
 						'aoColumns': data.datatable.aoColumns,
 						'aaData': data.datatable.aaData,
 					});
+					
+					currentTable = data.id; // set current table after it is populated
+					$('#page_title').text(data.title); // set page title
 				},
 				'error': function (e) {
 					alert('Ajax Error!\n' + e.responseText);
@@ -194,7 +194,59 @@
 			},
 			buttons: {
 				'Save': function() {
-					alert('This feature is not implemented yet!');
+					switch (currentTable)
+					{
+						case 0:		//				
+							break;
+							
+						case 1:		//Volunteers Tab							
+							for(var i = 2; i < 16; i++){
+								row[i]=$('#volunteer'+i).val();								
+							}
+							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
+							
+							//Update DB
+							break;
+						
+						case 2:							
+							for(var i = 2; i < 16; i++){
+								row[i]=$('#grower'+i).val();								
+							}
+							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
+							
+							//Update DB
+						
+							break;
+						case 3:
+							break;
+							
+						case 4:
+							for(var i = 1; i < row.length; i++){
+								row[i]=$('#distribution'+i).val();								
+							}
+							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
+							
+							//Update DB
+							$.ajax({							
+							'type': 'GET',
+							'url': 'ajax.php?cmd=update_distribution&id='+$('#distribution1').val()+'&name='+$('#distribution2').val()+'&phone='+$('#distribution3').val()+'&email='+$('#distribution4').val()+
+							'&street='+$('#distribution5').val()+'&city='+$('#distribution6').val()+'&state='+$('#distribution7').val()+'&zip='+$('#distribution8').val()+'&note='+$('#distribution9').val()+
+							'&oh1='+$('#distributionHour1-OpenHour').val()+'&om1='+$('#distributionHour1-OpenMin').val()+'&ch1='+ $('#distributionHour1-CloseHour').val()+'&cm1='+$('#distributionHour1-CloseMin').val()+
+							'&oh2='+$('#distributionHour2-OpenHour').val()+'&om2='+$('#distributionHour2-OpenMin').val()+'&ch2='+ $('#distributionHour2-CloseHour').val()+'&cm2='+$('#distributionHour2-CloseMin').val()+
+							'&oh3='+$('#distributionHour3-OpenHour').val()+'&om3='+$('#distributionHour3-OpenMin').val()+'&ch3='+ $('#distributionHour3-CloseHour').val()+'&cm3='+$('#distributionHour3-CloseMin').val()+
+							'&oh4='+$('#distributionHour4-OpenHour').val()+'&om4='+$('#distributionHour4-OpenMin').val()+'&ch4='+ $('#distributionHour4-CloseHour').val()+'&cm4='+$('#distributionHour4-CloseMin').val()+
+							'&oh5='+$('#distributionHour5-OpenHour').val()+'&om5='+$('#distributionHour5-OpenMin').val()+'&ch5='+ $('#distributionHour5-CloseHour').val()+'&cm5='+$('#distributionHour5-CloseMin').val()+
+							'&oh6='+$('#distributionHour6-OpenHour').val()+'&om6='+$('#distributionHour6-OpenMin').val()+'&ch6='+ $('#distributionHour6-CloseHour').val()+'&cm6='+$('#distributionHour6-CloseMin').val()+
+							'&oh7='+$('#distributionHour7-OpenHour').val()+'&om7='+$('#distributionHour7-OpenMin').val()+'&ch7='+ $('#distributionHour7-CloseHour').val()+'&cm7='+$('#distributionHour7-CloseMin').val(),
+							'success': function (data) {
+								alert('Information is updated!');
+							},
+							'error': function(e) {
+								alert('Ajax Error!\n' + e.responseText);
+								}
+							});							
+							break;
+					}						
 				},
 				Cancel: function() {
 					$(this).dialog('close');
@@ -208,20 +260,66 @@
 		// all rows in the table will open dialog onclick
 		// note that .live() is deprecated in favor of .on()
 		$(document).on('click', '#dt tbody tr',function(e) {
-			var row = (dt.fnGetData(this));
-			
-			// we don't need this stuff
-			if (currentTable == 'v'){
+			row = (dt.fnGetData(this));
+			aPos = dt.fnGetPosition( this );
+			switch (currentTable)
+			{
+				case 1: //volunteer
 				$('#grower').addClass('hidden');
+				$('#distribution').addClass('hidden');
 				$('#volunteer').removeClass('hidden'); //for css see style.css
-				for (var i = 0; i < row.length; i++)
+				for (var i = 1; i < row.length; i++)
 					$('#volunteer' + i).val(row[i]);				
-			} else if (currentTable == 'g'){
+				break;
+				
+				case 2: // grower
+				
 				$('#volunteer').addClass('hidden');
+				$('#distribution').addClass('hidden');
 				$('#grower').removeClass('hidden');
-				for (var i = 0; i < row.length; i++)
+				for (var i = 1; i < row.length; i++)
 					$('#grower' + i).val(row[i]);
-			}
+				break;
+				
+				case 4: // distribution
+                    $('#volunteer').addClass('hidden');
+                    $('#grower').addClass('hidden');
+                    $('#distribution').removeClass('hidden');
+                    for (var i = 1; i < row.length; i++)
+                        $('#distribution' + i).val(row[i]);                                                                            
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'GET',
+                        'url': 'ajax.php?cmd=get_distribution_times&id='+row[1],
+                        'success': function (data) {
+							for ( var i=0; i< 8; ++i )   // clear data
+							{
+								$('#distributionHour' +i+'-OpenHour').val('');
+								$('#distributionHour' +i+'-OpenMin').val('');
+								$('#distributionHour' +i+'-CloseHour').val('');
+								$('#distributionHour' +i+'-CloseMin').val('');
+							}
+							if( data.datatable != null) 							
+								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
+								{
+									var myData = data.datatable.aaData[i];
+									var dateID = myData[1];
+									var open   = myData[2].split(":",3);
+									var close  = myData[3].split(":",3);																			
+									$('#distributionHour' +dateID+'-OpenHour').val(open[0]);
+									$('#distributionHour' +dateID+'-OpenMin').val(open[1]);
+									$('#distributionHour' +dateID+'-CloseHour').val(close[0]);
+									$('#distributionHour' +dateID+'-CloseMin').val(close[1]);
+								}							
+                        },
+                        'error': function(e) {
+                            alert('Ajax Error!\n' + e.responseText);
+                        }
+                    });
+				break;
+		
+			}			
+			
 			
 			$('#edit-dialog').dialog('open') // show dialog
 		}); // on.click tr
