@@ -137,6 +137,9 @@
 			<td colspan="3" style = "display:none"><input id="grower1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
+			<td colspan="3" style = "display:none"><input id="grower14" name="pending" type="text" size="2"/></td>
+		</tr>
+		<tr>
 			<td><label for="grower2" >First</label></td>
 			<td><label for="grower3">Middle</label></td>
 			<td><label for="grower4">Last</label></td>
@@ -177,11 +180,11 @@
 			<td colspan="3"><input id="grower12" name="source" type="text" size="20"/></td>			
 		</tr>	
 		<tr>
-			<td colspan="3"><label for="grower14">Property Type</label></td>
+			<td colspan="3"><label for="grower15">Property Type</label></td>
 		</tr>
 		<tr>			
 			<td colspan="3">
-				<select id="grower14" name="property_type" style="width:200px;"> 
+				<select id="grower15" name="property_type" style="width:200px;"> 
 					<option value="1">Residence</option>	
 					<option value="2">Open Space/ Vacant lot</option>
 					<option value="3">Business</option>	
@@ -191,11 +194,11 @@
 			</td >
 		</tr>
 		<tr>			
-			<td colspan="3"><label for="grower15">Property Relationship</label></td>
+			<td colspan="3"><label for="grower16">Property Relationship</label></td>
 		</tr>
 		<tr>			
 			<td colspan="3">
-				<select id="grower15" name="property_relationship" style="width:200px;">
+				<select id="grower16" name="property_relationship" style="width:200px;">
 					<option value="1">Owner & Occupant</option>	
 					<option value="2">Renter</option>
 					<option value="3">Renter property owner(landlord)</option>	

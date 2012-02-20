@@ -167,8 +167,7 @@
 							break;
 							
 						case 1:		//Volunteers Tab
-							for(var i = 2; i < 16; i++){
-								
+							for(var i = 2; i < 16; i++){								
 								row[i]=$('#volunteer'+i).val();								
 							}
 							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
@@ -189,8 +188,8 @@
 																
 							break;
 						
-						case 2:							
-							for(var i = 2; i < 16; i++){
+						case 2:	
+							for(var i = 2; i < 17; i++){
 								row[i]=$('#grower'+i).val();								
 							}
 							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
