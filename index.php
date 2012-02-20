@@ -105,6 +105,8 @@
 
 		$('#nav input').click(function() {
 			var cmd = this.id; // button id is the ajax command
+			var aPos;
+			var row;
 			
 			$.ajax( {
 				'dataType': 'json', 
@@ -161,13 +163,37 @@
 				'Save': function() {
 					switch (currentTable)
 					{
-						case 0:						
+						case 0:		//				
 							break;
 							
-						case 1:						
+						case 1:		//Volunteers Tab							
+							for(var i = 2; i < 16; i++){
+								row[i]=$('#volunteer'+i).val();								
+							}
+							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
+							
+							//Update DB
+							break;
+						
+						case 2:							
+							for(var i = 2; i < 16; i++){
+								row[i]=$('#grower'+i).val();								
+							}
+							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
+							
+							//Update DB
+						
+							break;
+						case 3:
 							break;
 							
 						case 4:
+							for(var i = 1; i < row.length; i++){
+								row[i]=$('#distribution'+i).val();								
+							}
+							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
+							
+							//Update DB
 							$.ajax({							
 							'type': 'GET',
 							'url': 'ajax.php?cmd=update_distribution&id='+$('#distribution1').val()+'&name='+$('#distribution2').val()+'&phone='+$('#distribution3').val()+'&email='+$('#distribution4').val()+
@@ -201,30 +227,32 @@
 		// all rows in the table will open dialog onclick
 		// note that .live() is deprecated in favor of .on()
 		$(document).on('click', '#dt tbody tr',function(e) {
-			var row = (dt.fnGetData(this));
+			row = (dt.fnGetData(this));
+			aPos = dt.fnGetPosition( this );
 			switch (currentTable)
 			{
 				case 1: //volunteer
 				$('#grower').addClass('hidden');
 				$('#distribution').addClass('hidden');
 				$('#volunteer').removeClass('hidden'); //for css see style.css
-				for (var i = 0; i < row.length; i++)
-					$('#volunteer' + i).val(row[i+1]);				
+				for (var i = 1; i < row.length; i++)
+					$('#volunteer' + i).val(row[i]);				
 				break;
 				
 				case 2: // grower
+				
 				$('#volunteer').addClass('hidden');
 				$('#distribution').addClass('hidden');
 				$('#grower').removeClass('hidden');
 				for (var i = 1; i < row.length; i++)
-					$('#grower' + i).val(row[i+1]);
+					$('#grower' + i).val(row[i]);
 				break;
 				
 				case 4: // distribution
                     $('#volunteer').addClass('hidden');
                     $('#grower').addClass('hidden');
                     $('#distribution').removeClass('hidden');
-                    for (var i = 0; i < row.length; i++)
+                    for (var i = 1; i < row.length; i++)
                         $('#distribution' + i).val(row[i]);                                                                            
                     $.ajax({
                         'dataType': 'json',
