@@ -167,15 +167,14 @@
 							break;
 							
 						case 1:		//Volunteers Tab
-							// for(var i = 2; i < 16; i++){
+							for(var i = 2; i < 16; i++){
 								
-								// row[i]=$('#volunteer'+i).val();								
-							// }
-							// dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
+								row[i]=$('#volunteer'+i).val();								
+							}
+							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
 							
 							//Update DB
-							var para = $('#volunteer').serialize();	
-							alert(para);							
+							var para = $('#volunteer').serialize();
 							$.ajax({							
 							'type': 'GET',
 							'url': 'ajax.php?cmd=update_volunteer&'+para,
@@ -198,7 +197,6 @@
 							
 							//Update DB
 							var para = $('#grower').serialize();
-							alert(para);
 							$.ajax({							
 							'type': 'GET',
 							'url': 'ajax.php?cmd=update_grower&'+para,
