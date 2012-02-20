@@ -280,17 +280,17 @@ CREATE TABLE volunteers (
 
 
 INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, active, street, city, state, zip, privilege_id, signed_up,notes) VALUES
-('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', password('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 2,'2010-05-01',"")
+('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', password('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 4,'2010-05-01',"")
 ;
 
 -- A volunteer can have many rolls
-DROP TABLE IF EXISTS volunteer_rolls;
-CREATE TABLE volunteer_rolls (
+DROP TABLE IF EXISTS volunteer_roles;
+CREATE TABLE volunteer_roles (
 	volunteer_id INT NOT NULL,
 	volunteer_type_id INT NOT NULL,
-	CONSTRAINT pk_volunteer_rolls PRIMARY KEY (volunteer_id, volunteer_type_id),
-	CONSTRAINT fk_volunteer_rolls_volunteer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
-	CONSTRAINT fk_volunteer_rolls_volunteer_type_id FOREIGN KEY (volunteer_type_id) REFERENCES volunteer_types(id)
+	CONSTRAINT pk_volunteer_roles PRIMARY KEY (volunteer_id, volunteer_type_id),
+	CONSTRAINT fk_volunteer_roles_volunteer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
+	CONSTRAINT fk_volunteer_roles_volunteer_type_id FOREIGN KEY (volunteer_type_id) REFERENCES volunteer_types(id)
 ) ENGINE=innodb;
 
 
