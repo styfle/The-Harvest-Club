@@ -280,7 +280,7 @@ CREATE TABLE volunteers (
 
 
 INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, active, street, city, state, zip, privilege_id, signed_up,notes) VALUES
-('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', password('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 4,'2010-05-01',"")
+('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', password('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 2,'2010-05-01',"")
 ;
 
 -- A volunteer can have many rolls
