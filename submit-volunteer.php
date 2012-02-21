@@ -68,9 +68,7 @@ include('include/Database.inc.php');
 
 	$tableinfo = "volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source, signed_up)";
 	
-	$today = date('Y-m-d');
-
-	$valueinfo = "'$firstname', '$middlename', '$lastname', '$organization', '$phone', '$email', '$street', '$city', '$state', '$zip', '$comments', $source, '$today'";
+	$valueinfo = "'$firstname', '$middlename', '$lastname', '$organization', '$phone', '$email', '$street', '$city', '$state', '$zip', '$comments', $source, CURDATE()";
 
 	$r = $db->q($sql, array($tableinfo, $valueinfo));
 

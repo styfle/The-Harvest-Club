@@ -15,6 +15,9 @@ $empty_cell = '<tr><td>&nbsp;</td></tr><!-- empty cell -->';
 $r = $db->q("SELECT id, name FROM privileges;");
 $privileges = $r->buildArray();
 
+$r = $db->q("SELECT id, name FROM sources;");
+$sources = $r->buildArray();
+
 ?>
 <!-- all hidden forms go here -->
 <div id="edit-dialog" class="hidden">
@@ -27,13 +30,13 @@ $privileges = $r->buildArray();
 			<td colspan="3" class="hidden"><input id="volunteer1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="hidden"><input id="volunteer7" name="password" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="volunteer8" name="password" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="hidden"><input id="volunteer13" name="privilege" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="volunteer14" name="privilege" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="hidden"><input id="volunteer14" name="signedup" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="volunteer15" name="signedup" type="text" size="2"/></td>
 		</tr>
 		<tr>
 			<td><label for="volunteer2"><b>First</b></label></td>
@@ -44,38 +47,42 @@ $privileges = $r->buildArray();
 			<td><input id="volunteer2" name="firstname" type="text" size="20"/></td>
 			<td><input id="volunteer3" name="middlename" type="text" size="10"/></td>
 			<td><input id="volunteer4" name="lastname" type="text" size="15"/></td>
-		</tr>		
-		<tr>
-			<td><label for="volunteer5"><b>Phone</b></label></td>
-			<td colspan="2"><label for="volunteer6"><b>Email</b></label></td>
 		</tr>
 		<tr>
-			<td><input type="tel" name="phone" id="volunteer5" size="20" /></td>
-			<td colspan="2"><input type="text" name="email" id="volunteer6" size="28" /></td>
+			<td colspan="3"><label for="volunteer5"><b>Organization</b></label></td>
+		</tr>
+			<td colspan="3"><input type="text" name="organization" id="volunteer5" size="52"></td>
+		<tr>
+			<td><label for="volunteer6"><b>Phone</b></label></td>
+			<td colspan="2"><label for="volunteer7"><b>Email</b></label></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="volunteer9"><b>Street</b></label></td>			
+			<td><input type="tel" name="phone" id="volunteer6" size="20" /></td>
+			<td colspan="2"><input type="text" name="email" id="volunteer7" size="28" /></td>
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="street" id="volunteer9" size="52"/></td>			
+			<td colspan="3"><label for="volunteer10"><b>Street</b></label></td>			
 		</tr>
 		<tr>
-			<td><label for="volunteer10"><b>City</b></label></td>
-			<td><label for="volunteer11"><b>State</b></label></td>
-			<td><label for="volunteer12"><b>Zip</b></label></td>
+			<td colspan="3"><input type="text" name="street" id="volunteer10" size="52"/></td>			
+		</tr>
+		<tr>
+			<td><label for="volunteer11"><b>City</b></label></td>
+			<td><label for="volunteer12"><b>State</b></label></td>
+			<td><label for="volunteer13"><b>Zip</b></label></td>
 		</tr>
 		<tr>			
-			<td><input type="text" name="city" id="volunteer10" size="20"/></td>
-			<td><input type="text" name="state" id="volunteer11" size="10" maxlength="2"/></td>
-			<td><input type="text" name="zip" id="volunteer12" size="15"/></td>
+			<td><input type="text" name="city" id="volunteer11" size="20"/></td>
+			<td><input type="text" name="state" id="volunteer12" size="10" maxlength="2"/></td>
+			<td><input type="text" name="zip" id="volunteer13" size="15"/></td>
 		</tr>
 		
 		<?php echo $empty_cell ?>
 		
 		<tr>
-			<td><label for="volunteer8"><b>Status</b></label></td>					
+			<td><label for="volunteer9"><b>Status</b></label></td>					
 			<td colspan="2">
-				<select id="volunteer8" name="status">
+				<select id="volunteer9" name="status">
 					<option value="1">Active</option>
 					<option value="0">Inactive</option>					
 				</select>
@@ -83,9 +90,17 @@ $privileges = $r->buildArray();
 		</tr>
 		
 		<?php echo $empty_cell ?>
-		
+	
+		<tr>
+			<td><b>Sources</b></td>
+			<td>
+				<?php echo options('source', $sources); ?>
+			</td>
+		</tr>
+	
+
 		<tr>			
-			<td colspan="3"><label for="volunteer12"><b>Volunteer Role</b></label></td>
+			<td colspan="3"><label for="volunteer14"><b>Volunteer Role</b></label></td>
 		</tr>
 		
 		<tr>
@@ -156,8 +171,8 @@ $privileges = $r->buildArray();
 		</table>	
 	
 	<div style="margin-top:5px;">
-		<div><label for="volunteer14"><b>Notes</b></label></div>
-		<div><textarea name="note" id="volunteer15" rows="5" cols="48"></textarea></div>
+		<div><label for="volunteer16"><b>Notes</b></label></div>
+		<div><textarea name="note" id="volunteer16" rows="5" cols="48"></textarea></div>
 	</div>	
 	</form>
 	<!-- Volunteer end -->
