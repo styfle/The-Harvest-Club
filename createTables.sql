@@ -198,19 +198,19 @@ INSERT INTO grower_trees VALUES
 	(NULL, 2,3,'fernandoavocado',2,5,1);
 
 INSERT INTO month_harvests VALUES
-	(3,1);
+	(2,1);
 
 INSERT INTO grower_trees VALUES
 	(NULL, 3,6,'apple pie',2,5,1);
 
 INSERT INTO month_harvests VALUES
-	(6,1);
+	(3,1);
 
 INSERT INTO grower_trees VALUES
 	(NULL, 4,5,'peach',2,5,1);
 
 INSERT INTO month_harvests VALUES
-	(5,11);
+	(4,11);
 -- end temp insert
 
 DROP TABLE IF EXISTS volunteer_types;
