@@ -176,6 +176,17 @@ CREATE TABLE grower_trees (
 	CONSTRAINT fk_grower_trees_height FOREIGN KEY (avgHeight_id) REFERENCES tree_heights(id)
 ) ENGINE=innodb;
 
+
+DROP TABLE IF EXISTS month_harvests;
+CREATE TABLE month_harvests (
+	tree_id INT,
+	month_id INT,
+	CONSTRAINT pk_month_harvests_month_harvest PRIMARY KEY (tree_id, month_id),
+	CONSTRAINT fk_month_harvests_tree_type_id FOREIGN KEY (tree_id) REFERENCES grower_trees(id),
+	CONSTRAINT fk_month_harvests_month_id FOREIGN KEY (month_id) REFERENCES months(id)
+) ENGINE=innodb;
+
+
 -- temp insert
 INSERT INTO grower_trees VALUES
 	(NULL, 1,1,'reallyorange',2,5,1);
@@ -201,17 +212,6 @@ INSERT INTO grower_trees VALUES
 INSERT INTO month_harvests VALUES
 	(5,11);
 -- end temp insert
-
-DROP TABLE IF EXISTS month_harvests;
-CREATE TABLE month_harvests (
-	tree_id INT,
-	month_id INT,
-	CONSTRAINT pk_month_harvests_month_harvest PRIMARY KEY (tree_id, month_id),
-	CONSTRAINT fk_month_harvests_tree_type_id FOREIGN KEY (tree_id) REFERENCES grower_trees(id),
-	CONSTRAINT fk_month_harvests_month_id FOREIGN KEY (month_id) REFERENCES months(id)
-) ENGINE=innodb;
-
-
 
 DROP TABLE IF EXISTS volunteer_types;
 CREATE TABLE volunteer_types (
