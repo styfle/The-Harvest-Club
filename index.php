@@ -91,7 +91,8 @@
 	var dt; // global datatable variable
 	var currentTable = 0; // global id of current data table
 	var forms = ['volunteer', 'grower', 'distribution'];
-
+	var growerID = 0;
+	
 	var saveButton = {
 		text: 'Save',
 		click: function() {
@@ -378,6 +379,17 @@
 
 					currentTable = data.id; // set current table after it is populated
 					$('#page_title').text(data.title); // set page title
+					if(currentTable == 3){									//If current Tab is Trees AND growerID not 0, which means viewTrees button was clicked
+						if(growerID != 0){
+							$('#dt tbody tr').each(function() {				//For every row in the table
+								//alert($(this).find("td").eq(1).html());	
+								tempId = $(this).find("td").eq(1).html();    
+								if(tempId != growerID)						//If not the tree belonging to the grower in interest
+									$(this).hide();							//Hide it
+							});					
+						}						
+						growerID = 0;										//Reset growerID
+					}
 				},
 				'error': function (e) {
 					alert('Ajax Error!\n' + e.responseText);
@@ -526,7 +538,11 @@
 		}); // on.click() checkbox all
 
 	}); // document.ready()
-
+	function viewTrees(){
+		growerID = $('#grower1').val();					//get ID of grower whose trees are to be shown
+		$('#edit-dialog').dialog('close');				//Close pop-up
+		document.getElementById('get_trees').click();	//switch to Trees Tab	
+	}	
 	</script>
 
 	<!-- Prompt IE 6 users to install Chrome Frame. -->

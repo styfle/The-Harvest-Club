@@ -21,6 +21,7 @@ function updateVolunteer($exists) {
 	$firstName = $_REQUEST['firstname'];		
 	$middleName = $_REQUEST['middlename'];
 	$lastName = $_REQUEST['lastname'];
+	$organization = $_REQUEST['organization'];
 	$phone = $_REQUEST['phone'];
 	$email = $_REQUEST['email'];
 	$street = $_REQUEST['street'];
@@ -29,6 +30,7 @@ function updateVolunteer($exists) {
 	$zip = $_REQUEST['zip'];
 	$note =  $_REQUEST['note'];
 	$priv_id = $_REQUEST['privilege_id'];
+	$source_id = $_REQUEST['source']; // change to source_id
 	
 	if ($exists) { // volunteer exists so just update
 		$sql = "Update volunteers Set first_name='".$firstName."', middle_name='".$middleName."',last_name='".$lastName."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."' ,zip='".$zip."', notes='".$note."' where id=".$id;						
@@ -76,8 +78,8 @@ function updateVolunteer($exists) {
 		}
 	
 	} else { // adding new volunteer
-		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, active, street, city, state, zip, privilege_id) VALUES
-		('$firstName', '$middleName', '$lastName', '$phone', '$email', '1', '$street', '$city', '$state', '$zip', '1')";
+		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, active, street, city, state, zip, privilege_id, notes, source, signed_up) VALUES
+		('$firstName', '$middleName', '$lastName', '$organization', '$phone', '$email', '1', '$street', '$city', '$state', '$zip', '1', '$note', $source_id, CURDATE())";
 		$r = $db->q($sql);
 	}
 }
@@ -263,7 +265,9 @@ switch ($cmd)
 	case 'get_trees':
 		$data['id'] = 3;
 		$data['title'] = 'Trees';
-		$sql = "SELECT g.id, g.last_name AS grower_lname, tt.name AS tree, gt.varietal, mh.month_id, gt.number, gt.notes, gt.chemicaled FROM grower_trees gt, month_harvests mh, tree_types tt, growers g WHERE g.id = gt.grower_id AND gt.grower_id = mh.grower_id AND gt.tree_id = mh.tree_type_id AND gt.varietal = mh.varietal AND gt.tree_id=tt.id;";
+		$sql = "SELECT g.id AS grower_id, g.last_name AS grower_lname, tt.name AS tree, gt.varietal, mh.month_id, gt.number, gt.notes, gt.chemicaled
+				FROM grower_trees gt, month_harvests mh, tree_types tt, growers g
+				WHERE g.id = gt.grower_id AND gt.grower_id = mh.grower_id AND gt.tree_id = mh.tree_type_id AND gt.varietal = mh.varietal AND gt.tree_id=tt.id;";
 		getTable($sql);
 		break;
 	case 'get_distribs':
