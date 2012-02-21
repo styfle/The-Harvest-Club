@@ -130,19 +130,20 @@ INSERT INTO sources (name) VALUES
 DROP TABLE IF EXISTS growers;
 CREATE TABLE growers (
 	id			INT AUTO_INCREMENT PRIMARY KEY,
-	first_name	VARCHAR(255) NOT NULL,
-	middle_name	VARCHAR(255) NOT NULL,
-	last_name	VARCHAR(255) NOT NULL,
+	first_name	NVARCHAR(255) NOT NULL,
+	middle_name	NVARCHAR(255) NOT NULL,
+	last_name	NVARCHAR(255) NOT NULL,
 	phone		VARCHAR(17) NOT NULL, -- maybe (http://stackoverflow.com/q/75105/266535)
 	email		VARCHAR(255) NOT NULL, -- max is actually 320, but so rare	
-	street		VARCHAR(255) NOT NULL,
+	preferred	VARCHAR(6)	 NOT NULL, -- preferred contact method (phone/email)
+	street		NVARCHAR(255) NOT NULL,
 	city		VARCHAR(255) NOT NULL,
 	state		CHAR(2)		NOT NULL, -- this makes sense right?
 	zip			VARCHAR(5)	NOT NULL, -- can it be bigger?
 	tools		TINYTEXT,
-	source		TINYTEXT, -- this should probably be another INT type and a FK to a table
+	source		INT, -- this should probably be another INT type and a FK to a table
 	notes		TEXT,
-  	pending TINYINT(1), -- 1-Yes 0-No     
+  	pending TINYINT(1) DEFAULT 1, -- 1-Yes 0-No     
 	property_type_id INT NULL,
 	property_relationship_id INT NULL,
 	CONSTRAINT fk_property_type FOREIGN KEY (property_type_id) REFERENCES property_types(id) ON DELETE CASCADE,
@@ -150,40 +151,37 @@ CREATE TABLE growers (
 ) ENGINE=innodb;
 
 -- start temp insert (for debugging front end)
-INSERT INTO growers (first_name, middle_name, last_name, phone, email, street, city, state, zip, property_type_id, property_relationship_id, pending) VALUES
-('Steven','', 'Sommers', '(949) 334-1234', 'sommers@uci.edu','123 Fake St', 'Irvine', 'CA', '91234', 1, 2, 0),
-('Lawrence','','Nanners', '(949) 633-1234', 'nanners@uci.edu', '313 Fake St', 'Laguna', 'CA', '97234', 3, 2 ,0),
-('Fernando','', 'Vegas', '(949) 514-1234', 'vegas@uci.edu', '23 Fake St', 'Irvine', 'CA', '91234', 3, 1, 0),
-('Fernanda','', 'Vargas', '(949) 533-1234', 'vargas@aol.com', '23 Real St', 'Irvine', 'CA', '93731', 3, 1, 0),
-('Billy','', 'Bob', '(800) 555-1234', 'bob@aol.com', '123 Spooner St', 'Springfield', 'IL', '65134', 4, 4, 0)
+INSERT INTO growers (first_name, middle_name, last_name, phone, email, preferred, street, city, state, zip, property_type_id, property_relationship_id, pending) VALUES
+('Steven','', 'Sommers', '(949) 334-1234', 'sommers@uci.edu', 'email', '123 Fake St', 'Irvine', 'CA', '91234', 1, 2, 0),
+('Lawrence','','Nanners', '(949) 633-1234', 'nanners@uci.edu', 'email', '313 Fake St', 'Laguna', 'CA', '97234', 3, 2 ,0),
+('Fernando','', 'Vegas', '(949) 514-1234', 'vegas@uci.edu', 'phone', '23 Fake St', 'Irvine', 'CA', '91234', 3, 1, 0),
+('Fernanda','', 'Vargas', '(949) 533-1234', 'vargas@aol.com', 'phone', '23 Real St', 'Irvine', 'CA', '93731', 3, 1, 0),
+('Billy','', 'Bob', '(800) 555-1234', 'bob@aol.com', 'email', '123 Spooner St', 'Springfield', 'IL', '65134', 4, 4, 0)
 ;
 -- end temp insert
 
 
 DROP TABLE IF EXISTS grower_trees;
 CREATE TABLE grower_trees (
+	id INT PRIMARY KEY AUTO_INCREMENT,
 	grower_id INT,
-	tree_id INT,
+	tree_type INT,
   	varietal TEXT,  
 	number INT,
 	avgHeight_id INT, 
 	chemicaled TINYINT(1) NULL, -- 1 Yes -- 0 No	   
-	notes 		text,
 	CONSTRAINT fk_grower_trees_grower FOREIGN KEY (grower_id) REFERENCES growers(id),
-	CONSTRAINT fk_grower_trees_tree FOREIGN KEY (tree_id) REFERENCES tree_types(id),
+	CONSTRAINT fk_grower_trees_tree FOREIGN KEY (tree_type) REFERENCES tree_types(id),
 	CONSTRAINT fk_grower_trees_height FOREIGN KEY (avgHeight_id) REFERENCES tree_heights(id)
 ) ENGINE=innodb;
 
 
 DROP TABLE IF EXISTS month_harvests;
 CREATE TABLE month_harvests (
-	grower_id INT,
-	tree_type_id INT,
-  	varietal nvarchar(255),  
+	tree_id INT,
 	month_id INT,
-	CONSTRAINT pk_month_harvests_month_harvest PRIMARY KEY (grower_id, tree_type_id, varietal, month_id),
-	CONSTRAINT fk_month_harvests_grower_id FOREIGN KEY (grower_id) REFERENCES growers(id),
-	CONSTRAINT fk_month_harvests_tree_type_id FOREIGN KEY (tree_type_id) REFERENCES tree_types(id),
+	CONSTRAINT pk_month_harvests_month_harvest PRIMARY KEY (tree_id, month_id),
+	CONSTRAINT fk_month_harvests_tree_type_id FOREIGN KEY (tree_id) REFERENCES grower_trees(id),
 	CONSTRAINT fk_month_harvests_month_id FOREIGN KEY (month_id) REFERENCES months(id)
 ) ENGINE=innodb;
 
@@ -264,17 +262,19 @@ CREATE TABLE volunteers (
 	first_name nvarchar(255) NOT NULL,
 	middle_name nvarchar(255) NULL,
 	last_name nvarchar(255) NOT NULL,
-	phone nvarchar(17) NOT NULL, 
+	organization nvarchar(255),
+	phone varchar(17) NOT NULL, 
 	email nvarchar(255) NOT NULL, 
 	password nvarchar(255) NULL, 
-	active TINYINT(1), -- 1-Active, 0-Inactive
+	active TINYINT(1) DEFAULT 1, -- 1-Active, 0-Inactive
 	street nvarchar(255) NOT NULL,
-	city nvarchar(255) NOT NULL,
+	city varchar(255) NOT NULL,
 	state CHAR(2) NOT NULL, 
-	zip nvarchar(5) NOT NULL, 
-	privilege_id INT NOT NULL,
+	zip varchar(5) NOT NULL, 
+	privilege_id INT DEFAULT 1,
 	signed_up DATE,
 	notes TEXT,
+	source INT,
 	CONSTRAINT fk_privilege_id FOREIGN KEY (privilege_id) REFERENCES privileges(id)
 ) ENGINE=innodb;
 
