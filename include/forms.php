@@ -1,24 +1,42 @@
+<?php
+require_once('include/Database.inc.php');
+
+function options($name, $data) {
+	//$optionSelect = '<option value="" disabled="disabled" selected="selected">Select...</option>';
+	$s = "<select name='$name'>";
+	foreach ($data as $o) {
+		$s .= "<option value='$o[id]'>$o[name]</option>";
+	}
+	return "$s</select>";
+}
+
+// perform all pre-processing here including db queries
+$empty_cell = '<tr><td>&nbsp;</td></tr><!-- empty cell -->';
+$r = $db->q("SELECT id, name FROM privileges;");
+$privileges = $r->buildArray();
+
+?>
 <!-- all hidden forms go here -->
 <div id="edit-dialog" class="hidden">
-	
-	<!--------------- Volunteer form ----------------->	
+		
+	<!-- Volunteer form -->	
 	<form id="volunteer" class="hidden">
 		<h3>Volunteer</h3>
 		<table>
 		<tr>
-			<td colspan="3" style = "display:none"><input id="volunteer1" name="id" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="volunteer1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" style = "display:none"><input id="volunteer7" name="password" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="volunteer7" name="password" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" style = "display:none"><input id="volunteer13" name="privilege" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="volunteer13" name="privilege" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" style = "display:none"><input id="volunteer14" name="signedup" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="volunteer14" name="signedup" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td><label for="volunteer2" ><b>First</b></label></td>
+			<td><label for="volunteer2"><b>First</b></label></td>
 			<td><label for="volunteer3"><b>Middle</b></label></td>
 			<td><label for="volunteer4"><b>Last</b></label></td>
 		</tr>
@@ -50,20 +68,24 @@
 			<td><input type="text" name="city" id="volunteer10" size="20"/></td>
 			<td><input type="text" name="state" id="volunteer11" size="10" maxlength="2"/></td>
 			<td><input type="text" name="zip" id="volunteer12" size="15"/></td>
-		</tr>		
+		</tr>
+		
+		<?php echo $empty_cell ?>
+		
 		<tr>
-			
-			<td><label for="volunteer8"><br> <b>Status</b></label></td>					
+			<td><label for="volunteer8"><b>Status</b></label></td>					
 			<td colspan="2">
-				<br>
 				<select id="volunteer8" name="status">
 					<option value="1">Active</option>
 					<option value="0">Inactive</option>					
 				</select>
 			</td>			
-		</tr>		
+		</tr>
+		
+		<?php echo $empty_cell ?>
+		
 		<tr>			
-			<td colspan="3"><label for="volunteer12"><br><b>Volunteer Role</b></label></td>
+			<td colspan="3"><label for="volunteer12"><b>Volunteer Role</b></label></td>
 		</tr>
 		
 		<tr>
@@ -87,8 +109,10 @@
 			<td colspan="2"><input type="checkbox" name="volunteerRole5" id="volunteerRole5" size="28" /></td>
 		</tr>
 		
+		<?php echo $empty_cell ?>
+		
 		<tr>			
-			<td colspan="3"><label for="volunteer12"><br><b>Preferred Days</b></label></td>
+			<td colspan="3"><label for="volunteer12"><b>Preferred Days</b></label></td>
 		</tr>
 		
 		<tr>
@@ -118,7 +142,16 @@
 		<tr>
 			<td><label for="volunteer5">Sunday</label></td>
 			<td colspan="2"><input type="checkbox" name="volunteerDay7" id="volunteerDay7" size="28" /></td>
-		</tr>		
+		</tr>
+		
+		<?php echo $empty_cell ?>
+		
+		<tr>
+			<td><b>User Type</b></td>
+			<td>
+				<?php echo options('privilege_id', $privileges); ?>
+			</td>
+		</tr>
 		
 		</table>	
 	
@@ -127,16 +160,17 @@
 		<div><textarea name="note" id="volunteer15" rows="5" cols="48"></textarea></div>
 	</div>	
 	</form>
+	<!-- Volunteer end -->
 	
-	<!--------------- Grower form ----------------->
+	<!-- Grower form -->
 	<form id="grower" class="hidden">
 		<h3>Grower</h3>
 		<table>
 		<tr>
-			<td colspan="3" style = "display:none"><input id="grower1" name="id" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="grower1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" style = "display:none"><input id="grower14" name="pending" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="grower14" name="pending" type="text" size="2"/></td>
 		</tr>
 		<tr>
 			<td><label for="grower2" >First</label></td>
@@ -215,14 +249,15 @@
 		<div><label for="grower13">Notes</label></div>
 		<div><textarea name="notes" id="grower13" rows="5" cols="30"></textarea></div>
 	</div>	
-	</form>	
+	</form>
+	<!-- Grower end -->
 	
-	<!--------------- Distribution form ----------------->
+	<!-- Distribution form -->
 	<form id="distribution" class="hidden">
 		<h3>Distribution Site</h3>
 		<table>
 		<tr>
-			<td colspan="3" style = "display:none"><input id="distribution1" name="id" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="distribution1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
 			<td colspan="3"><label for="distribution2" >Name</label></td>			
@@ -257,7 +292,7 @@
 		</table>
 		
 		<table>
-			<br>
+			<?php echo $empty_cell ?>
 			
 			<tr>
 				<td><label > <b> Hours </b></label></td>
@@ -355,4 +390,6 @@
 		<div><textarea name="note" id="distribution9" rows="5" cols="43"></textarea></div>
 	</div>	
 	</form>	
-</div>	
+	<!-- Distribution end -->
+</div>
+<!-- dialog end -->
