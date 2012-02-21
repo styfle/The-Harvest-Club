@@ -262,6 +262,7 @@
 				$('#'+forms[i]).find(':input').each(function()
 				{
 					switch(this.type) {
+						case 'tel':
 						case 'text':
 						case 'password':
 						case 'textarea':
@@ -272,6 +273,9 @@
 						case 'radio':
 						case 'checkbox':
 								this.checked = false;
+						default:
+								$(this).val('');
+								break;
 					}
 				});
 			}
