@@ -266,9 +266,9 @@ switch ($cmd)
 	case 'get_trees':
 		$data['id'] = 3;
 		$data['title'] = 'Trees';
-		$sql = "SELECT g.id AS grower_id, g.last_name AS grower_lname, tt.name AS tree, gt.varietal, mh.month_id, gt.number, gt.notes, gt.chemicaled
-				FROM grower_trees gt, month_harvests mh, tree_types tt, growers g
-				WHERE g.id = gt.grower_id AND gt.grower_id = mh.grower_id AND gt.tree_id = mh.tree_type_id AND gt.varietal = mh.varietal AND gt.tree_id=tt.id;";
+		$sql = "SELECT g.id AS grower_id, g.last_name AS last_name, tt.name AS tree_type, gt.varietal, m.name AS month, gt.number, gt.chemicaled
+				FROM grower_trees gt, month_harvests mh, tree_types tt, growers g, months m
+				WHERE g.id = gt.grower_id AND gt.id = mh.tree_id AND gt.tree_type=tt.id AND mh.month_id = m.id;";
 		getTable($sql);
 		break;
 	case 'get_distribs':
