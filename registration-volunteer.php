@@ -7,7 +7,6 @@ if(!$r->isValid())
 	die("MySQL Error: " . $db->error());
 $sources = $r->buildArray();
 
-
 ?>
 
 
@@ -17,9 +16,10 @@ $sources = $r->buildArray();
     <meta charset="utf-8">
     <title>The Harvest Club - Volunteer Registration</title>
     
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="js/jquery-1.7.1.min.js"></script>
 	<script>
 		var sources = <?php echo json_encode($sources); ?>;
+		var optionSelect = '<option value="" disabled="disabled" selected="selected">Select...</option>';
 	</script>
 
 	
@@ -27,6 +27,7 @@ $sources = $r->buildArray();
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 </head>
+
 <body><div id="main">
     <h1>The Harvest Club</h1>
     <p>Volunteering with The Harvest Club is a fun way to make a difference and make friends in the community. This form provides us with the essential contact information to match you with events. </p>
@@ -39,9 +40,11 @@ $sources = $r->buildArray();
     		<legend>Name</legend>
     		<label for="firstname">First*:</label>
     		<input id="firstname" name="firstname" type="text" placeholder="Peter" required="required" />
+			<label for="middlename">Middle:</label>
+			<input id="middlename" name="middlename" type="text" placeholder="The" />
     		<label for="lastname">Last*:</label>
     		<input id="lastname" name="lastname" type="text" placeholder="Anteater" required="required" />
-    		<br/>
+			<br/>
     		<label for="organization">Organization:</label>
     		<input id="organization" name="organization" type="text" size="40" placeholder="Donald Bren School of ICS" />
 		</fieldset>
@@ -125,55 +128,55 @@ $sources = $r->buildArray();
     	<h3>Volunteer Interests</h3>
 		<fieldset>
     		<legend>Volunteer Role</legend>
-			<p><i>Choose all that applies.</i></p>
+			<p><i>Choose all that apply.</i></p>
 			<span>
-			<input name="Role[]" type="checkbox" id="harvester" value="harvester"><label for="harvester">Harvester</label>
+			<input name="roles[]" type="checkbox" id="harvester" value="1"><label for="harvester">Harvester</label>
 			 - volunteers at harvesting events
 			</span>
 			<br />
 			<span>
-			<input name="Role[]" type="checkbox" id="havestcaptain" value="harvestcaptain"><label for="harvestcaptain">Harvest Captain</label>
+			<input name="roles[]" type="checkbox" id="havestcaptain" value="2"><label for="harvestcaptain">Harvest Captain</label>
 			 - leads a harvest crew
 			</span>
 			<br />
-			<input name="Role[]" type="checkbox" id="driver" value="driver"><label for="driver">Driver</label>
+			<input name="roles[]" type="checkbox" id="driver" value="3"><label for="driver">Driver</label>
 			- transports donated food to local food pantries
 			<br />
 			<span>
-			<input name="Role[]" type="checkbox" id="ambassador" value="ambassador"><label for="ambassador">Ambassador</label>
+			<input name="roles[]" type="checkbox" id="ambassador" value="4"><label for="ambassador">Ambassador</label>
 			- canvasses neighborhoods and hands out leaflets to homes with visible fruit trees
 			</span>
 			
     	</fieldset>
 		<fieldset>
-    		<legend>Preffered Days to Volunteer</legend>
+    		<legend>Preferred Days to Volunteer</legend>
 			<p><i>Note: Harvest Events usually takes two hours long and generally take place over the weekends.</i></p>
 			<span title="Monday">
-			<input name="Day[]" type="checkbox" id="monday" value="monday"><label for="monday">Mon</label>
+			<input name="days[]" type="checkbox" id="monday" value="1"><label for="monday">Mon</label>
 			</span>
 			&nbsp;
 			<span title="Tuesday">
-			<input name="Day[]" type="checkbox" id="tuesday" value="tuesday"><label for="tuesday">Tue</label>
+			<input name="days[]" type="checkbox" id="tuesday" value="2"><label for="tuesday">Tue</label>
 			</span>
 			&nbsp;
 			<span title="Wednesday">
-			<input name="Day[]" type="checkbox" id="wednesday" value="wednesday"><label for="wednesday">Wed</label>
+			<input name="days[]" type="checkbox" id="wednesday" value="3"><label for="wednesday">Wed</label>
 			</span>
 			&nbsp;
 			<span title="Thursday">
-			<input name="Day[]" type="checkbox" id="thursday" value="thursday"><label for="thursday">Thu</label>
+			<input name="days[]" type="checkbox" id="thursday" value="4"><label for="thursday">Thu</label>
 			</span>
 			&nbsp;
 			<span title="Friday">
-			<input name="Day[]" type="checkbox" id="friday" value="friday"><label for="friday">Fri</label>
+			<input name="days[]" type="checkbox" id="friday" value="5"><label for="friday">Fri</label>
 			</span>
 			&nbsp;
 			<span title="Saturday">
-			<input name="Day[]" type="checkbox" id="saturday" value="saturday"><label for="saturday">Sat</label>
+			<input name="days[]" type="checkbox" id="saturday" value="6"><label for="saturday">Sat</label>
 			</span>
 			&nbsp;
 			<span title="Sunday">
-			<input name="Day[]" type="checkbox" id="sunday" value="sunday"><label for="sunday">Sun</label>
+			<input name="days[]" type="checkbox" id="sunday" value="7"><label for="sunday">Sun</label>
 			</span>
 			&nbsp;
 			
@@ -200,18 +203,13 @@ $sources = $r->buildArray();
 
 		<fieldset>
 			<legend>Optional</legend>
-			<label for="heardby">How did you first hear about The Harvest Club?</label>
-			<select id="heardby" name="heardby">
-					<option value="" disabled="disabled" selected="selected">Select...</option>
-  					<option value="flyer">Flyer</option>
-  					<option value="facebook">Facebook</option>
-					<option value="twitter">Twitter</option>
-					<option value="family">Family or Friend</option>
-					<option value="newspaper">Newspaper/Local Magazine</option>
-					<option value="website">Website/Search Engine</option>
-					<option value="village">Village Harvest</option>
-					<option value="other">Other</option>
-			</select>
+
+			<div>
+				<label for="source">How did you hear about us?</label>
+				<select id="source" name="source">
+				</select>
+			</div>
+
 			<br />
 			<label>Additional comments:</label><br/>
 				<textarea name="comments" type="textarea" cols="50" rows="3" placeholder=""></textarea>
@@ -225,5 +223,25 @@ $sources = $r->buildArray();
 		</fieldset>			
     </form>
 </div>
+
+<script type="text/javascript">
+	// populate drop downs
+	$(document).ready(function() {
+		$('#source').html(options(sources));
+	});
+
+
+
+	function options(data) {
+		var s = optionSelect;
+		for (var i=0; i<data.length; i++) {
+			var o = data[i];
+			s += '<option value="'+o.id+'">'+o.name+'</option>';
+		}
+		return s;
+	}
+
+</script>
+
 </body>
 </html>

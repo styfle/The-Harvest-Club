@@ -60,7 +60,10 @@ $months = $r->buildArray();
     		<legend>Name</legend>
     		<label for="firstname">First*</label>
     		<input id="firstname" name="firstname" type="text" placeholder="Peter" required="required" />
-    	
+    
+			<label for="middlename">Middle</label>
+			<input id="middlename" name="middlename" type="text" placeholder="The" />
+
     		<label for="lastname">Last*</label>
     		<input id="lastname" name="lastname" type="text" placeholder="Anteater" required="required" />
     		<!-- br/>
@@ -71,14 +74,14 @@ $months = $r->buildArray();
     	
     	<fieldset>
     		<legend>Contact</legend>
-    		<label for="email">Email*</label><input id="email" type="email" placeholder="peter@uci.edu" required="required" />
+    		<label for="email">Email*</label><input id="email" type="email" name="email" placeholder="peter@uci.edu" required="required" />
     		<label for="phone">Phone*</label><input id="phone" type="tel" name="phone" placeholder="9495551234" pattern="[0-9]{10}" required="required" />
     		<div>
 				<label>Preferred Contact </label>
 				&nbsp;
-				<input id="contact-email" name="prefer" type="radio" /><label for="contact-email">Email</label>
+				<input id="contact-email" name="prefer" type="radio" value="email"/><label for="contact-email">Email</label>
 				&nbsp;
-				<input id="contact-phone" name="prefer" type="radio" /><label for="contact-phone">Phone</label>
+				<input id="contact-phone" name="prefer" type="radio" value="phone"/><label for="contact-phone">Phone</label>
 				<!--input id="contact-address" name="prefer" type="radio" /><label for="contact-address">Mail</label-->
 			</div>
     	</fieldset>
@@ -208,7 +211,7 @@ $months = $r->buildArray();
 
 		<fieldset>
 			<legend>Register</legend>
-			<input id="submit" type="submit" value="Register as Grower" disabled="disabled"/> <!--onclick="this.disabled='disabled';" /-->
+			<input id="submit" name="Submit" type="submit" value="Register as Grower" disabled="disabled"/> <!--onclick="this.disabled='disabled';" /-->
 		</fieldset>
 	</form>
 </div>

@@ -1,10 +1,9 @@
 <?php
 
-require_once('include/Database.inc.php');
+include('include/Database.inc.php');
 
-if($_POST['Submit'] == "Register as Volunteer")
-{
    $firstname = $_POST['firstname'];
+   $middlename = $_POST['middlename'];
    $lastname = $_POST['lastname'];
    $organization = $_POST['organization'];
    $email = $_POST['email'];
@@ -14,22 +13,11 @@ if($_POST['Submit'] == "Register as Volunteer")
    $city = $_POST['city'];
    $state = $_POST['state'];
    $zip = $_POST['zip'];
-   if(!empty($_POST['Role']))
-   {
-	  $roles = $_POST['Role'];
-   }
-   if(!empty($_POST['Day']))
-   {
-      $days = $_POST['Day'];
-   }
-   $group_number = $_POST['group-number'];
-   $group_age = $_POST['group-age'];
-   $group_availability = $_POST['group-avail'];
-   $group_note = $_POST['group-notes'];
-   if(!empty($_POST['heardby']))
-   {
-      $heardby = $_POST['heardby'];
-   }
+   //$group_number = $_POST['group-number'];
+   //$group_age = $_POST['group-age'];
+   //$group_availability = $_POST['group-avail'];
+   //$group_note = $_POST['group-notes'];
+   $source = $_POST['source'];
    $comments = $_POST['comments'];
    $errorMessage = "";
    
@@ -46,11 +34,11 @@ if($_POST['Submit'] == "Register as Volunteer")
    if(empty($phone)) {
       $errorMessage .= "<li>No Phone!</li>";
    }
+   if(!is_numeric($phone)) {
+	   $errorMessage .= "<li>Phone Number is Non-Numeric!</li>";
+   }
    if(empty($city)) {
       $errorMessage .= "<li>No City!</li>";
-   }
-   if(empty($email)) {
-      $errorMessage .= "<li>No Email!</li>";
    }
    if(empty($state)) {
       $errorMessage .= "<li>No State!</li>";
@@ -58,11 +46,15 @@ if($_POST['Submit'] == "Register as Volunteer")
    if(empty($zip)) {
       $errorMessage .= "<li>No Zip!</li>";
    }
+   if(!is_numeric($zip)) {
+	   $errorMessage .= "<li>Zip is Non-Numeric!</li>";
+   }
    if(!empty($errorMessage))
    {
 	  die($errorMessage);
    }
 
+/*
    $sql = "INSERT INTO volunteers (first_name, last_name, phone, email, active, street, city, state, zip, privilege_id) VALUES 
    ('$firstname', '$lastname', '$phone', '$email', '1', '$street', '$city', '$state', '$zip', '1')";
    
@@ -70,8 +62,44 @@ if($_POST['Submit'] == "Register as Volunteer")
    {
 		die('Could not insert your information: ' .mysql_error());
    }
-   
+*/
 
-}
+	$sql = "INSERT INTO %s VALUES (%s);  ";
+
+	$tableinfo = "volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source, signed_up)";
+	
+	$today = date('Y-m-d');
+
+	$valueinfo = "'$firstname', '$middlename', '$lastname', '$organization', '$phone', '$email', '$street', '$city', '$state', '$zip', '$comments', $source, '$today'";
+
+	$r = $db->q($sql, array($tableinfo, $valueinfo));
+
+	if ($r->isValid()) {
+		echo $db->error();
+	}
+
+	$volunteerID = mysql_insert_id();
+
+	foreach($_POST['roles'] as $role) {
+		$tableinfo = "volunteer_roles (volunteer_id, volunteer_type_id)";
+		$valueinfo = "$volunteerID, $role";
+
+		$r = $db->q($sql, array($tableinfo, $valueinfo));
+
+		if ($r->isValid()) {
+			echo $db->error();
+		}
+	}
+
+	foreach($_POST['days'] as $day) {
+		$tableinfo = "volunteer_prefers (volunteer_id, day_id)";
+		$valueinfo = "$volunteerID, $day";
+	
+		$r = $db->q($sql, array($tableinfo, $valueinfo));
+		
+		if ($r->isValid()) {
+			echo $db->error();
+		}
+	}
 
 ?>
