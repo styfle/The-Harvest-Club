@@ -33,9 +33,6 @@ $sources = $r->buildArray();
 			<td colspan="3" class="hidden"><input id="volunteer8" name="password" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="hidden"><input id="volunteer14" name="privilege" type="text" size="2"/></td>
-		</tr>
-		<tr>
 			<td colspan="3" class="hidden"><input id="volunteer15" name="signedup" type="text" size="2"/></td>
 		</tr>
 		<tr>
@@ -92,15 +89,15 @@ $sources = $r->buildArray();
 		<?php echo $empty_cell ?>
 	
 		<tr>
-			<td><b>Sources</b></td>
+			<td><b>Source</b></td>
 			<td>
-				<?php echo options('volunteer16', 'source', $sources); ?>
+				<?php echo options('volunteer17', 'source_id', $sources); ?>
 			</td>
 		</tr>
 	
 
 		<tr>			
-			<td colspan="3"><label for="volunteer14"><b>Volunteer Role</b></label></td>
+			<td colspan="3"><label for="volunteer5"><b>Volunteer Role</b></label></td>
 		</tr>
 		
 		<tr>
@@ -164,7 +161,7 @@ $sources = $r->buildArray();
 		<tr>
 			<td><b>User Type</b></td>
 			<td>
-				<?php echo options('volunteer13', 'privilege_id', $privileges); ?>
+				<?php echo options('volunteer14', 'privilege_id', $privileges); ?>
 			</td>
 		</tr>
 		
@@ -222,10 +219,13 @@ $sources = $r->buildArray();
 			<td><input type="text" name="zip" id="grower10" size="8"/></td>
 		</tr>
 		<tr>
-			<td><label for="grower12" >Source</label></td>
+			<td><b>Sources</b></td>
+			<td>
+				<?php echo options('grower12', 'source_id', $sources); ?>
+			</td>
 		</tr>
 		<tr>
-			<td colspan="3"><input id="grower12" name="source" type="text" size="20"/></td>			
+			<td colspan="3"><input id="grower12" name="source_id" type="text" size="20"/></td>			
 		</tr>	
 		<tr>
 			<td colspan="3"><label for="grower15">Property Type</label></td>

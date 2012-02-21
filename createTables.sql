@@ -141,7 +141,7 @@ CREATE TABLE growers (
 	state		CHAR(2)		NOT NULL, -- this makes sense right?
 	zip			VARCHAR(5)	NOT NULL, -- can it be bigger?
 	tools		TINYTEXT,
-	source		INT, -- this should probably be another INT type and a FK to a table
+	source_id	INT, -- this should probably be another INT type and a FK to a table
 	notes		TEXT,
   	pending TINYINT(1) DEFAULT 1, -- 1-Yes 0-No     
 	property_type_id INT NULL,
@@ -300,7 +300,7 @@ CREATE TABLE volunteers (
 	privilege_id INT DEFAULT 1,
 	signed_up DATE,
 	notes TEXT,
-	source INT,
+	source_id	INT,
 	CONSTRAINT fk_privilege_id FOREIGN KEY (privilege_id) REFERENCES privileges(id)
 ) ENGINE=innodb;
 
