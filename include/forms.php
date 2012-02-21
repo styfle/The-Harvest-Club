@@ -264,6 +264,9 @@ $sources = $r->buildArray();
 		<div><label for="grower13">Notes</label></div>
 		<div><textarea name="notes" id="grower13" rows="5" cols="30"></textarea></div>
 	</div>	
+	<div style="margin-top:5px;">
+		<input type="button" OnClick="viewTrees();" value="View Trees"/>
+	</div>		
 	</form>
 	<!-- Grower end -->
 	

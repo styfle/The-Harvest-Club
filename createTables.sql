@@ -158,6 +158,31 @@ INSERT INTO growers (first_name, middle_name, last_name, phone, email, preferred
 ('Fernanda','', 'Vargas', '(949) 533-1234', 'vargas@aol.com', 'phone', '23 Real St', 'Irvine', 'CA', '93731', 3, 1, 0),
 ('Billy','', 'Bob', '(800) 555-1234', 'bob@aol.com', 'email', '123 Spooner St', 'Springfield', 'IL', '65134', 4, 4, 0)
 ;
+
+
+INSERT INTO grower_trees VALUES
+	(1,1,'reallyorange',2,5,1,'alala');
+
+INSERT INTO month_harvests VALUES
+	(1,1,'reallyorange',12);
+
+INSERT INTO grower_trees VALUES
+	(2,3,'fernandoavocado',2,5,1,'alaasdfla');
+
+INSERT INTO month_harvests VALUES
+	(2,3,'fernandoavocado',1);
+
+INSERT INTO grower_trees VALUES
+	(3,6,'apple pie',2,5,1,'apsdjdjd');
+
+INSERT INTO month_harvests VALUES
+	(3,6,'apple pie',1);
+
+INSERT INTO grower_trees VALUES
+	(4,5,'peach',2,5,1,'alaasdfla');
+
+INSERT INTO month_harvests VALUES
+	(4,5,'peach',11);
 -- end temp insert
 
 
