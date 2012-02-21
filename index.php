@@ -190,51 +190,15 @@
 						alert('Ajax Error!\n' + e.responseText);
 						}
 					});
-					dt.fnReloadAjax();
 														
 					break;
 				
 				case 2:	
-					for(var i = 2; i < 17; i++){
-						row[i]=$('#grower'+i).val();								
-					}
-					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
-					
-					//Update DB
-					var para = $('#grower').serialize();
-					$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=update_grower&'+para,
-					'success': function (data) {
-						alert('Information is updated!');
-						
-									  },
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
-					});
 					break;
 				case 3:
 					break;
 					
 				case 4:
-					var para = $('#distribution').serialize();															
-					for(var i = 1; i < row.length; i++){
-						row[i]=$('#distribution'+i).val();								
-					}
-					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
-					
-					//Update DB
-					$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=update_distribution&'+para,
-					'success': function (data) {
-						alert('Information is updated!');
-					},
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
-					});							
 					break;
 			}		
 		}
