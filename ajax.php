@@ -24,16 +24,17 @@ function updateVolunteer($exists) {
 	$organization = $_REQUEST['organization'];
 	$phone = $_REQUEST['phone'];
 	$email = $_REQUEST['email'];
+	$status = $_REQUEST['status'];
 	$street = $_REQUEST['street'];
 	$city = $_REQUEST['city'];
 	$state = $_REQUEST['state'];
 	$zip = $_REQUEST['zip'];
-	$note =  $_REQUEST['note'];
 	$priv_id = $_REQUEST['privilege_id'];
+	$notes =  $_REQUEST['note'];
 	$source_id = $_REQUEST['source']; // change to source_id
 	
 	if ($exists) { // volunteer exists so just update
-		$sql = "Update volunteers Set first_name='".$firstName."', middle_name='".$middleName."',last_name='".$lastName."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."' ,zip='".$zip."', notes='".$note."' where id=".$id;						
+		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', phone='$phone', email='$email', status=$status, street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";						
 		$r = $db->q($sql);
 		
 		for ($i=1; $i<6 ; $i++) {

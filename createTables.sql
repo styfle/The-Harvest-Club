@@ -159,30 +159,6 @@ INSERT INTO growers (first_name, middle_name, last_name, phone, email, preferred
 ('Billy','', 'Bob', '(800) 555-1234', 'bob@aol.com', 'email', '123 Spooner St', 'Springfield', 'IL', '65134', 4, 4, 0)
 ;
 
-
-INSERT INTO grower_trees VALUES
-	(1,1,'reallyorange',2,5,1,'alala');
-
-INSERT INTO month_harvests VALUES
-	(1,1,'reallyorange',12);
-
-INSERT INTO grower_trees VALUES
-	(2,3,'fernandoavocado',2,5,1,'alaasdfla');
-
-INSERT INTO month_harvests VALUES
-	(2,3,'fernandoavocado',1);
-
-INSERT INTO grower_trees VALUES
-	(3,6,'apple pie',2,5,1,'apsdjdjd');
-
-INSERT INTO month_harvests VALUES
-	(3,6,'apple pie',1);
-
-INSERT INTO grower_trees VALUES
-	(4,5,'peach',2,5,1,'alaasdfla');
-
-INSERT INTO month_harvests VALUES
-	(4,5,'peach',11);
 -- end temp insert
 
 
@@ -200,6 +176,31 @@ CREATE TABLE grower_trees (
 	CONSTRAINT fk_grower_trees_height FOREIGN KEY (avgHeight_id) REFERENCES tree_heights(id)
 ) ENGINE=innodb;
 
+-- temp insert
+INSERT INTO grower_trees VALUES
+	(NULL, 1,1,'reallyorange',2,5,1);
+
+INSERT INTO month_harvests VALUES
+	(1,12);
+
+INSERT INTO grower_trees VALUES
+	(NULL, 2,3,'fernandoavocado',2,5,1);
+
+INSERT INTO month_harvests VALUES
+	(3,1);
+
+INSERT INTO grower_trees VALUES
+	(NULL, 3,6,'apple pie',2,5,1);
+
+INSERT INTO month_harvests VALUES
+	(6,1);
+
+INSERT INTO grower_trees VALUES
+	(NULL, 4,5,'peach',2,5,1);
+
+INSERT INTO month_harvests VALUES
+	(5,11);
+-- end temp insert
 
 DROP TABLE IF EXISTS month_harvests;
 CREATE TABLE month_harvests (
@@ -291,7 +292,7 @@ CREATE TABLE volunteers (
 	phone varchar(17) NOT NULL, 
 	email nvarchar(255) NOT NULL, 
 	password nvarchar(255) NULL, 
-	active TINYINT(1) DEFAULT 1, -- 1-Active, 0-Inactive
+	status TINYINT(1) DEFAULT 1, -- 1-Active, 0-Inactive
 	street nvarchar(255) NOT NULL,
 	city varchar(255) NOT NULL,
 	state CHAR(2) NOT NULL, 
@@ -304,7 +305,7 @@ CREATE TABLE volunteers (
 ) ENGINE=innodb;
 
 
-INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, active, street, city, state, zip, privilege_id, signed_up,notes) VALUES
+INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, status, street, city, state, zip, privilege_id, signed_up,notes) VALUES
 ('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', password('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 4,'2010-05-01',"")
 ;
 

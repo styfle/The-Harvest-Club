@@ -1,9 +1,9 @@
 <?php
 require_once('include/Database.inc.php');
 
-function options($name, $data) {
+function options($id, $name, $data) {
 	//$optionSelect = '<option value="" disabled="disabled" selected="selected">Select...</option>';
-	$s = "<select name='$name'>";
+	$s = "<select id='$id' name='$name'>";
 	foreach ($data as $o) {
 		$s .= "<option value='$o[id]'>$o[name]</option>";
 	}
@@ -94,7 +94,7 @@ $sources = $r->buildArray();
 		<tr>
 			<td><b>Sources</b></td>
 			<td>
-				<?php echo options('source', $sources); ?>
+				<?php echo options('volunteer16', 'source', $sources); ?>
 			</td>
 		</tr>
 	
@@ -164,7 +164,7 @@ $sources = $r->buildArray();
 		<tr>
 			<td><b>User Type</b></td>
 			<td>
-				<?php echo options('privilege_id', $privileges); ?>
+				<?php echo options('volunteer13', 'privilege_id', $privileges); ?>
 			</td>
 		</tr>
 		
