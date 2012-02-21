@@ -33,7 +33,8 @@
 	<script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
 	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
-</head>
+
+	</head>
 
 <body id="dt_example">
 <div id="container">
@@ -41,7 +42,7 @@
 		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Page Title<span></h1>
 		<div id="quote">"The harvest is plentiful but the workers are few"</div>
 		<form>
-			<div id="nav">
+			<div id="nav" style="float: left"> 
 				<input type="radio" id="get_notifications" name="radio" checked="checked" /><label for="get_notifications">Notifications</label>
 				<input type="radio" id="get_volunteers" name="radio" /><label for="get_volunteers">Volunteers</label>
 				<input type="radio" id="get_growers" name="radio" /><label for="get_growers">Growers</label>
@@ -54,6 +55,20 @@
 	</header>
 	
 	<div id="main" role="main">
+		<style>
+		#toolbar {
+			float: right;
+		}
+		</style>
+		<div class="toolbar">
+			<span id="toolbar" class="ui-widget-header ui-corner-all">
+				<button id="Add">Add</button>
+				<button id="Remove">Remove</button>
+				<button id="Export">Export</button>
+			</span>
+
+		</div><!-- End toolbar -->
+
 		<table id="dt" cellpadding="0" cellspacing="0" border="0" class="display">
 			<!-- table is filled dynamically -->
 			<thead><tr><th>Loading...</th></tr></thead>
@@ -72,11 +87,207 @@
 	
 	
 	
-	
-	
-	<script type="text/javascript">
+	<script type="text/javascript" charset="utf-8">
 	var dt; // global datatable variable
 	var currentTable = 0; // global id of current data table
+	var forms = ['volunteer', 'grower', 'distribution'];
+
+	var saveButton = {
+		text: 'Save',
+		click: function() {
+			switch (currentTable)
+			{
+				case 0:		//				
+					break;
+					
+				case 1:		//Volunteers Tab
+					for(var i = 2; i < 16; i++){								
+						row[i]=$('#volunteer'+i).val();								
+					}
+					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
+					
+					//Update DB
+					var para = $('#volunteer').serialize();
+					$.ajax({							
+					'type': 'GET',
+					'url': 'ajax.php?cmd=update_volunteer&'+para,
+					'success': function (data) {
+						alert('Information is updated!');
+									  },
+					'error': function(e) {
+						alert('Ajax Error!\n' + e.responseText);
+						}
+					});
+					
+														
+					break;
+				
+				case 2:	
+					for(var i = 2; i < 17; i++){
+						row[i]=$('#grower'+i).val();								
+					}
+					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
+					
+					//Update DB
+					var para = $('#grower').serialize();
+					$.ajax({							
+					'type': 'GET',
+					'url': 'ajax.php?cmd=update_grower&'+para,
+					'success': function (data) {
+						alert('Information is updated!');
+						
+									  },
+					'error': function(e) {
+						alert('Ajax Error!\n' + e.responseText);
+						}
+					});
+					break;
+				case 3:
+					break;
+					
+				case 4:
+					var para = $('#distribution').serialize();															
+					for(var i = 1; i < row.length; i++){
+						row[i]=$('#distribution'+i).val();								
+					}
+					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
+					
+					//Update DB
+					$.ajax({							
+					'type': 'GET',
+					'url': 'ajax.php?cmd=update_distribution&'+para,
+					'success': function (data) {
+						alert('Information is updated!');
+					},
+					'error': function(e) {
+						alert('Ajax Error!\n' + e.responseText);
+						}
+					});							
+					break;
+			}		
+		}
+	};
+
+	var addButton = {
+		text: 'Add',
+		click: function() {
+			switch (currentTable)
+			{
+				case 0:		//				
+					break;
+					
+				case 1:		//Volunteers Tab
+					
+					//Update DB
+					var para = $('#volunteer').serialize();
+					$.ajax({							
+					'type': 'GET',
+					'url': 'ajax.php?cmd=add_volunteer&'+para,
+					'success': function (data) {
+						alert('Information is added!');
+									  },
+					'error': function(e) {
+						alert('Ajax Error!\n' + e.responseText);
+						}
+					});
+														
+					break;
+				
+				case 2:	
+					break;
+				case 3:
+					break;
+					
+				case 4:
+					break;
+			}		
+		}
+	};
+	
+	
+	var cancelButton = {
+		text: 'Cancel',
+		click: function() {
+			$(this).dialog('close');
+		}
+	}; 
+	
+	$(function() {
+		$( "#Add" ).button({
+			label: "Add",
+			icons: {
+				primary: "ui-icon-plus"
+			}
+		}).click(function()
+		{
+			// Clear all forms
+			for(var i = 0; i < forms.length; i++)
+			{
+				$('#'+forms[i]).find(':input').each(function()
+				{
+					switch(this.type) {
+						case 'tel':
+						case 'text':
+						case 'password':
+						case 'textarea':
+						case 'select-one':
+						case 'select-multiple':
+								$(this).val('');
+								break;
+						case 'radio':
+						case 'checkbox':
+								this.checked = false;
+						default:
+								$(this).val('');
+								break;
+					}
+				});
+			}
+			
+			//Display the form you want, hide everything else
+			switch (currentTable)
+			{
+				case 1: //volunteer
+					$('#grower').addClass('hidden');
+					$('#distribution').addClass('hidden');
+					$('#volunteer').removeClass('hidden'); //for css see style.css
+//					for (var i = 0; i < row.length; i++)
+//						$('#volunteer' + i).val('');
+				break;
+				
+				case 2: // grower
+					$('#volunteer').addClass('hidden');
+					$('#distribution').addClass('hidden');
+					$('#grower').removeClass('hidden');
+				break;
+				
+				case 4: // distribution
+                    $('#volunteer').addClass('hidden');
+                    $('#grower').addClass('hidden');
+                    $('#distribution').removeClass('hidden');
+                break;
+			}			
+
+//			$('#form' + id).removeClass('hidden');
+			$('#edit-dialog').dialog("option", "buttons", [addButton, cancelButton]);
+			$('#edit-dialog').dialog({ title: 'Add Record' });
+			$('#edit-dialog').dialog('open');
+			
+		});
+
+		$( "#Remove" ).button({
+			label: "Remove",
+			icons: {
+				primary: "ui-icon-trash"
+			}
+		});
+		$( "#Export" ).button({
+			label: "Export",
+			icons: {
+				primary: "ui-icon-document"
+			}
+		});
+	});
 	
 	$(document).ready(function() {
 	
@@ -84,8 +295,10 @@
 			'bJQueryUI': true, // style using jQuery UI
 			'sPaginationType': 'full_numbers', // full pagination
 			'bProcessing': true, // show loading bar text
-			'bAutoWidth': true, // auto column size
+			//'bAutoWidth': true, // auto column size
 			'aaSorting': [], // disable initial sort
+			"sScrollX": "100%",
+			//"bScrollCollapse": true
 			//'aaData': [],
 			//'aoColumns': [],
 		});
@@ -137,8 +350,10 @@
 										[10, 25, 50, 100, "All"]], // sort name
 						'aoColumns': data.datatable.aoColumns,
 						'aaData': data.datatable.aaData,
+						//"sScrollX": "100%",
+						//"bScrollCollapse": true
 					});
-					
+
 					currentTable = data.id; // set current table after it is populated
 					$('#page_title').text(data.title); // set page title
 				},
@@ -147,7 +362,6 @@
 				}
 			});
 		});
-
 		
 		
 		$('#edit-dialog').dialog({
@@ -159,83 +373,6 @@
 			close: function() {
 				console.log('dialog closed');
 			},
-			buttons: {
-				'Save': function() {
-					switch (currentTable)
-					{
-						case 0:		//				
-							break;
-							
-						case 1:		//Volunteers Tab
-							for(var i = 2; i < 16; i++){								
-								row[i]=$('#volunteer'+i).val();								
-							}
-							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
-							
-							//Update DB
-							var para = $('#volunteer').serialize();
-							$.ajax({							
-							'type': 'GET',
-							'url': 'ajax.php?cmd=update_volunteer&'+para,
-							'success': function (data) {
-								alert('Information is updated!');
-							                  },
-							'error': function(e) {
-								alert('Ajax Error!\n' + e.responseText);
-								}
-							});
-							
-																
-							break;
-						
-						case 2:	
-							for(var i = 2; i < 17; i++){
-								row[i]=$('#grower'+i).val();								
-							}
-							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
-							
-							//Update DB
-							var para = $('#grower').serialize();
-							$.ajax({							
-							'type': 'GET',
-							'url': 'ajax.php?cmd=update_grower&'+para,
-							'success': function (data) {
-								alert('Information is updated!');
-								
-							                  },
-							'error': function(e) {
-								alert('Ajax Error!\n' + e.responseText);
-								}
-							});
-							break;
-						case 3:
-							break;
-							
-						case 4:
-							var para = $('#distribution').serialize();															
-							for(var i = 1; i < row.length; i++){
-								row[i]=$('#distribution'+i).val();								
-							}
-							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
-							
-							//Update DB
-							$.ajax({							
-							'type': 'GET',
-							'url': 'ajax.php?cmd=update_distribution&'+para,
-							'success': function (data) {
-								alert('Information is updated!');
-							},
-							'error': function(e) {
-								alert('Ajax Error!\n' + e.responseText);
-								}
-							});							
-							break;
-					}						
-				},
-				Cancel: function() {
-					$(this).dialog('close');
-				}
-			} // end buttons
 		});
 		
 		// after we force a dialog, hidden is handled by jqueryUI
@@ -341,7 +478,8 @@
 		
 			}			
 			
-			
+			$('#edit-dialog').dialog("option", "buttons", [saveButton, cancelButton]);
+			$('#edit-dialog').dialog({ title: 'Edit Record' });
 			$('#edit-dialog').dialog('open') // show dialog
 		}); // on.click tr
 

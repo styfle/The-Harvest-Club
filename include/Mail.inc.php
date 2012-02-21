@@ -11,15 +11,25 @@ if (file_exists($config)) {
 class Mail
 {
 	private $headers;
+	private $to;
+	private $from;
+	private $replyto;
 	
-	function __construct() {
+	function __construct($to, $from, $replyto) {
 		$this->headers = ''; // empty headers
+		$this->to = $to;
+		$this->from = $from;
+		$this->replyto = $replyto;
 	}
 
 	/**
 	 * Send email to single recipient
 	 */
-	function send($subject, $message, $to=MAIL_TO, $from=MAIL_FROM, $replyto=MAIL_FROM) {
+	function send($subject, $message, $to=NULL, $from=NULL, $replyto=NULL) {
+		if (is_NULL($to)) $to = $this->to;
+		if (is_NULL($from)) $from= $this->from;
+		if (is_NULL($replyto)) $replyto= $this->from;
+
 		//$this->headers .= 'To: ' . $to . "\r\n";
 		$this->headers .= 'From: ' . $from . "\r\n";
 		$this->headers .= 'Reply-To: ' . $replyto . "\r\n";
@@ -32,16 +42,16 @@ class Mail
 	 */
 	function sendBulk($subject, $message, $bcc) {
 		//$bcc = $implode(',', $addresses);
-		//$this->headers .= 'To: ' . MAIL_TO . "\r\n";
-		$this->headers .= 'From: ' . MAIL_FROM . "\r\n";
-		$this->headers .= 'Reply-To: ' . MAIL_REPLYTO . "\r\n";
+		//$this->headers .= 'To: ' . $this->to . "\r\n";
+		$this->headers .= 'From: ' . $this->from . "\r\n";
+		$this->headers .= 'Reply-To: ' . $this->replyto . "\r\n";
 		$this->headers .= 'Bcc: ' . $bcc . "\r\n";
 		//$this->headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 		//$this->headers .= 'X-Mailer: Microsoft Office Outlook' . "\r\n";
-		return mail(MAIL_TO, $subject, $message, $this->headers);
+		return mail($this->to, $subject, $message, $this->headers);
 	}
 }
 
-$mail = new Mail(); // global object
+$mail = new Mail(MAIL_TO, MAIL_FROM, MAIL_REPLYTO); // global object
 
 ?>
