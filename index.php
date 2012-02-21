@@ -295,7 +295,7 @@
 			'bJQueryUI': true, // style using jQuery UI
 			'sPaginationType': 'full_numbers', // full pagination
 			'bProcessing': true, // show loading bar text
-			//'bAutoWidth': true, // auto column size
+			'bAutoWidth': true, // auto column size
 			'aaSorting': [], // disable initial sort
 			"sScrollX": "100%",
 			//"bScrollCollapse": true
