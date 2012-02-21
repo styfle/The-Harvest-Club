@@ -12,12 +12,13 @@ $data = array('status'=>200); // default to OK
 
 function getError($r) {
 	global $data;
+	global $db;
 
 	if ($r->isValid())
 		return 0; // 0 is success
 
 	$data['status'] = 999;
-	$data['message'] = 'DB: ' . $e; // show error message
+	$data['message'] = 'DB: ' . $db->error(); // show error message
 	return $data;
 }
 
@@ -173,6 +174,93 @@ function generatePassword ()
     return $password;
   }
 
+// if exists = true then update, else add new data
+function updateVolunteer($exists)
+{
+	global $db;
+	global $data;
+	$id = $_REQUEST['id'];						
+	$firstName = $_REQUEST['firstname'];		
+	$middleName = $_REQUEST['middlename'];
+	$lastName = $_REQUEST['lastname'];
+	$phone = $_REQUEST['phone'];
+	$email = $_REQUEST['email'];
+	$street = $_REQUEST['street'];
+	$city = $_REQUEST['city'];
+	$state = $_REQUEST['state'];
+	$zip = $_REQUEST['zip'];
+	$note =  $_REQUEST['note'];
+	if($exists)
+	{
+		$sql = "Update volunteers Set first_name='".$firstName."', middle_name='".$middleName."',last_name='".$lastName."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."' ,zip='".$zip."', notes='".$note."' where id=".$id;						
+
+		$r = $db->q($sql);			
+		
+		for ($i=1; $i<6 ; $i++ )
+		 if (isset($_GET["volunteerRole$i"])) //it is checked
+			{	
+				if( $i==2 )
+				{
+					$sql = "Select * From volunteer_roles where volunteer_type_id= 2 And volunteer_id=".$id;     
+					$r = $db->q($sql);	
+					if(!($r->hasRows())) // IS NOT Captain 
+					{
+						$pass = generatePassword();	
+						$sql = "Update volunteers Set password = password('".$pass."') where id=".$id;						
+						$r = $db->q($sql);			
+						// And then send an email		
+						$mail = 'Mail';
+						$m = new $mail();
+						$subject='From: The Harvest Club - Your account information';
+						$message=' Hi, here is your password: '.$pass;
+						$to = $email;
+						$from = 'admin@thc.net';
+						$replyto = 'admin@thc.net';
+						//$m->send($subject, $message, $to=MAIL_TO, $from=MAIL_FROM, $replyto=MAIL_FROM);
+					}
+				}
+				
+				$sql = "Insert into volunteer_roles(volunteer_id, volunteer_type_id) Values(".$id.",".$i.")";
+				$r = $db->q($sql);
+			}			
+		 else // it is unchecked
+			{	
+				if( $i==2 )
+				{
+					$sql = "Select * From volunteer_roles where volunteer_type_id= 2 And volunteer_id=".$id;     
+					$r = $db->q($sql);		
+					if($r->hasRows()) // being Captain and unchecked			
+					{
+						$sql = "Update volunteers Set password = null where id=".$id;						
+						$r = $db->q($sql);			
+					}
+				}
+				
+				$sql = "Delete From volunteer_roles Where volunteer_type_id= ".$i." And volunteer_id=".$id;					
+				$r = $db->q($sql);
+			
+			}
+			
+		for ($i=1; $i<8 ; $i++ )
+		 if (isset($_GET["volunteerDay$i"])) //it is checked
+			{							   
+				$sql = "Insert into volunteer_prefers(volunteer_id, day_id) Values(".$id.",".$i.")";
+				$r = $db->q($sql);
+			}			
+		 else // it is unchecked
+			{				
+				$sql = "Delete From volunteer_prefers Where day_id= ".$i." And volunteer_id=".$id;					
+				$r = $db->q($sql);			
+			}
+	}
+	else
+	{
+		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, active, street, city, state, zip, privilege_id) VALUES 
+		('$firstName', '$middleName', '$lastName', '$phone', '$email', '1', '$street', '$city', '$state', '$zip', '1')";
+
+		$r = $db->q($sql);			
+	}
+}
 
 
 switch ($cmd)
@@ -296,81 +384,14 @@ switch ($cmd)
 		$sql = "Update growers Set first_name='".$firstname."', middle_name ='".$middlename."', last_name='".$lastname."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."',zip='".$zip."', tools='".$tools."', source='".$source."', notes='".$notes."', property_type_id ='".$property_type."', property_relationship_id ='".$property_relationship."' where id=".$id;				
 		$r = $db->q($sql);
 		break;
+		
 	case 'update_volunteer':
-		global $db;
-		global $data;
-		$id = $_REQUEST['id'];						
-		$firstName = $_REQUEST['firstname'];		
-		$middleName = $_REQUEST['middlename'];
-		$lastName = $_REQUEST['lastname'];
-		$phone = $_REQUEST['phone'];
-		$email = $_REQUEST['email'];
-		$street = $_REQUEST['street'];
-		$city = $_REQUEST['city'];
-		$state = $_REQUEST['state'];
-		$zip = $_REQUEST['zip'];
-		$note =  $_REQUEST['note'];
-		$sql = "Update volunteers Set first_name='".$firstName."', middle_name='".$middleName."',last_name='".$lastName."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."' ,zip='".$zip."', notes='".$note."' where id=".$id;						
-		$r = $db->q($sql);			
+		updateVolunteer(true);
+		break;
 		
-		for ($i=1; $i<6 ; $i++ )
-		 if (isset($_GET["volunteerRole$i"])) //it is checked
-			{	
-				if( $i==2 )
-				{
-					$sql = "Select * From volunteer_roles where volunteer_type_id= 2 And volunteer_id=".$id;     
-					$r = $db->q($sql);	
-					if(!($r->hasRows())) // IS NOT Captain 
-					{
-						$pass = generatePassword();	
-						$sql = "Update volunteers Set password = password('".$pass."') where id=".$id;						
-						$r = $db->q($sql);			
-						// And then send an email		
-						$mail = 'Mail';
-						$m = new $mail();
-						$subject='From: The Harvest Club - Your account information';
-						$message=' Hi, here is your password: '.$pass;
-						$to = $email;
-						$from = 'admin@thc.net';
-						$replyto = 'admin@thc.net';
-						//$m->send($subject, $message, $to=MAIL_TO, $from=MAIL_FROM, $replyto=MAIL_FROM);
-					}
-				}
-				
-				$sql = "Insert into volunteer_roles(volunteer_id, volunteer_type_id) Values(".$id.",".$i.")";
-				$r = $db->q($sql);
-			}			
-		 else // it is unchecked
-			{	
-				if( $i==2 )
-				{
-					$sql = "Select * From volunteer_roles where volunteer_type_id= 2 And volunteer_id=".$id;     
-					$r = $db->q($sql);		
-					if($r->hasRows()) // being Captain and unchecked			
-					{
-						$sql = "Update volunteers Set password = null where id=".$id;						
-						$r = $db->q($sql);			
-					}
-				}
-				
-				$sql = "Delete From volunteer_roles Where volunteer_type_id= ".$i." And volunteer_id=".$id;					
-				$r = $db->q($sql);
-			
-			}
-			
-		for ($i=1; $i<8 ; $i++ )
-		 if (isset($_GET["volunteerDay$i"])) //it is checked
-			{							   
-				$sql = "Insert into volunteer_prefers(volunteer_id, day_id) Values(".$id.",".$i.")";
-				$r = $db->q($sql);
-			}			
-		 else // it is unchecked
-			{				
-				$sql = "Delete From volunteer_prefers Where day_id= ".$i." And volunteer_id=".$id;					
-				$r = $db->q($sql);			
-			}
-		break;		
-		
+	case 'add_volunteer':
+		updateVolunteer(false);
+		break;
 		
 	case 'send_grower_email':
 		date_default_timezone_set("America/Los_Angeles");

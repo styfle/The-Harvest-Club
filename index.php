@@ -34,11 +34,6 @@
 	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
 
-	<script type="text/javascript" src="js/jquery.jeditable.js"></script>
-	<script type="text/javascript" src="js/jquery-ui.js"></script>
-	<script type="text/javascript" src="js/jquery.validate.js"></script>
-	<script type="text/javascript" src="js/jquery.dataTables.editable.js"></script>
-	
 	</head>
 
 <body id="dt_example">
@@ -47,7 +42,7 @@
 		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Page Title<span></h1>
 		<div id="quote">"The harvest is plentiful but the workers are few"</div>
 		<form>
-			<div id="nav">
+			<div id="nav" style="float: left"> 
 				<input type="radio" id="get_notifications" name="radio" checked="checked" /><label for="get_notifications">Notifications</label>
 				<input type="radio" id="get_volunteers" name="radio" /><label for="get_volunteers">Volunteers</label>
 				<input type="radio" id="get_growers" name="radio" /><label for="get_growers">Growers</label>
@@ -60,6 +55,20 @@
 	</header>
 	
 	<div id="main" role="main">
+		<style>
+		#toolbar {
+			float: right;
+		}
+		</style>
+		<div class="toolbar">
+			<span id="toolbar" class="ui-widget-header ui-corner-all">
+				<button id="Add">Add</button>
+				<button id="Remove">Remove</button>
+				<button id="Export">Export</button>
+			</span>
+
+		</div><!-- End toolbar -->
+
 		<table id="dt" cellpadding="0" cellspacing="0" border="0" class="display">
 			<!-- table is filled dynamically -->
 			<thead><tr><th>Loading...</th></tr></thead>
@@ -81,6 +90,236 @@
 	<script type="text/javascript" charset="utf-8">
 	var dt; // global datatable variable
 	var currentTable = 0; // global id of current data table
+	var forms = ['volunteer', 'grower', 'distribution'];
+
+	var saveButton = {
+		text: 'Save',
+		click: function() {
+			switch (currentTable)
+			{
+				case 0:		//				
+					break;
+					
+				case 1:		//Volunteers Tab
+					for(var i = 2; i < 16; i++){								
+						row[i]=$('#volunteer'+i).val();								
+					}
+					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
+					
+					//Update DB
+					var para = $('#volunteer').serialize();
+					$.ajax({							
+					'type': 'GET',
+					'url': 'ajax.php?cmd=update_volunteer&'+para,
+					'success': function (data) {
+						alert('Information is updated!');
+									  },
+					'error': function(e) {
+						alert('Ajax Error!\n' + e.responseText);
+						}
+					});
+					
+														
+					break;
+				
+				case 2:	
+					for(var i = 2; i < 17; i++){
+						row[i]=$('#grower'+i).val();								
+					}
+					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
+					
+					//Update DB
+					var para = $('#grower').serialize();
+					$.ajax({							
+					'type': 'GET',
+					'url': 'ajax.php?cmd=update_grower&'+para,
+					'success': function (data) {
+						alert('Information is updated!');
+						
+									  },
+					'error': function(e) {
+						alert('Ajax Error!\n' + e.responseText);
+						}
+					});
+					break;
+				case 3:
+					break;
+					
+				case 4:
+					var para = $('#distribution').serialize();															
+					for(var i = 1; i < row.length; i++){
+						row[i]=$('#distribution'+i).val();								
+					}
+					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
+					
+					//Update DB
+					$.ajax({							
+					'type': 'GET',
+					'url': 'ajax.php?cmd=update_distribution&'+para,
+					'success': function (data) {
+						alert('Information is updated!');
+					},
+					'error': function(e) {
+						alert('Ajax Error!\n' + e.responseText);
+						}
+					});							
+					break;
+			}		
+		}
+	};
+
+	var addButton = {
+		text: 'Add',
+		click: function() {
+			switch (currentTable)
+			{
+				case 0:		//				
+					break;
+					
+				case 1:		//Volunteers Tab
+					
+					//Update DB
+					var para = $('#volunteer').serialize();
+					$.ajax({							
+					'type': 'GET',
+					'url': 'ajax.php?cmd=add_volunteer&'+para,
+					'success': function (data) {
+						alert('Information is added!');
+									  },
+					'error': function(e) {
+						alert('Ajax Error!\n' + e.responseText);
+						}
+					});
+					dt.fnReloadAjax();
+														
+					break;
+				
+				case 2:	
+					for(var i = 2; i < 17; i++){
+						row[i]=$('#grower'+i).val();								
+					}
+					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
+					
+					//Update DB
+					var para = $('#grower').serialize();
+					$.ajax({							
+					'type': 'GET',
+					'url': 'ajax.php?cmd=update_grower&'+para,
+					'success': function (data) {
+						alert('Information is updated!');
+						
+									  },
+					'error': function(e) {
+						alert('Ajax Error!\n' + e.responseText);
+						}
+					});
+					break;
+				case 3:
+					break;
+					
+				case 4:
+					var para = $('#distribution').serialize();															
+					for(var i = 1; i < row.length; i++){
+						row[i]=$('#distribution'+i).val();								
+					}
+					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
+					
+					//Update DB
+					$.ajax({							
+					'type': 'GET',
+					'url': 'ajax.php?cmd=update_distribution&'+para,
+					'success': function (data) {
+						alert('Information is updated!');
+					},
+					'error': function(e) {
+						alert('Ajax Error!\n' + e.responseText);
+						}
+					});							
+					break;
+			}		
+		}
+	};
+	
+	
+	var cancelButton = {
+		text: 'Cancel',
+		click: function() {
+			$(this).dialog('close');
+		}
+	}; 
+	
+	$(function() {
+		$( "#Add" ).button({
+			label: "Add",
+			icons: {
+				primary: "ui-icon-plus"
+			}
+		}).click(function()
+		{
+			// Clear all forms
+			for(var i = 0; i < forms.length; i++)
+			{
+				$('#'+forms[i]).find(':input').each(function()
+				{
+					switch(this.type) {
+						case 'text':
+						case 'password':
+						case 'textarea':
+						case 'select-one':
+						case 'select-multiple':
+								$(this).val('');
+								break;
+						case 'radio':
+						case 'checkbox':
+								this.checked = false;
+					}
+				});
+			}
+			
+			//Display the form you want, hide everything else
+			switch (currentTable)
+			{
+				case 1: //volunteer
+					$('#grower').addClass('hidden');
+					$('#distribution').addClass('hidden');
+					$('#volunteer').removeClass('hidden'); //for css see style.css
+//					for (var i = 0; i < row.length; i++)
+//						$('#volunteer' + i).val('');
+				break;
+				
+				case 2: // grower
+					$('#volunteer').addClass('hidden');
+					$('#distribution').addClass('hidden');
+					$('#grower').removeClass('hidden');
+				break;
+				
+				case 4: // distribution
+                    $('#volunteer').addClass('hidden');
+                    $('#grower').addClass('hidden');
+                    $('#distribution').removeClass('hidden');
+                break;
+			}			
+
+//			$('#form' + id).removeClass('hidden');
+			$('#edit-dialog').dialog("option", "buttons", [addButton, cancelButton]);
+			$('#edit-dialog').dialog({ title: 'Add Record' });
+			$('#edit-dialog').dialog('open');
+			
+		});
+
+		$( "#Remove" ).button({
+			label: "Remove",
+			icons: {
+				primary: "ui-icon-trash"
+			}
+		});
+		$( "#Export" ).button({
+			label: "Export",
+			icons: {
+				primary: "ui-icon-document"
+			}
+		});
+	});
 	
 	$(document).ready(function() {
 	
@@ -91,43 +330,10 @@
 			//'bAutoWidth': true, // auto column size
 			'aaSorting': [], // disable initial sort
 			"sScrollX": "100%",
-			"sScrollXInner": "110%",
-			"bScrollCollapse": true
+			//"bScrollCollapse": true
 			//'aaData': [],
 			//'aoColumns': [],
 		});
-
-		dt.makeEditable({
-//				sUpdateURL: "UpdateData.php",
-				sAddURL: "AddData.php",
-				sAddHttpMethod: "GET", //Used only on google.code live example because google.code server do not support POST request
-//				sDeleteURL: "DeleteData.php",
-				sAddNewRowFormId: "formAddNewRow",
-				oAddNewRowButtonOptions: {	label: "Add...",
-								icons: {primary:'ui-icon-plus'} 
-				},
-				oDeleteRowButtonOptions: {	label: "Remove", 
-								icons: {primary:'ui-icon-trash'}
-				},
-				oAddNewRowOkButtonOptions: {	label: "Confirm",
-								icons: {primary:'ui-icon-check'},
-								name:"action",
-								value:"add-new"
-				},
-				oAddNewRowCancelButtonOptions: { label: "Close",
-								 class: "back-class",
-								 name:"action",
-								 value:"cancel-add",
-								 icons: {primary:'ui-icon-close'}
-				},
-				oAddNewRowFormOptions: { 	title: 'Add Record',
-								show: "blind",
-								hide: "explode",
-								height: 530,
-								width: 400,
-				},
-				sAddDeleteToolbarSelector: ".dataTables_length"	
-			});
 	
 		$('#nav') // set up navigation
 			.buttonset() // turn into buttons
@@ -170,49 +376,16 @@
 						'bJQueryUI': true, // style using jQuery UI
 						'sPaginationType': 'full_numbers', // full pagination
 						'bProcessing': true, // show loading bar text
-						//'bAutoWidth': true, // auto column size
+						'bAutoWidth': true, // auto column size
 						'aaSorting': [], // disable initial sort
 						"aLengthMenu": [[10, 25, 50, 100, -1], // sort length
 										[10, 25, 50, 100, "All"]], // sort name
 						'aoColumns': data.datatable.aoColumns,
 						'aaData': data.datatable.aaData,
-						"sScrollX": "100%",
-						"sScrollXInner": "110%",
-						"bScrollCollapse": true
+						//"sScrollX": "100%",
+						//"bScrollCollapse": true
 					});
 
-		dt.makeEditable({
-//				sUpdateURL: "UpdateData.php",
-				sAddURL: "AddData.php",
-				sAddHttpMethod: "GET", //Used only on google.code live example because google.code server do not support POST request
-//				sDeleteURL: "DeleteData.php",
-				sAddNewRowFormId: "formAddNewRow",
-				oAddNewRowButtonOptions: {	label: "Add...",
-								icons: {primary:'ui-icon-plus'} 
-				},
-				oDeleteRowButtonOptions: {	label: "Remove", 
-								icons: {primary:'ui-icon-trash'}
-				},
-				oAddNewRowOkButtonOptions: {	label: "Confirm",
-								icons: {primary:'ui-icon-check'},
-								name:"action",
-								value:"add-new"
-				},
-				oAddNewRowCancelButtonOptions: { label: "Close",
-								 class: "back-class",
-								 name:"action",
-								 value:"cancel-add",
-								 icons: {primary:'ui-icon-close'}
-				},
-				oAddNewRowFormOptions: { 	title: 'Add Record',
-								show: "blind",
-								hide: "explode",
-								height: 530,
-								width: 400,
-				},
-				sAddDeleteToolbarSelector: ".dataTables_length"	
-			});
-					
 					currentTable = data.id; // set current table after it is populated
 					$('#page_title').text(data.title); // set page title
 				},
@@ -221,7 +394,6 @@
 				}
 			});
 		});
-
 		
 		
 		$('#edit-dialog').dialog({
@@ -233,83 +405,6 @@
 			close: function() {
 				console.log('dialog closed');
 			},
-			buttons: {
-				'Save': function() {
-					switch (currentTable)
-					{
-						case 0:		//				
-							break;
-							
-						case 1:		//Volunteers Tab
-							for(var i = 2; i < 16; i++){								
-								row[i]=$('#volunteer'+i).val();								
-							}
-							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
-							
-							//Update DB
-							var para = $('#volunteer').serialize();
-							$.ajax({							
-							'type': 'GET',
-							'url': 'ajax.php?cmd=update_volunteer&'+para,
-							'success': function (data) {
-								alert('Information is updated!');
-							                  },
-							'error': function(e) {
-								alert('Ajax Error!\n' + e.responseText);
-								}
-							});
-							
-																
-							break;
-						
-						case 2:	
-							for(var i = 2; i < 17; i++){
-								row[i]=$('#grower'+i).val();								
-							}
-							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
-							
-							//Update DB
-							var para = $('#grower').serialize();
-							$.ajax({							
-							'type': 'GET',
-							'url': 'ajax.php?cmd=update_grower&'+para,
-							'success': function (data) {
-								alert('Information is updated!');
-								
-							                  },
-							'error': function(e) {
-								alert('Ajax Error!\n' + e.responseText);
-								}
-							});
-							break;
-						case 3:
-							break;
-							
-						case 4:
-							var para = $('#distribution').serialize();															
-							for(var i = 1; i < row.length; i++){
-								row[i]=$('#distribution'+i).val();								
-							}
-							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
-							
-							//Update DB
-							$.ajax({							
-							'type': 'GET',
-							'url': 'ajax.php?cmd=update_distribution&'+para,
-							'success': function (data) {
-								alert('Information is updated!');
-							},
-							'error': function(e) {
-								alert('Ajax Error!\n' + e.responseText);
-								}
-							});							
-							break;
-					}						
-				},
-				Cancel: function() {
-					$(this).dialog('close');
-				}
-			} // end buttons
 		});
 		
 		// after we force a dialog, hidden is handled by jqueryUI
@@ -415,7 +510,8 @@
 		
 			}			
 			
-			
+			$('#edit-dialog').dialog("option", "buttons", [saveButton, cancelButton]);
+			$('#edit-dialog').dialog({ title: 'Edit Record' });
 			$('#edit-dialog').dialog('open') // show dialog
 		}); // on.click tr
 
@@ -452,84 +548,6 @@
 </div> <!-- container -->
 
 <?php require_once('include/forms.php'); ?>
-
-<!-- Adding a row Form -->
-	<form id="formAddNewRow" action="#" title="Add New Row" >
-
-		<h3>Volunteer</h3>
-		<table>
-		<tr>
-			<input type="hidden" id="checkbox" name="checkbox" rel="0" />
-			<td colspan="3" style = "display:none"><input id="volunteer1" name="id" type="text" size="2" rel="1"/></td>
-		</tr>
-		<tr>
-			<td><label for="volunteer2" >First</label></td>
-			<td><label for="volunteer3">Middle</label></td>
-			<td><label for="volunteer4">Last</label></td>
-		</tr>
-		<tr>
-			<td><input id="volunteer2" name="firstname" type="text" size="12" rel="2"/></td>
-			<td><input id="volunteer3" name="middlename" type="text" size="4" rel="3"/></td>
-			<td><input id="volunteer4" name="lastname" type="text" size="10" rel="4"/></td>
-		</tr>
-		<tr>
-			<td colspan="2"><label for="volunteer7">Password</label></td>
-			<td><label for="volunteer14">Signed-Up</label></td>
-		</tr>
-		<tr>
-			<td colspan="2"><input type="password" name="password" id="volunteer7" rel="7"/></td>
-			<td><input type="text" name="signedup" id="volunteer14" size="10" rel="14"/></td>
-		</tr>
-		<tr>
-			<td><label for="volunteer5">Phone</label></td>
-			<td colspan="2"><label for="volunteer6">Email</label></td>
-		</tr>
-		<tr>
-			<td><input type="tel" name="phone" id="volunteer5" size="12" rel="5"/></td>
-			<td colspan="2"><input type="text" name="email" id="volunteer6" size="17" rel="6"/></td>
-		</tr>
-		<tr>
-			<td colspan="3"><label for="volunteer9">Street</label></td>			
-		</tr>
-		<tr>
-			<td colspan="3"><input type="text" name="street" id="volunteer9" rel="9" size="33"/></td>			
-		</tr>
-		<tr>
-			<td><label for="volunteer10">City</label></td>
-			<td><label for="volunteer11">State</label></td>
-			<td><label for="volunteer12">Zip</label></td>
-		</tr>
-		<tr>			
-			<td><input type="text" name="city" id="volunteer10" size="12" rel="10"/></td>
-			<td><input type="text" name="state" id="volunteer11" size="2" rel="11"/></td>
-			<td><input type="text" name="zip" id="volunteer12" size="8" rel="12"/></td>
-		</tr>
-		<tr>
-			<td><label for="volunteer8">Status</label></td>
-			<td colspan="2"><label for="volunteer13">Privilege</label></td>
-		</tr>
-		<tr>
-			<td>
-				<select id="volunteer8" name="status" rel="8">
-					<option value="1">Active</option>
-					<option value="0">Inactive</option>					
-				</select>
-			</td>
-			<td colspan="2">
-				<select id="volunteer13" name="privilege" rel="13"> 
-					<option value="1">Volunteer</option>	
-					<option value="2">Harvest Captain</option>								
-				</select>
-			</td>
-		</tr>
-		</table>	
-	<input type="hidden" id="user_type" name="user_type" rel="16" />
-	<div style="margin-top:5px;">
-		<div><label for="volunteer14">Notes</label></div>
-		<div><textarea name="note" id="volunteer14" rows="5" cols="30" rel="15"></textarea></div>
-	</div>	
-	</form>
-	
 
 </body>
 </html>
