@@ -280,6 +280,28 @@
 			icons: {
 				primary: "ui-icon-trash"
 			}
+		}).click(function()
+		{
+			//pop up confirmation window
+
+			//if yes, then delete selected 
+			$('input[name=select-row]:checked').each(function(){
+				var row = $(this).parent().parent();
+				var data = dt.fnGetData(row[0]);
+				var id = data[1];
+				alert(id);
+				$.ajax({							
+					'type': 'GET',
+					'url': 'ajax.php?cmd=remove_volunteer&id='+id,
+					'success': function (data) {
+						//alert('Information is Removed!');
+									  },
+					'error': function(e) {
+						alert('Ajax Error!\n' + e.responseText);
+						}
+				});
+				row.remove();
+			});
 		});
 		$( "#Export" ).button({
 			label: "Export",
@@ -484,7 +506,7 @@
 		}); // on.click tr
 
 		$(document).on('click', 'input[name=select-row]', function(e) {
-			e.stopPropagation();
+				e.stopPropagation();
 		}); // on.click() checkbox row
 
 		$(document).on('click', 'input[name=select-all]', function(e) {

@@ -371,6 +371,16 @@ switch ($cmd)
 		//$data['zip'] = getZip();
 		//$data['fruit'] = getFruit();
 		break;
+	case 'remove_volunteer':
+		global $db;
+		global $data;
+		$id = $_REQUEST['id'];
+		//echo($id);
+		$sql = "DELETE FROM volunteers
+				WHERE id = '".$id."'";
+		$r = $db->q($sql);
+		getError($r);
+		break;
 	default:
 		$data['status'] = 404; // Not found
 		$data['message'] = "Unknown ajax command: $cmd";
