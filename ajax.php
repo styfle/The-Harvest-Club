@@ -31,10 +31,10 @@ function updateVolunteer($exists) {
 	$zip = $_REQUEST['zip'];
 	$priv_id = $_REQUEST['privilege_id'];
 	$notes =  $_REQUEST['note'];
-	$source_id = $_REQUEST['source']; // change to source_id
+	$source_id = $_REQUEST['source_id']; // change to source_id
 	
 	if ($exists) { // volunteer exists so just update
-		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', phone='$phone', email='$email', status=$status, street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";						
+		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', phone='$phone', email='$email', status=$status, street='$street', city='$city', state='$state',zip='$zip', notes='$notes', source_id=$source_id where id=$id";						
 		$r = $db->q($sql);
 		
 		for ($i=1; $i<6 ; $i++) {
@@ -57,14 +57,14 @@ function updateVolunteer($exists) {
 			}
 		}
 		
-		// TODO: Check if priv changed
+		// Check if priv changed
 		$sql = "SELECT p.id, p.name, v.password, v.first_name, v.last_name FROM volunteers v LEFT JOIN privileges p ON v.privilege_id = p.id WHERE v.id = $id";
 		$r = $db->q($sql);
 		$row = $r->getRow();
 		
 		if ($priv_id != $row[0]) { // privs have changed
 			$sql = "UPDATE volunteers SET privilege_id=$priv_id"; // new priv
-			$message = "$firstName $lastName,\r\nYour privileges have changed. You are now a $privName!\r\n";
+			$message = "$firstName $lastName,\r\nYour privileges have changed. You are now a $row[0]!\r\n";
 			if (empty($row[3])) { // no password
 				$pass = generatePassword(); // so generate
 				// http://dev.mysql.com/doc/refman/5.5/en/encryption-functions.html#function_sha2
@@ -79,8 +79,8 @@ function updateVolunteer($exists) {
 		}
 	
 	} else { // adding new volunteer
-		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, active, street, city, state, zip, privilege_id, notes, source, signed_up) VALUES
-		('$firstName', '$middleName', '$lastName', '$organization', '$phone', '$email', '1', '$street', '$city', '$state', '$zip', '1', '$note', $source_id, CURDATE())";
+		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, status, street, city, state, zip, privilege_id, notes, source_id, signed_up) VALUES
+		('$firstName', '$middleName', '$lastName', '$organization', '$phone', '$email', '1', '$street', '$city', '$state', '$zip', '1', '$notes', $source_id, CURDATE())";
 		$r = $db->q($sql);
 	}
 }
@@ -127,7 +127,7 @@ function getTable($sql) {
 	foreach ($a[0] as $k => $v) {
 		$column = array();
 		$column['sTitle'] = $k;
-		if ($k == 'id' || $k == 'password') {
+		if ($k == 'id' || $k == 'password') {// || contains($k, '_id')) {
 			$column['bSearchable'] = false;
 			$column['bVisible'] = false;
 		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip') {
@@ -294,8 +294,8 @@ switch ($cmd)
 		$city = $_REQUEST['city'];
 		$state = $_REQUEST['state'];
 		$zip = $_REQUEST['zip'];
-		$note =  $_REQUEST['note'];
-		$sql = "Update distributions Set name='".$name."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."',zip='".$zip."', notes='".$note."' where id=".$id;				
+		$notes =  $_REQUEST['note'];
+		$sql = "Update distributions Set name='$name', phone='$phone', email='$email', street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";				
 		$r = $db->q($sql);	
 		
 		for ($i=1; $i<8 ; $i++) {
@@ -351,13 +351,13 @@ switch ($cmd)
 		$zip = $_REQUEST['zip'];
 		$tools = $_REQUEST['tools'];
 		
-		$source = $_REQUEST['source'];
+		$source_id = $_REQUEST['source_id'];
 		$notes =  $_REQUEST['notes'];
 		
 		
 		$property_type= $_REQUEST['property_type'];
 		$property_relationship = $_REQUEST['property_relationship'];		
-		$sql = "Update growers Set first_name='".$firstname."', middle_name ='".$middlename."', last_name='".$lastname."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."',zip='".$zip."', tools='".$tools."', source='".$source."', notes='".$notes."', property_type_id ='".$property_type."', property_relationship_id ='".$property_relationship."' where id=".$id;				
+		$sql = "Update growers Set first_name='".$firstname."', middle_name ='".$middlename."', last_name='".$lastname."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."',zip='".$zip."', tools='".$tools."', source_id='".$source_id."', notes='".$notes."', property_type_id ='".$property_type."', property_relationship_id ='".$property_relationship."' where id=".$id;				
 		$r = $db->q($sql);
 		break;
 	case 'update_volunteer':
