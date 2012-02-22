@@ -130,7 +130,7 @@
 					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
 					
 					//Update DB
-					var para = $('#grower').serialize();
+					var para = $('#grower').serialize();					
 					$.ajax({							
 					'type': 'GET',
 					'url': 'ajax.php?cmd=update_grower&'+para,
@@ -290,7 +290,6 @@
 				var row = $(this).parent().parent();
 				var data = dt.fnGetData(row[0]);
 				var id = data[1];
-				alert(id);
 				$.ajax({							
 					'type': 'GET',
 					'url': 'ajax.php?cmd=remove_volunteer&id='+id,
@@ -379,13 +378,13 @@
 
 					currentTable = data.id; // set current table after it is populated
 					$('#page_title').text(data.title); // set page title
-					if(currentTable == 3){									//If current Tab is Trees AND growerID not 0, which means viewTrees button was clicked
+					if(currentTable == 3){									//If current Tab is Trees 
 						if(growerID != 0){
 							$('#dt tbody tr').each(function() {				//For every row in the table
-								//alert($(this).find("td").eq(1).html());	
-								tempId = $(this).find("td").eq(1).html();    
-								if(tempId != growerID)						//If not the tree belonging to the grower in interest
-									$(this).hide();							//Hide it
+								//alert(dt.fnGetData(this)[1]);	
+								tempId = dt.fnGetData(this)[1];    			//Get growerID of current row in Tree tabs
+								if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
+									$(this).hide();							//So it is hidden
 							});					
 						}						
 						growerID = 0;										//Reset growerID

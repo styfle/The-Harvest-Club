@@ -127,7 +127,7 @@ function getTable($sql) {
 	foreach ($a[0] as $k => $v) {
 		$column = array();
 		$column['sTitle'] = $k;
-		if ($k == 'id' || $k == 'password') {// || contains($k, '_id')) {
+		if ($k == 'id' || $k == 'password' || contains($k, '_id')) {
 			$column['bSearchable'] = false;
 			$column['bVisible'] = false;
 		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip') {
@@ -260,7 +260,9 @@ switch ($cmd)
 	case 'get_growers':
 		$data['id'] = 2;
 		$data['title'] = 'Growers';
-		$sql = "SELECT g.*, pt.name AS property_type, pr.name AS property_relationship FROM growers g, property_types pt, property_relationships pr WHERE g.id = pt.id AND g.id = pr.id;";
+		$sql = "SELECT g.*, pt.name AS property_type, pr.name AS property_relationship
+				FROM growers g, property_types pt, property_relationships pr
+				WHERE g.property_type_id = pt.id AND g.property_relationship_id = pr.id;";
 		getTable($sql);
 		break;
 	case 'get_trees':
@@ -349,12 +351,9 @@ switch ($cmd)
 		$city = $_REQUEST['city'];
 		$state = $_REQUEST['state'];
 		$zip = $_REQUEST['zip'];
-		$tools = $_REQUEST['tools'];
-		
+		$tools = $_REQUEST['tools'];		
 		$source_id = $_REQUEST['source_id'];
-		$notes =  $_REQUEST['notes'];
-		
-		
+		$notes =  $_REQUEST['notes'];		
 		$property_type= $_REQUEST['property_type'];
 		$property_relationship = $_REQUEST['property_relationship'];		
 		$sql = "Update growers Set first_name='".$firstname."', middle_name ='".$middlename."', last_name='".$lastname."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."',zip='".$zip."', tools='".$tools."', source_id='".$source_id."', notes='".$notes."', property_type_id ='".$property_type."', property_relationship_id ='".$property_relationship."' where id=".$id;				

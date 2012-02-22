@@ -18,6 +18,12 @@ $privileges = $r->buildArray();
 $r = $db->q("SELECT id, name FROM sources;");
 $sources = $r->buildArray();
 
+$r = $db->q("SELECT id, name FROM property_relationships;");
+$property_relationships = $r->buildArray();
+
+$r = $db->q("SELECT id, name FROM property_types;");
+$property_types = $r->buildArray();
+
 ?>
 <!-- all hidden forms go here -->
 <div id="edit-dialog" class="hidden">
@@ -182,7 +188,7 @@ $sources = $r->buildArray();
 			<td colspan="3" class="hidden"><input id="grower1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="hidden"><input id="grower14" name="pending" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="grower15" name="pending" type="text" size="2"/></td>
 		</tr>
 		<tr>
 			<td><label for="grower2" >First</label></td>
@@ -203,66 +209,59 @@ $sources = $r->buildArray();
 			<td colspan="2"><input type="text" name="email" id="grower6" size="17" /></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="grower7">Street</label></td>			
+			<td colspan="3"><label for="grower7">Preference</label></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="street" id="grower7" size="33"/></td>			
+			<td colspan="3"><input type="text" name="preference" id="grower7" size="33"/></td>			
+		</tr>
+		
+		<tr>
+			<td colspan="3"><label for="grower8">Street</label></td>			
 		</tr>
 		<tr>
-			<td><label for="grower8">City</label></td>
-			<td><label for="grower9">State</label></td>
-			<td><label for="grower10">Zip</label></td>
+			<td colspan="3"><input type="text" name="street" id="grower8" size="33"/></td>			
+		</tr>
+		<tr>
+			<td><label for="grower9">City</label></td>
+			<td><label for="grower10">State</label></td>
+			<td><label for="grower11">Zip</label></td>
 		</tr>
 		<tr>			
-			<td><input type="text" name="city" id="grower8" size="12"/></td>
-			<td><input type="text" name="state" id="grower9" size="2"/></td>
-			<td><input type="text" name="zip" id="grower10" size="8"/></td>
+			<td><input type="text" name="city" id="grower9" size="12"/></td>
+			<td><input type="text" name="state" id="grower10" size="2"/></td>
+			<td><input type="text" name="zip" id="grower11" size="8"/></td>
 		</tr>
 		<tr>
-			<td><b>Sources</b></td>
-			<td>
-				<?php echo options('grower12', 'source_id', $sources); ?>
-			</td>
+			<td colspan="3"><b>Sources</b></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><input id="grower12" name="source_id" type="text" size="20"/></td>			
+			<td colspan="3"><?php echo options('grower13', 'source_id', $sources); ?></td>			
 		</tr>	
 		<tr>
-			<td colspan="3"><label for="grower15">Property Type</label></td>
+			<td colspan="3"><label for="grower16">Property Type</label></td>
 		</tr>
 		<tr>			
 			<td colspan="3">
-				<select id="grower15" name="property_type" style="width:200px;"> 
-					<option value="1">Residence</option>	
-					<option value="2">Open Space/ Vacant lot</option>
-					<option value="3">Business</option>	
-					<option value="4">Public Property</option>					
-					<option value="5">Other</option>
-				</select>
+			<?php echo options('grower16', 'property_type', $property_types); ?>				
 			</td >
 		</tr>
 		<tr>			
-			<td colspan="3"><label for="grower16">Property Relationship</label></td>
+			<td colspan="3"><label for="grower17">Property Relationship</label></td>
 		</tr>
 		<tr>			
 			<td colspan="3">
-				<select id="grower16" name="property_relationship" style="width:200px;">
-					<option value="1">Owner & Occupant</option>	
-					<option value="2">Renter</option>
-					<option value="3">Renter property owner(landlord)</option>	
-					<option value="4">Other</option>													
-				</select>
+				<?php echo options('grower17', 'property_relationship', $property_relationships); ?>
 			</td>
 		</tr>		
 		
 		</table>	
 	<div style="margin-top:5px;">
-		<div><label for="grower11">Tools</label></div>
-		<div><textarea name="tools" id="grower11" rows="5" cols="30"></textarea></div>
+		<div><label for="grower12">Tools</label></div>
+		<div><textarea name="tools" id="grower12" rows="5" cols="30"></textarea></div>
 	</div>	
 	<div style="margin-top:5px;">
-		<div><label for="grower13">Notes</label></div>
-		<div><textarea name="notes" id="grower13" rows="5" cols="30"></textarea></div>
+		<div><label for="grower14">Notes</label></div>
+		<div><textarea name="notes" id="grower14" rows="5" cols="30"></textarea></div>
 	</div>	
 	<div style="margin-top:5px;">
 		<input type="button" OnClick="viewTrees();" value="View Trees"/>
