@@ -408,5 +408,18 @@ $property_types = $r->buildArray();
 	</div>	
 	</form>	
 	<!-- Distribution end -->
+
+	<!-- Email Form -->
+	<form id="email" class="hidden">
+		<h3>Email Selected Users</h3>
+		<div id="email-user-count"></div>
+		<div>Recipients</div>
+		<div><input name="bcc" type="text" readonly="readonly" size="30" required="required" style="font-size:0.5em" /></div>
+		<div>Subject</div>
+		<div><input name="subject" type="text" size="30" required="required" /></div>
+		<div>Message</div>
+		<div><textarea name="message" rows="10" cols="50" required="required"></textarea></div>
+	</form>
+	<!-- Email end -->
 </div>
 <!-- dialog end -->

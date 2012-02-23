@@ -39,23 +39,23 @@
 <body id="dt_example">
 <div id="container">
 	<header>
-		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Page Title<span></h1>
+		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Home<span></h1>
 		<div id="quote">"The harvest is plentiful but the workers are few"</div>
 
 		<div id="status"class="invisible">Welcome!</div><!-- alert user -->
 
 		<div class="toolbar">
 			<span id="toolbar" style="float: right" class="ui-widget-header ui-corner-all">
-				<button id="add">Add</button>
-				<button id="remove">Remove</button>
-				<button id="email">Email</button>
-				<button id="export">Export</button>
+				<button id="add-button">Add</button>
+				<button id="remove-button">Remove</button>
+				<button id="email-button">Email</button>
+				<button id="export-button">Export</button>
 			</span>
 		</div><!-- End toolbar -->
 
 		<form>
 			<div id="nav" style="float: left"> 
-				<input type="radio" id="get_notifications" name="radio" checked="checked" /><label for="get_notifications">Notifications</label>
+				<input type="radio" id="get_notifications" name="radio" checked="checked" /><label for="get_notifications">Home</label>
 				<input type="radio" id="get_volunteers" name="radio" /><label for="get_volunteers">Volunteers</label>
 				<input type="radio" id="get_growers" name="radio" /><label for="get_growers">Growers</label>
 				<input type="radio" id="get_trees" name="radio" /><label for="get_trees">Trees</label>
@@ -229,6 +229,29 @@
 		}
 	};
 	
+	var sendEmailButton = {
+		text: 'Send Email',
+		click: function() {
+			var para = $('#email').serialize();
+			$.ajax({							
+				'dataType': 'json', 
+				'type': 'GET',
+				'url': 'ajax.php?cmd=send_email&'+para,
+				'success': function (data) {
+					if (!data || !data.status)
+						return alert('Error: Corrupt data returned from server!');
+					if (data.status != 200) {
+						setError('Email not sent. Maybe the mailserver is overloaded?');
+						return alert('Status '+ data.status + '\n' + data.message);
+					}
+					var bcc = $('#email [name=bcc]')[0];
+					setInfo('Email sent to ' + bcc.value.split(',').length + ' user(s).');
+					$('#edit-dialog').dialog('close');
+				},
+				'error': ajaxError
+			});
+		}
+	};
 	
 	var cancelButton = {
 		text: 'Cancel',
@@ -238,7 +261,7 @@
 	}; 
 	
 	$(function() {
-		$("#add").button({
+		$("#add-button").button({
 			label: "Add New Record",
 			icons: { primary: "ui-icon-plusthick" },
 			text: false
@@ -298,7 +321,7 @@
 			
 		});
 
-		$("#remove").button({
+		$("#remove-button").button({
 			label: "Remove Selected",
 			icons: { primary: "ui-icon-trash" },
 			text: false
@@ -326,7 +349,7 @@
 			setInfo('Deleted ' + deleteList.length + ' items');
 		});
 
-		$('#email').button({
+		$('#email-button').button({
 			label: 'Email Selected',
 			icons: { primary: 'ui-icon-mail-closed' },
 			text: false
@@ -338,10 +361,13 @@
 				var emailAddr = data[7];
 				emailList.push(emailAddr);
 			}); // :checked end
-			console.log(emailList);
+			$('#email [name=bcc]').val(emailList.join(','));
+			$('#edit-dialog').dialog("option", "buttons", [sendEmailButton, cancelButton]);
+			$('#edit-dialog').dialog({ title: 'Email Selected Users' });
+			$('#edit-dialog').dialog('open') // show dialog
 		}); // .click() end
 		
-		$("#export").button({
+		$("#export-button").button({
 			label: "Export Selected",
 			icons: { primary: "ui-icon-disk" },
 			text: false
@@ -418,7 +444,6 @@
 					if(currentTable == 3){									//If current Tab is Trees 
 						if(growerID != 0){
 							$('#dt tbody tr').each(function() {				//For every row in the table
-								//alert(dt.fnGetData(this)[1]);	
 								tempId = dt.fnGetData(this)[1];    			//Get growerID of current row in Tree tabs
 								if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
 									$(this).hide();							//So it is hidden
@@ -438,9 +463,9 @@
 			height: 550,
 			width: 600,
 			modal: true,
-			close: function() {
+			/*close: function() {
 				console.log('dialog closed');
-			},
+			},*/
 		});
 		
 		// after we force a dialog, hidden is handled by jqueryUI
