@@ -408,5 +408,41 @@ $property_types = $r->buildArray();
 	</div>	
 	</form>	
 	<!-- Distribution end -->
+
+	<!-- Donation form -->
+	<form id="donation" class="hidden">
+		<h3>Donation</h3>
+		<table>
+		<tr>
+			<td colspan="3" class="hidden"><input id="donations1" name="id" type="text" size="2"/></td>
+		</tr>
+		<tr>
+			<td colspan="3"><label for="donations2">Donation</label></td>	
+		</tr>
+		<tr>
+			<td colspan="3"><input type="text" name="donation" id="donations2" size="33"/></td>			
+		</tr>
+		<tr>
+			<td colspan="3"><label for="donations3">Donor</label></td>		
+		</tr>
+		<tr>
+			<td colspan="3"><input type="text" name="donor" id="donations3" size="33"/></td>			
+		</tr>
+		<tr>
+			<td colspan="3"><label for="donations4">Value</label></td>		
+		</tr>
+		<tr>
+			<td colspan="3"><input type="text" name="value" id="donations4" size="33"/></td>			
+		</tr>
+		<tr>
+			<td colspan="3"><label for="donations5">Date</label></td>		
+		</tr>
+		<tr>
+			<td colspan="3"><input type="text" name="date" id="donations5" size="33"/></td>			
+		</tr>
+	</form>
+	<!-- Donation end -->
+
+
 </div>
 <!-- dialog end -->

@@ -66,10 +66,7 @@ $months = $r->buildArray();
 
     		<label for="lastname">Last*</label>
     		<input id="lastname" name="lastname" type="text" placeholder="Anteater" required="required" />
-    		<!-- br/>
-    		<label for="organization">Organization</label>
-    		<input id="organization" name="organization" type="text" size="40" placeholder="Donald Bren School of ICS" />
-    		-->
+    		<br/>
     	</fieldset>
     	
     	<fieldset>

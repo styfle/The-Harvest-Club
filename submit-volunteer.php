@@ -66,13 +66,13 @@ include('include/Database.inc.php');
 
 	$sql = "INSERT INTO %s VALUES (%s);  ";
 
-	$tableinfo = "volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source, signed_up)";
+	$tableinfo = "volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source_id, signed_up)";
 	
 	$valueinfo = "'$firstname', '$middlename', '$lastname', '$organization', '$phone', '$email', '$street', '$city', '$state', '$zip', '$comments', $source, CURDATE()";
 
 	$r = $db->q($sql, array($tableinfo, $valueinfo));
 
-	if ($r->isValid()) {
+	if (!$r->isValid()) {
 		echo $db->error();
 	}
 
@@ -84,7 +84,7 @@ include('include/Database.inc.php');
 
 		$r = $db->q($sql, array($tableinfo, $valueinfo));
 
-		if ($r->isValid()) {
+		if (!$r->isValid()) {
 			echo $db->error();
 		}
 	}
@@ -95,7 +95,7 @@ include('include/Database.inc.php');
 	
 		$r = $db->q($sql, array($tableinfo, $valueinfo));
 		
-		if ($r->isValid()) {
+		if (!$r->isValid()) {
 			echo $db->error();
 		}
 	}

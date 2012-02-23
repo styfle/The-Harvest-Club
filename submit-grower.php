@@ -66,12 +66,12 @@ include('include/Database.inc.php');
 
    $sql = "INSERT INTO %s VALUES (%s);  "; 
    
-   $tableinfo = "growers (first_name, middle_name, last_name, phone, email, preferred, street, city, state, zip, tools, property_type_id, property_relationship_id, source, notes)";
+   $tableinfo = "growers (first_name, middle_name, last_name, phone, email, preferred, street, city, state, zip, tools, property_type_id, property_relationship_id, source_id, notes)";
    $valueinfo = "'$firstname', '$middlename', '$lastname', '$phone', '$email', '$preferred', '$street', '$city', '$state', '$zip', '$tools', $property, $relationship, $source, '$notes'";
    
    $r = $db->q($sql, array($tableinfo, $valueinfo));
   
-   if ($r->isValid()) {
+   if (!$r->isValid()) {
 	  echo $db->error();
    }
 
@@ -113,7 +113,7 @@ include('include/Database.inc.php');
 
 		$r = $db->q($sql, array($tableinfo, $valueinfo));
 	
-		if ($r->isValid()) {
+		if (!$r->isValid()) {
 			echo $db->error();
 		}
 
@@ -125,7 +125,7 @@ include('include/Database.inc.php');
 
 			$r = $db->q($sql, array($tableinfo, $valueinfo));
 
-			if ($r->isValid()) {
+			if (!$r->isValid()) {
 				echo $db->error();
 			}
 		}
