@@ -41,6 +41,15 @@
 	<header>
 		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Page Title<span></h1>
 		<div id="quote">"The harvest is plentiful but the workers are few"</div>
+
+		<div class="toolbar">
+			<span id="toolbar" style="float:right" class="ui-widget-header ui-corner-all">
+				<button id="Add">Add</button>
+				<button id="Remove">Remove</button>
+				<button id="Export">Export</button>
+			</span>
+		</div><!-- End toolbar -->
+
 		<form>
 			<div id="nav" style="float: left"> 
 				<input type="radio" id="get_notifications" name="radio" checked="checked" /><label for="get_notifications">Notifications</label>
@@ -55,19 +64,6 @@
 	</header>
 	
 	<div id="main" role="main">
-		<style>
-		#toolbar {
-			float: right;
-		}
-		</style>
-		<div class="toolbar">
-			<span id="toolbar" class="ui-widget-header ui-corner-all">
-				<button id="Add">Add</button>
-				<button id="Remove">Remove</button>
-				<button id="Export">Export</button>
-			</span>
-
-		</div><!-- End toolbar -->
 
 		<table id="dt" cellpadding="0" cellspacing="0" border="0" class="display">
 			<!-- table is filled dynamically -->
@@ -88,6 +84,12 @@
 	
 	
 	<script type="text/javascript" charset="utf-8">
+
+	// Generic Ajax Error
+	function ajaxError(e) {
+		alert('Ajax Error!\n' + e.responseText);
+	}
+
 	var dt; // global datatable variable
 	var currentTable = 0; // global id of current data table
 	var forms = ['volunteer', 'grower', 'distribution'];
@@ -115,9 +117,7 @@
 					'success': function (data) {
 						alert('Information is updated!');
 									  },
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
+					'error': ajaxError
 					});
 					
 														
@@ -132,15 +132,13 @@
 					//Update DB
 					var para = $('#grower').serialize();					
 					$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=update_grower&'+para,
-					'success': function (data) {
-						alert('Information is updated!');
-						
-									  },
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
+						'type': 'GET',
+						'url': 'ajax.php?cmd=update_grower&'+para,
+						'success': function (data) {
+							// check data.status if actually successful
+							alert('Information is updated!');
+						},
+						'error': ajaxError
 					});
 					break;
 				case 3:
@@ -160,9 +158,7 @@
 					'success': function (data) {
 						alert('Information is updated!');
 					},
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
+					'error': ajaxError
 					});							
 					break;
 			}		
@@ -187,9 +183,7 @@
 					'success': function (data) {
 						alert('Information is added!');
 									  },
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
+					'error': ajaxError
 					});
 														
 					break;
@@ -276,13 +270,12 @@
 			
 		});
 
-		$( "#Remove" ).button({
+		$("#Remove").button({
 			label: "Remove",
 			icons: {
 				primary: "ui-icon-trash"
 			}
-		}).click(function()
-		{
+		}).click(function()	{
 			//pop up confirmation window
 
 			//if yes, then delete selected 
@@ -296,14 +289,13 @@
 					'success': function (data) {
 						//alert('Information is Removed!');
 									  },
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
+					'error': ajaxError
 				});
 				row.remove();
 			});
 		});
-		$( "#Export" ).button({
+		
+		$("#Export").button({
 			label: "Export",
 			icons: {
 				primary: "ui-icon-document"
@@ -390,9 +382,7 @@
 						growerID = 0;										//Reset growerID
 					}
 				},
-				'error': function (e) {
-					alert('Ajax Error!\n' + e.responseText);
-				}
+				'error': ajaxError
 			});
 		});
 		
@@ -438,9 +428,7 @@
 								$('#volunteerRole'+data.datatable.aaData[i][0]).prop("checked", true);									
 									
                         },
-                        'error': function(e) {
-                            alert('Ajax Error!\n' + e.responseText);
-                        }
+                        'error': ajaxError
                     });
 					
 				$.ajax({
@@ -456,9 +444,7 @@
 								$('#volunteerDay'+data.datatable.aaData[i][0]).prop("checked", true);									
 									
                         },
-                        'error': function(e) {
-                            alert('Ajax Error!\n' + e.responseText);
-                        }
+                        'error': ajaxError
                     });
 					
 				break;
@@ -503,9 +489,7 @@
 									$('#distributionHour' +dateID+'-CloseMin').val(close[1]);
 								}							
                         },
-                        'error': function(e) {
-                            alert('Ajax Error!\n' + e.responseText);
-                        }
+                        'error': ajaxError
                     });
 				break;
 		
