@@ -42,11 +42,14 @@
 		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Page Title<span></h1>
 		<div id="quote">"The harvest is plentiful but the workers are few"</div>
 
+		<div id="status"class="invisible">Welcome!</div><!-- alert user -->
+
 		<div class="toolbar">
-			<span id="toolbar" style="float:right" class="ui-widget-header ui-corner-all">
-				<button id="Add">Add</button>
-				<button id="Remove">Remove</button>
-				<button id="Export">Export</button>
+			<span id="toolbar" style="float: right" class="ui-widget-header ui-corner-all">
+				<button id="add">Add</button>
+				<button id="remove">Remove</button>
+				<button id="email">Email</button>
+				<button id="export">Export</button>
 			</span>
 		</div><!-- End toolbar -->
 
@@ -64,7 +67,6 @@
 	</header>
 	
 	<div id="main" role="main">
-
 		<table id="dt" cellpadding="0" cellspacing="0" border="0" class="display">
 			<!-- table is filled dynamically -->
 			<thead><tr><th>Loading...</th></tr></thead>
@@ -84,6 +86,30 @@
 	
 	
 	<script type="text/javascript" charset="utf-8">
+	// GLOBAL FUNCTIONS (probably move to separate file)
+
+	function hideStatus() {
+		$('#status').addClass('invisible');
+	}
+
+	function setInfo(message) {
+		$('#status')
+			.text(message)
+			.removeClass() // remove all classes
+			.addClass('ui-state-highlight');
+
+		setTimeout(hideStatus, 5000); // hide after 5 sec
+	}
+
+	function setError(message) {
+		$('#status')
+			.text(message)
+			.removeClass() // remove all classes
+			.addClass('ui-state-error');
+
+		setTimeout(hideStatus, 5000); // hide after 5 sec
+	}
+
 
 	// Generic Ajax Error
 	function ajaxError(e) {
@@ -112,12 +138,13 @@
 					//Update DB
 					var para = $('#volunteer').serialize();
 					$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=update_volunteer&'+para,
-					'success': function (data) {
-						alert('Information is updated!');
-									  },
-					'error': ajaxError
+						'type': 'GET',
+						'url': 'ajax.php?cmd=update_volunteer&'+para,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+						},
+						'error': ajaxError
 					});
 					
 														
@@ -136,7 +163,8 @@
 						'url': 'ajax.php?cmd=update_grower&'+para,
 						'success': function (data) {
 							// check data.status if actually successful
-							alert('Information is updated!');
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
 						},
 						'error': ajaxError
 					});
@@ -153,13 +181,14 @@
 					
 					//Update DB
 					$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=update_distribution&'+para,
-					'success': function (data) {
-						alert('Information is updated!');
-					},
-					'error': ajaxError
-					});							
+						'type': 'GET',
+						'url': 'ajax.php?cmd=update_distribution&'+para,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+						},
+						'error': ajaxError
+						});							
 					break;
 			}		
 		}
@@ -178,12 +207,13 @@
 					//Update DB
 					var para = $('#volunteer').serialize();
 					$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=add_volunteer&'+para,
-					'success': function (data) {
-						alert('Information is added!');
-									  },
-					'error': ajaxError
+						'type': 'GET',
+						'url': 'ajax.php?cmd=add_volunteer&'+para,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+						},
+						'error': ajaxError
 					});
 														
 					break;
@@ -208,13 +238,11 @@
 	}; 
 	
 	$(function() {
-		$( "#Add" ).button({
-			label: "Add",
-			icons: {
-				primary: "ui-icon-plus"
-			}
-		}).click(function()
-		{
+		$("#add").button({
+			label: "Add New Record",
+			icons: { primary: "ui-icon-plusthick" },
+			text: false
+		}).click(function() {
 			// Clear all forms
 			for(var i = 0; i < forms.length; i++)
 			{
@@ -270,36 +298,53 @@
 			
 		});
 
-		$("#Remove").button({
-			label: "Remove",
-			icons: {
-				primary: "ui-icon-trash"
-			}
+		$("#remove").button({
+			label: "Remove Selected",
+			icons: { primary: "ui-icon-trash" },
+			text: false
 		}).click(function()	{
 			//pop up confirmation window
+			var deleteList = [];
 
 			//if yes, then delete selected 
 			$('input[name=select-row]:checked').each(function(){
 				var row = $(this).parent().parent();
 				var data = dt.fnGetData(row[0]);
 				var id = data[1];
+				deleteList.push(id);
+				//TODO Ajax needs to be sent at the end
 				$.ajax({							
 					'type': 'GET',
 					'url': 'ajax.php?cmd=remove_volunteer&id='+id,
 					'success': function (data) {
 						//alert('Information is Removed!');
-									  },
+					},
 					'error': ajaxError
 				});
 				row.remove();
 			});
+			setInfo('Deleted ' + deleteList.length + ' items');
 		});
+
+		$('#email').button({
+			label: 'Email Selected',
+			icons: { primary: 'ui-icon-mail-closed' },
+			text: false
+		}).click(function() {
+			var emailList = [];
+			$('input[name=select-row]:checked').each(function(){
+				var row = $(this).parent().parent();
+				var data = dt.fnGetData(row[0]);
+				var emailAddr = data[7];
+				emailList.push(emailAddr);
+			}); // :checked end
+			console.log(emailList);
+		}); // .click() end
 		
-		$("#Export").button({
-			label: "Export",
-			icons: {
-				primary: "ui-icon-document"
-			}
+		$("#export").button({
+			label: "Export Selected",
+			icons: { primary: "ui-icon-disk" },
+			text: false
 		});
 	});
 	
