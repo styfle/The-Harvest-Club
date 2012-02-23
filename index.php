@@ -39,11 +39,23 @@
 <body id="dt_example">
 <div id="container">
 	<header>
-		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Page Title<span></h1>
+		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Home<span></h1>
 		<div id="quote">"The harvest is plentiful but the workers are few"</div>
+
+		<div id="status"class="invisible">Welcome!</div><!-- alert user -->
+
+		<div class="toolbar">
+			<span id="toolbar" style="float: right" class="ui-widget-header ui-corner-all">
+				<button id="add-button">Add</button>
+				<button id="remove-button">Remove</button>
+				<button id="email-button">Email</button>
+				<button id="export-button">Export</button>
+			</span>
+		</div><!-- End toolbar -->
+
 		<form>
 			<div id="nav" style="float: left"> 
-				<input type="radio" id="get_notifications" name="radio" checked="checked" /><label for="get_notifications">Notifications</label>
+				<input type="radio" id="get_notifications" name="radio" checked="checked" /><label for="get_notifications">Home</label>
 				<input type="radio" id="get_volunteers" name="radio" /><label for="get_volunteers">Volunteers</label>
 				<input type="radio" id="get_growers" name="radio" /><label for="get_growers">Growers</label>
 				<input type="radio" id="get_trees" name="radio" /><label for="get_trees">Trees</label>
@@ -55,20 +67,6 @@
 	</header>
 	
 	<div id="main" role="main">
-		<style>
-		#toolbar {
-			float: right;
-		}
-		</style>
-		<div class="toolbar">
-			<span id="toolbar" class="ui-widget-header ui-corner-all">
-				<button id="Add">Add</button>
-				<button id="Remove">Remove</button>
-				<button id="Export">Export</button>
-			</span>
-
-		</div><!-- End toolbar -->
-
 		<table id="dt" cellpadding="0" cellspacing="0" border="0" class="display">
 			<!-- table is filled dynamically -->
 			<thead><tr><th>Loading...</th></tr></thead>
@@ -88,6 +86,48 @@
 	
 	
 	<script type="text/javascript" charset="utf-8">
+
+	// GLOBAL FUNCTIONS (probably move to separate file)
+
+	function hideStatus() {
+		$('#status').addClass('invisible');
+	}
+
+	function setInfo(message) {
+		$('#status')
+			.text(message)
+			.removeClass() // remove all classes
+			.addClass('ui-state-highlight');
+
+		setTimeout(hideStatus, 5000); // hide after 5 sec
+	}
+
+	function setError(message) {
+		$('#status')
+			.text(message)
+			.removeClass() // remove all classes
+			.addClass('ui-state-error');
+
+		setTimeout(hideStatus, 5000); // hide after 5 sec
+	}
+
+	// show form and hide all other forms
+	function switchForm(id) {
+		$('#volunteer').addClass('hidden');
+		$('#grower').addClass('hidden');
+		$('#distribution').addClass('hidden');
+		$('#email').addClass('hidden');
+
+		$('#'+id).removeClass('hidden'); // show form
+	}
+
+	// Generic Ajax Error
+	function ajaxError(e) {
+		alert('Ajax Error!\n' + e.responseText);
+	}
+
+	// GLOBAL VARIABLES
+
 	var dt; // global datatable variable
 	var currentTable = 0; // global id of current data table
 	var forms = ['volunteer', 'grower', 'distribution'];
@@ -110,14 +150,13 @@
 					//Update DB
 					var para = $('#volunteer').serialize();
 					$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=update_volunteer&'+para,
-					'success': function (data) {
-						alert('Information is updated!');
-									  },
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
+						'type': 'GET',
+						'url': 'ajax.php?cmd=update_volunteer&'+para,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+						},
+						'error': ajaxError
 					});
 					
 														
@@ -132,15 +171,14 @@
 					//Update DB
 					var para = $('#grower').serialize();					
 					$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=update_grower&'+para,
-					'success': function (data) {
-						alert('Information is updated!');
-						
-									  },
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
+						'type': 'GET',
+						'url': 'ajax.php?cmd=update_grower&'+para,
+						'success': function (data) {
+							// check data.status if actually successful
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+						},
+						'error': ajaxError
 					});
 					break;
 				case 3:
@@ -155,15 +193,14 @@
 					
 					//Update DB
 					$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=update_distribution&'+para,
-					'success': function (data) {
-						alert('Information is updated!');
-					},
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
-					});							
+						'type': 'GET',
+						'url': 'ajax.php?cmd=update_distribution&'+para,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+						},
+						'error': ajaxError
+						});							
 					break;
 			}		
 		}
@@ -182,14 +219,13 @@
 					//Update DB
 					var para = $('#volunteer').serialize();
 					$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=add_volunteer&'+para,
-					'success': function (data) {
-						alert('Information is added!');
-									  },
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
+						'type': 'GET',
+						'url': 'ajax.php?cmd=add_volunteer&'+para,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+						},
+						'error': ajaxError
 					});
 														
 					break;
@@ -205,6 +241,29 @@
 		}
 	};
 	
+	var sendEmailButton = {
+		text: 'Send Email',
+		click: function() {
+			var para = $('#email').serialize();
+			$.ajax({							
+				'dataType': 'json', 
+				'type': 'GET',
+				'url': 'ajax.php?cmd=send_email&'+para,
+				'success': function (data) {
+					if (!data || !data.status)
+						return alert('Error: Corrupt data returned from server!');
+					if (data.status != 200) {
+						setError('Email not sent. Maybe the mailserver is overloaded?');
+						return alert('Status '+ data.status + '\n' + data.message);
+					}
+					var bcc = $('#email [name=bcc]')[0];
+					setInfo('Email sent to ' + bcc.value.split(',').length + ' user(s).');
+					$('#edit-dialog').dialog('close');
+				},
+				'error': ajaxError
+			});
+		}
+	};
 	
 	var cancelButton = {
 		text: 'Cancel',
@@ -214,13 +273,11 @@
 	}; 
 	
 	$(function() {
-		$( "#Add" ).button({
-			label: "Add",
-			icons: {
-				primary: "ui-icon-plus"
-			}
-		}).click(function()
-		{
+		$("#add-button").button({
+			label: "Add New Record",
+			icons: { primary: "ui-icon-plusthick" },
+			text: false
+		}).click(function() {
 			// Clear all forms
 			for(var i = 0; i < forms.length; i++)
 			{
@@ -249,65 +306,75 @@
 			switch (currentTable)
 			{
 				case 1: //volunteer
-					$('#grower').addClass('hidden');
-					$('#distribution').addClass('hidden');
-					$('#volunteer').removeClass('hidden'); //for css see style.css
-//					for (var i = 0; i < row.length; i++)
-//						$('#volunteer' + i).val('');
+					switchForm('volunteer');
 				break;
 				
 				case 2: // grower
-					$('#volunteer').addClass('hidden');
-					$('#distribution').addClass('hidden');
-					$('#grower').removeClass('hidden');
+					switchForm('grower');
 				break;
 				
 				case 4: // distribution
-                    $('#volunteer').addClass('hidden');
-                    $('#grower').addClass('hidden');
-                    $('#distribution').removeClass('hidden');
+					switchForm('distribution');
                 break;
 			}			
 
-//			$('#form' + id).removeClass('hidden');
 			$('#edit-dialog').dialog("option", "buttons", [addButton, cancelButton]);
 			$('#edit-dialog').dialog({ title: 'Add Record' });
 			$('#edit-dialog').dialog('open');
 			
 		});
 
-		$( "#Remove" ).button({
-			label: "Remove",
-			icons: {
-				primary: "ui-icon-trash"
-			}
-		}).click(function()
-		{
+		$("#remove-button").button({
+			label: "Remove Selected",
+			icons: { primary: "ui-icon-trash" },
+			text: false
+		}).click(function()	{
 			//pop up confirmation window
+			var deleteList = [];
 
 			//if yes, then delete selected 
 			$('input[name=select-row]:checked').each(function(){
 				var row = $(this).parent().parent();
 				var data = dt.fnGetData(row[0]);
 				var id = data[1];
+				deleteList.push(id);
+				//TODO Ajax needs to be sent at the end
 				$.ajax({							
 					'type': 'GET',
 					'url': 'ajax.php?cmd=remove_volunteer&id='+id,
 					'success': function (data) {
 						//alert('Information is Removed!');
-									  },
-					'error': function(e) {
-						alert('Ajax Error!\n' + e.responseText);
-						}
+					},
+					'error': ajaxError
 				});
 				row.remove();
 			});
+			setInfo('Deleted ' + deleteList.length + ' items');
 		});
-		$( "#Export" ).button({
-			label: "Export",
-			icons: {
-				primary: "ui-icon-document"
-			}
+
+		$('#email-button').button({
+			label: 'Email Selected',
+			icons: { primary: 'ui-icon-mail-closed' },
+			text: false
+		}).click(function() {
+			var emailList = [];
+			$('input[name=select-row]:checked').each(function(){
+				var row = $(this).parent().parent();
+				var data = dt.fnGetData(row[0]);
+				var emailAddr = data[7];
+				emailList.push(emailAddr);
+			}); // :checked end
+			switchForm('email');
+			$('#email [name=bcc]').val(emailList.join(','));
+			$('#edit-dialog').dialog("option", "buttons", [sendEmailButton, cancelButton]);
+			$('#edit-dialog').dialog({ title: 'Email Selected Users' });
+			$('#edit-dialog').dialog('open') // show dialog
+		}); // .click() end
+		
+		$("#export-button").button({
+			label: "Export Selected",
+			icons: { primary: "ui-icon-disk" },
+			text: false
 		});
 	});
 	
@@ -381,7 +448,6 @@
 					if(currentTable == 3){									//If current Tab is Trees 
 						if(growerID != 0){
 							$('#dt tbody tr').each(function() {				//For every row in the table
-								//alert(dt.fnGetData(this)[1]);	
 								tempId = dt.fnGetData(this)[1];    			//Get growerID of current row in Tree tabs
 								if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
 									$(this).hide();							//So it is hidden
@@ -390,9 +456,7 @@
 						growerID = 0;										//Reset growerID
 					}
 				},
-				'error': function (e) {
-					alert('Ajax Error!\n' + e.responseText);
-				}
+				'error': ajaxError
 			});
 		});
 		
@@ -403,9 +467,9 @@
 			height: 550,
 			width: 600,
 			modal: true,
-			close: function() {
+			/*close: function() {
 				console.log('dialog closed');
-			},
+			},*/
 		});
 		
 		// after we force a dialog, hidden is handled by jqueryUI
@@ -419,9 +483,7 @@
 			switch (currentTable)
 			{
 				case 1: //volunteer
-				$('#grower').addClass('hidden');
-				$('#distribution').addClass('hidden');
-				$('#volunteer').removeClass('hidden'); //for css see style.css
+				switchForm('volunteer');
 				for (var i = 0; i < row.length; i++)
 					$('#volunteer' + i).val(row[i]);
 
@@ -438,9 +500,7 @@
 								$('#volunteerRole'+data.datatable.aaData[i][0]).prop("checked", true);									
 									
                         },
-                        'error': function(e) {
-                            alert('Ajax Error!\n' + e.responseText);
-                        }
+                        'error': ajaxError
                     });
 					
 				$.ajax({
@@ -456,26 +516,19 @@
 								$('#volunteerDay'+data.datatable.aaData[i][0]).prop("checked", true);									
 									
                         },
-                        'error': function(e) {
-                            alert('Ajax Error!\n' + e.responseText);
-                        }
+                        'error': ajaxError
                     });
 					
 				break;
 				
 				case 2: // grower
-				
-				$('#volunteer').addClass('hidden');
-				$('#distribution').addClass('hidden');
-				$('#grower').removeClass('hidden');
-				for (var i = 1; i < row.length; i++)
-					$('#grower' + i).val(row[i]);
+					switchForm('grower');
+					for (var i = 1; i < row.length; i++)
+						$('#grower' + i).val(row[i]);
 				break;
 				
 				case 4: // distribution
-                    $('#volunteer').addClass('hidden');
-                    $('#grower').addClass('hidden');
-                    $('#distribution').removeClass('hidden');
+					switchForm('distribution');
                     for (var i = 1; i < row.length; i++)
                         $('#distribution' + i).val(row[i]);                                                                            
                     $.ajax({
@@ -483,14 +536,14 @@
                         'type': 'GET',
                         'url': 'ajax.php?cmd=get_distribution_times&id='+row[1],
                         'success': function (data) {
-							for ( var i=0; i< 8; ++i )   // clear data
+							for (var i=0; i< 8; ++i)   // clear data
 							{
 								$('#distributionHour' +i+'-OpenHour').val('');
 								$('#distributionHour' +i+'-OpenMin').val('');
 								$('#distributionHour' +i+'-CloseHour').val('');
 								$('#distributionHour' +i+'-CloseMin').val('');
 							}
-							if( data.datatable != null) 							
+							if (data.datatable != null) 							
 								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
 								{
 									var myData = data.datatable.aaData[i];
@@ -503,9 +556,7 @@
 									$('#distributionHour' +dateID+'-CloseMin').val(close[1]);
 								}							
                         },
-                        'error': function(e) {
-                            alert('Ajax Error!\n' + e.responseText);
-                        }
+                        'error': ajaxError
                     });
 				break;
 		

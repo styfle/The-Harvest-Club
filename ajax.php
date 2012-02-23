@@ -17,6 +17,7 @@ function contains($haystack, $needle) {
 function updateVolunteer($exists) {
 	global $db;
 	global $data;
+	global $mail;
 	$id = $_REQUEST['id'];						
 	$firstName = $_REQUEST['firstname'];		
 	$middleName = $_REQUEST['middlename'];
@@ -64,7 +65,7 @@ function updateVolunteer($exists) {
 		
 		if ($priv_id != $row[0]) { // privs have changed
 			$sql = "UPDATE volunteers SET privilege_id=$priv_id"; // new priv
-			$message = "$firstName $lastName,\r\nYour privileges have changed. You are now a $row[0]!\r\n";
+			$message = "$firstName $lastName,\r\nYour privileges have changed. You are now a(n) $row[1]!\r\n";
 			if (empty($row[3])) { // no password
 				$pass = generatePassword(); // so generate
 				// http://dev.mysql.com/doc/refman/5.5/en/encryption-functions.html#function_sha2
@@ -80,8 +81,9 @@ function updateVolunteer($exists) {
 	
 	} else { // adding new volunteer
 		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, status, street, city, state, zip, privilege_id, notes, source_id, signed_up) VALUES
-		('$firstName', '$middleName', '$lastName', '$organization', '$phone', '$email', '1', '$street', '$city', '$state', '$zip', '1', '$notes', $source_id, CURDATE())";
+		('$firstName', '$middleName', '$lastName', '$organization', '$phone', '$email', '$status', '$street', '$city', '$state', '$zip', '$priv_id', '$notes', $source_id, CURDATE())";
 		$r = $db->q($sql);
+		getError($r);
 	}
 }
 
@@ -365,25 +367,41 @@ switch ($cmd)
 	case 'add_volunteer':
 		updateVolunteer(false);
 		break;
-	case 'send_grower_email':
-		date_default_timezone_set("America/Los_Angeles");
-		$data['date'] = date('F d, Y');
-		//$data['name'] = getName();
-		//$data['address'] = getAddress();
-		//$data['city'] = getCity();
-		//$data['state'] = getState();
-		//$data['zip'] = getZip();
-		//$data['fruit'] = getFruit();
-		break;
 	case 'remove_volunteer':
 		global $db;
 		global $data;
 		$id = $_REQUEST['id'];
-		//echo($id);
 		$sql = "DELETE FROM volunteers
-				WHERE id = '".$id."'";
+				WHERE id=$id";
 		$r = $db->q($sql);
 		getError($r);
+		break;
+	case 'send_email':
+		global $data;
+		global $mail;
+		global $db;
+		// check if user can send email
+		$sql = "SELECT send_email,email FROM volunteers v
+				LEFT JOIN privileges p ON v.privilege_id = p.id
+				WHERE v.id=1"; // TODO user auth needed here
+		$r = $db->q($sql);
+		//getError($r);
+		$a = $r->buildArray();
+		$can_send = $a[0];
+		$my_email = $a[1];
+		if (!$can_send) { // not allowed to send email
+			$data['status'] = 403; // forbidden
+			$data['message'] = 'You are not allowed to send email!';
+		} else {
+			$bcc = $_REQUEST['bcc'];
+			$subject = $_REQUEST['subject'];
+			$message = $_REQUEST['message'];
+			$sent = $mail->sendBulk($subject, $message, $bcc); // maybe use $my_email for replyto
+			if (!$sent) {
+				$data['status'] = 500;
+				$data['message'] = 'Mail could not be sent';
+			}
+		}
 		break;
 	default:
 		$data['status'] = 404; // Not found
