@@ -86,6 +86,7 @@
 	
 	
 	<script type="text/javascript" charset="utf-8">
+
 	// GLOBAL FUNCTIONS (probably move to separate file)
 
 	function hideStatus() {
@@ -110,11 +111,22 @@
 		setTimeout(hideStatus, 5000); // hide after 5 sec
 	}
 
+	// show form and hide all other forms
+	function switchForm(id) {
+		$('#volunteer').addClass('hidden');
+		$('#grower').addClass('hidden');
+		$('#distribution').addClass('hidden');
+		$('#email').addClass('hidden');
+
+		$('#'+id).removeClass('hidden'); // show form
+	}
 
 	// Generic Ajax Error
 	function ajaxError(e) {
 		alert('Ajax Error!\n' + e.responseText);
 	}
+
+	// GLOBAL VARIABLES
 
 	var dt; // global datatable variable
 	var currentTable = 0; // global id of current data table
@@ -294,27 +306,18 @@
 			switch (currentTable)
 			{
 				case 1: //volunteer
-					$('#grower').addClass('hidden');
-					$('#distribution').addClass('hidden');
-					$('#volunteer').removeClass('hidden'); //for css see style.css
-//					for (var i = 0; i < row.length; i++)
-//						$('#volunteer' + i).val('');
+					switchForm('volunteer');
 				break;
 				
 				case 2: // grower
-					$('#volunteer').addClass('hidden');
-					$('#distribution').addClass('hidden');
-					$('#grower').removeClass('hidden');
+					switchForm('grower');
 				break;
 				
 				case 4: // distribution
-                    $('#volunteer').addClass('hidden');
-                    $('#grower').addClass('hidden');
-                    $('#distribution').removeClass('hidden');
+					switchForm('distribution');
                 break;
 			}			
 
-//			$('#form' + id).removeClass('hidden');
 			$('#edit-dialog').dialog("option", "buttons", [addButton, cancelButton]);
 			$('#edit-dialog').dialog({ title: 'Add Record' });
 			$('#edit-dialog').dialog('open');
@@ -361,6 +364,7 @@
 				var emailAddr = data[7];
 				emailList.push(emailAddr);
 			}); // :checked end
+			switchForm('email');
 			$('#email [name=bcc]').val(emailList.join(','));
 			$('#edit-dialog').dialog("option", "buttons", [sendEmailButton, cancelButton]);
 			$('#edit-dialog').dialog({ title: 'Email Selected Users' });
@@ -479,9 +483,7 @@
 			switch (currentTable)
 			{
 				case 1: //volunteer
-				$('#grower').addClass('hidden');
-				$('#distribution').addClass('hidden');
-				$('#volunteer').removeClass('hidden'); //for css see style.css
+				switchForm('volunteer');
 				for (var i = 0; i < row.length; i++)
 					$('#volunteer' + i).val(row[i]);
 
@@ -520,18 +522,13 @@
 				break;
 				
 				case 2: // grower
-				
-				$('#volunteer').addClass('hidden');
-				$('#distribution').addClass('hidden');
-				$('#grower').removeClass('hidden');
-				for (var i = 1; i < row.length; i++)
-					$('#grower' + i).val(row[i]);
+					switchForm('grower');
+					for (var i = 1; i < row.length; i++)
+						$('#grower' + i).val(row[i]);
 				break;
 				
 				case 4: // distribution
-                    $('#volunteer').addClass('hidden');
-                    $('#grower').addClass('hidden');
-                    $('#distribution').removeClass('hidden');
+					switchForm('distribution');
                     for (var i = 1; i < row.length; i++)
                         $('#distribution' + i).val(row[i]);                                                                            
                     $.ajax({
@@ -539,14 +536,14 @@
                         'type': 'GET',
                         'url': 'ajax.php?cmd=get_distribution_times&id='+row[1],
                         'success': function (data) {
-							for ( var i=0; i< 8; ++i )   // clear data
+							for (var i=0; i< 8; ++i)   // clear data
 							{
 								$('#distributionHour' +i+'-OpenHour').val('');
 								$('#distributionHour' +i+'-OpenMin').val('');
 								$('#distributionHour' +i+'-CloseHour').val('');
 								$('#distributionHour' +i+'-CloseMin').val('');
 							}
-							if( data.datatable != null) 							
+							if (data.datatable != null) 							
 								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
 								{
 									var myData = data.datatable.aaData[i];
