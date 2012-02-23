@@ -354,6 +354,7 @@ CREATE TABLE volunteer_events (
 	event_id INT NOT NULL,
 	volunteer_id INT NOT NULL,
 	driver TINYINT NOT NULL,
+	hour DOUBLE,
 	CONSTRAINT pk_volunteer_events PRIMARY KEY (volunteer_id, event_id),
 	CONSTRAINT fk_volunteer_events_volunteer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
 	CONSTRAINT fk_volunteer_events_event_id FOREIGN KEY (event_id) REFERENCES events(id)
