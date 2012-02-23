@@ -17,6 +17,7 @@ function contains($haystack, $needle) {
 function updateVolunteer($exists) {
 	global $db;
 	global $data;
+	global $mail;
 	$id = $_REQUEST['id'];						
 	$firstName = $_REQUEST['firstname'];		
 	$middleName = $_REQUEST['middlename'];
@@ -64,7 +65,7 @@ function updateVolunteer($exists) {
 		
 		if ($priv_id != $row[0]) { // privs have changed
 			$sql = "UPDATE volunteers SET privilege_id=$priv_id"; // new priv
-			$message = "$firstName $lastName,\r\nYour privileges have changed. You are now a $row[0]!\r\n";
+			$message = "$firstName $lastName,\r\nYour privileges have changed. You are now a(n) $row[1]!\r\n";
 			if (empty($row[3])) { // no password
 				$pass = generatePassword(); // so generate
 				// http://dev.mysql.com/doc/refman/5.5/en/encryption-functions.html#function_sha2
