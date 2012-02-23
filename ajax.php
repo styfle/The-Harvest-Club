@@ -403,6 +403,13 @@ switch ($cmd)
 			}
 		}
 		break;
+	case 'get_donors':
+		$data['id'] = 3;
+		$data['title'] = 'Donors';
+		$sql = "SELECT donation, donor, value, date FROM donations";
+		getTable($sql);
+		break;
+
 	default:
 		$data['status'] = 404; // Not found
 		$data['message'] = "Unknown ajax command: $cmd";

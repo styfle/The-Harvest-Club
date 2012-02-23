@@ -139,6 +139,7 @@ $roles = $r->buildArray();
 
 		<fieldset>
 			<legend>Preferred Roles</legend>
+			Hover over each role for a description.
 				<div id="roles"></div>
 				<script type="text/javascript">
 				var container = document.getElementById('roles');
@@ -153,15 +154,17 @@ $roles = $r->buildArray();
 						var label = document.createElement('label')
 						label.htmlFor = "id";
 						label.appendChild(document.createTextNode(o.type));
+						label.title = o.description;
 
 						container.appendChild(checkbox);
 						container.appendChild(label);
+						// container.append('<br>');
 					}
 				</script>
 		</fieldset>
 
 		<fieldset>
-			<legend>Preferred Days</legend>
+			<legend>Preferred Days to volunteer</legend>
 				<tr>
 				<div id="days"></div>
 				</tr>

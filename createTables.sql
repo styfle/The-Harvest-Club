@@ -214,15 +214,16 @@ INSERT INTO month_harvests VALUES
 DROP TABLE IF EXISTS volunteer_types;
 CREATE TABLE volunteer_types (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	type nvarchar(255) NOT NULL
+	type nvarchar(255) NOT NULL,
+	description varchar(255)
 ) ENGINE=innodb;
 
-INSERT INTO volunteer_types (type) VALUES
-	('Harvester'),
-	('Harvest Captain'),
-	('Driver'),
-	('Ambassador'),
-	('Tree Scout')
+INSERT INTO volunteer_types (type, description) VALUES
+	('Harvester', 'Volunteers at harvesting events'),
+	('Harvest Captain', 'Leads a harvest crew'),
+	('Driver', 'Transports harvested food to local distribution establishments'),
+	('Ambassador', 'Canvasses neighborhoods and hands out leaflets to homes with visible fruit trees'),
+	('Tree Scout', 'Meets with growers and inspects properties before harvest events')
 ;
     
 DROP TABLE IF EXISTS privileges;
@@ -343,12 +344,8 @@ DROP TABLE IF EXISTS volunteer_events;
 CREATE TABLE volunteer_events (
 	event_id INT NOT NULL,
 	volunteer_id INT NOT NULL,
-<<<<<<< HEAD
 	driver TINYINT(1) DEFAULT 0, -- 1 if driver -- 0 if not driver
-=======
-	driver TINYINT NOT NULL,
 	hour DOUBLE,
->>>>>>> 55e1eac30a486fce24b545120116a74ce96ba0b3
 	CONSTRAINT pk_volunteer_events PRIMARY KEY (volunteer_id, event_id),
 	CONSTRAINT fk_volunteer_events_volunteer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
 	CONSTRAINT fk_volunteer_events_event_id FOREIGN KEY (event_id) REFERENCES events(id)

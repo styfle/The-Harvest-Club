@@ -409,7 +409,6 @@ $property_types = $r->buildArray();
 	</form>	
 	<!-- Distribution end -->
 
-<<<<<<< HEAD
 	<!-- Donation form -->
 	<form id="donation" class="hidden">
 		<h3>Donation</h3>
@@ -444,8 +443,6 @@ $property_types = $r->buildArray();
 	</form>
 	<!-- Donation end -->
 
-
-=======
 	<!-- Email Form -->
 	<form id="email" class="hidden">
 		<h3>Email Selected Users</h3>
@@ -458,6 +455,5 @@ $property_types = $r->buildArray();
 		<div><textarea name="message" rows="10" cols="50" required="required"></textarea></div>
 	</form>
 	<!-- Email end -->
->>>>>>> 55e1eac30a486fce24b545120116a74ce96ba0b3
 </div>
 <!-- dialog end -->
