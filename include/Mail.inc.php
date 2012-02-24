@@ -25,8 +25,7 @@ class Mail
 	/**
 	 * Send email to single recipient
 	 */
-	function send($subject, $message, $to=NULL, $from=NULL, $replyto=NULL) {
-		if (is_NULL($to)) $to = $this->to;
+	function send($subject, $message, $to, $from=NULL, $replyto=NULL) {
 		if (is_NULL($from)) $from= $this->from;
 		if (is_NULL($replyto)) $replyto= $this->from;
 

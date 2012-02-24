@@ -1,5 +1,6 @@
 <?php
 require_once('include/Database.inc.php');
+DEFINE('SESSION_MAX_LENGTH', 60); // logout after inactive for x seconds
 
 session_start();
 
@@ -22,12 +23,18 @@ if (isset($_REQUEST['email']) && isset($_REQUEST['password'])) {
 		$_SESSION = $_SESSION[0];
 		if (!isset($_SESSION['id']))
 			$message = 'Incorrect email/password combination!';
+		
+		$_SESSION['time'] = time();
 	}
 }
 
 // user is logged in if we find an id
-if (isset($_SESSION['id']))
+if (isset($_SESSION['id'])) {
+	if (time() - $_SESSION['time'] > SESSION_MAX_LENGTH)
+		header('Location: logout.php');
 	$message = 'You are logged in as ' . $_SESSION['first_name'] . ' ' . $_SESSION['last_name'];
+	$_SESSION['time'] = time();
+}
 
 //print_r($_SESSION); // debug
 ?><!DOCTYPE html>

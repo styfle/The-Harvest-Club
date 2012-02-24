@@ -341,6 +341,10 @@
 				case 4: // distribution
 					switchForm('distribution');
                 break;
+
+				case 6: // donation
+					switchForm('donation');
+				break;
 			}			
 
 			$('#edit-dialog').dialog("option", "buttons", [addButton, cancelButton]);
@@ -480,7 +484,8 @@
 							$('#dt tbody tr').each(function() {				//For every row in the table
 								tempId = dt.fnGetData(this)[1];    			//Get growerID of current row in Tree tabs
 								if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
-									$(this).hide();							//So it is hidden
+									//$(this).hide();							//So it is hidden
+									dt.fnDeleteRow(this);					// so it is not in this view
 							});					
 						}						
 						growerID = 0;										//Reset growerID
@@ -646,7 +651,9 @@
 					
 				break;
 				
-				
+				case 6: // donation
+					switchForm('donation');
+				break;	
 		
 			}			
 			

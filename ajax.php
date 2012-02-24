@@ -113,8 +113,8 @@ function getTable($sql) {
 	
 	// if empty return empty result
 	if (!$a) {
-		$data['datatable']['aoColumns'][] = array('sTitle'=>'Oh no');
-		$data['datatable']['aaData'][] = array('No results found.');
+		$data['datatable']['aoColumns'][] = array('sTitle'=>'Empty Set');
+		$data['datatable']['aaData'][] = array('No results found. Maybe you should add something?');
 		return; 
 	}
 	
@@ -429,8 +429,8 @@ switch ($cmd)
 		}
 		break;
 	case 'get_donors':
-		$data['id'] = 3;
-		$data['title'] = 'Donors';
+		$data['id'] = 6;
+		$data['title'] = 'Donations';
 		$sql = "SELECT donation, donor, value, date FROM donations";
 		getTable($sql);
 		break;
