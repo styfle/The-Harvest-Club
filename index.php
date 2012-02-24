@@ -117,6 +117,7 @@
 		$('#grower').addClass('hidden');
 		$('#distribution').addClass('hidden');
 		$('#email').addClass('hidden');
+		$('#donation').addClass('hidden');
 
 		$('#'+id).removeClass('hidden'); // show form
 	}
@@ -364,8 +365,13 @@
 				var emailAddr = data[7];
 				emailList.push(emailAddr);
 			}); // :checked end
+			if (emailList.length == 0) {
+				setInfo('Select 1 or more checkboxes to choose email recipients.');
+				return false;
+			}
 			switchForm('email');
 			$('#email [name=bcc]').val(emailList.join(','));
+			$('#email .rcount').text(emailList.length);
 			$('#edit-dialog').dialog("option", "buttons", [sendEmailButton, cancelButton]);
 			$('#edit-dialog').dialog({ title: 'Email Selected Users' });
 			$('#edit-dialog').dialog('open') // show dialog
