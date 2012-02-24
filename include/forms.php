@@ -409,6 +409,72 @@ $property_types = $r->buildArray();
 	</form>	
 	<!-- Distribution end -->
 
+	<!-- Event form -->
+	<form id="event" class="hidden">
+		<h3>Event</h3>
+		<table>
+		<tr>
+			<td colspan="7" style = "display:none"><input id="event1" name="id" type="text" size="2"/></td>
+		</tr>
+		<tr>
+			<td colspan="7" ><label for="event2" ><b>Name</b></label></td>			
+		</tr>
+		<tr>
+			<td colspan="7" ><input id="event2" name="event-name" type="text" size="45"/></td>
+		</tr>
+		<tr>
+			<td colspan="7" ><label for="event5" ><b>Date</b></label></td>			
+		</tr>
+		<tr>
+			<td colspan="7" ><input id="event5" name="event-date" type="text" size="45"/></td>
+		</tr>
+
+		<tr>		
+			<td colspan="7" ><label for="event-grower-name"><b>Grower</b></label></td>	
+		</tr>
+		<tr>
+			<td  colspan="7" id ="event-grower"></td>			
+		</tr>	
+		
+		<tr>		
+			<td colspan="7" ><label for="event-grower-name"><b>Harvest Captain</b></label></td>	
+		</tr>
+		<tr>
+			<td colspan="7" id ="event-captain"></td>			
+		</tr>
+		<tr> <td> <br> </td> </tr>
+		<table>
+			<tr>		
+				<td><label for="event-grower-name" ><b>Tree Type</b></label></td>	
+				<td>	
+				 <INPUT type="button" value="Add" onclick="addTreeRow('eventTree')" /> 
+				 <INPUT type="button" value="Remove" onclick="deleteTreeRow('eventTree')" /> 
+				</td>
+			</tr>
+			<TABLE id="eventTree" width="250px"></TABLE>				
+		
+		</table>
+		
+		<tr> <td> <br> </td> </tr>
+		
+		<table>
+			<tr>		
+				<td ><label for="event-volunteer-name"><b>Volunteers</b></label></td>	
+				<td >	
+					<INPUT type="button" value="Add" onclick="addVolunteerRow('eventVolunteer')" />
+					<INPUT type="button" value="Remove" onclick="deleteVolunteerRow('eventVolunteer')" />
+				</td>
+			</tr>
+			
+			<TABLE id="eventVolunteer" width="450px"></TABLE>
+		</table>
+		
+		</table>
+
+	</form>	
+	<!-- Event end -->
+
+
 	<!-- Donation form -->
 	<form id="donation" class="hidden">
 		<h3>Donation</h3>
