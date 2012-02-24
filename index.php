@@ -33,6 +33,7 @@
 	<script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
 	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
+	<script type="text/javascript" src="js/event.js"></script>
 
 	</head>
 
@@ -117,6 +118,7 @@
 		$('#grower').addClass('hidden');
 		$('#distribution').addClass('hidden');
 		$('#email').addClass('hidden');
+		$('#event').addClass('hidden');
 		$('#donation').addClass('hidden');
 
 		$('#'+id).removeClass('hidden'); // show form
@@ -133,6 +135,17 @@
 	var currentTable = 0; // global id of current data table
 	var forms = ['volunteer', 'grower', 'distribution'];
 	var growerID = 0;
+	//----- These are the variables for event
+	var loadGrower=0;
+	var loadCaptain = 0;
+	var loadVolunteer = 0;
+	var loadTreeType = 0;
+	var loadDistribution = 0;
+	var treeNames = new Array();
+	var volunteerNames = new Array();
+	var distributionNames = new Array();
+	var grower_id;
+	////
 	
 	var saveButton = {
 		text: 'Save',
@@ -203,6 +216,17 @@
 						'error': ajaxError
 						});							
 					break;
+					
+				case 5:  //event
+							row[2] = $('#event2').val();
+							row[3] = $('#event-grower-name').val();
+							row[4] = $('#event-volunteer-name').val();
+							row[5] =  $('#event5').val();
+							
+							dt.fnUpdate( row, aPos, 0 );
+							
+							updateEvent();
+							break;
 			}		
 		}
 	};
@@ -565,6 +589,64 @@
                         'error': ajaxError
                     });
 				break;
+			
+				case 5: // event
+				deleteAllTreeRows();
+				treeNames.length = 0;
+				deleteAllVolunteerRows();
+				loadDistribution = 0;
+				switchForm('event');
+				for (var i = 1; i < row.length; i++)
+					$('#event' + i).val(row[i]);
+					
+				grower_id = row[3];	
+				captain_id = row[4];
+				
+				if (loadDistribution == 0)
+				{
+					distributionNames.length = 0;
+					loadDistributionName();
+					loadDistribution++;
+				}
+					
+				if(loadGrower == 0)
+				{
+					loadGrowerToForm(grower_id);
+					loadGrower++;
+				}
+				else
+				    getGrower(grower_id);
+				
+				if (loadCaptain ==0)
+				{
+					loadVolunteerToForm($('#event-captain'), captain_id);
+					loadCaptain++;
+				}
+				else
+				    getCaptain(captain_id);
+					
+				if (loadTreeType ==0)
+				{
+					loadTree(grower_id,row[1]);
+					loadTreeType++;
+				}
+				else
+					getTreeType(grower_id, row[1]);
+				
+				if (loadVolunteer == 0)
+				{
+					volunteerNames.length = 0;
+					loadVolunteerName(row[1]);
+					loadVolunteer++;
+				}
+				else
+					getEventVolunteer(row[1]);
+					
+				
+					
+				break;
+				
+				
 		
 			}			
 			
@@ -572,7 +654,17 @@
 			$('#edit-dialog').dialog({ title: 'Edit Record' });
 			$('#edit-dialog').dialog('open') // show dialog
 		}); // on.click tr
-
+		
+		$(document).on('change', '#event-grower-name', function(e) {
+			deleteAllTreeRows();
+			deleteAllVolunteerRows()
+			grower_id = $(this).val();
+			treeNames.length = 0;
+			loadTree(grower_id, row[1]);
+			loadVolunteerName(row[1]);
+			
+		});
+		
 		$(document).on('click', 'input[name=select-row]', function(e) {
 				e.stopPropagation();
 		}); // on.click() checkbox row

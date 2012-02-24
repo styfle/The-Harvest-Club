@@ -222,6 +222,31 @@ function getVolunteer_Prefer($sql) {
 
 }
 
+function getName($sql) {
+	global $db;
+	global $data;
+	//$data['datatable'] = array('aoColumns', 'aaData');
+
+	$r = $db->q($sql);
+	if (getError($r))
+		return $data;
+	
+	// get result as giant array
+	$a = $r->buildArray();
+	
+	
+	
+	foreach ($a as $v) {
+		// add a checkbox to each row (might need unique names)
+		$record = array();
+		foreach ($v as $name=>$value) {
+			$record[] = $value;
+		}
+		$data['datatable']['aaData'][] = $record;
+	}	
+
+}
+
 function generatePassword($length=8) {   
 	$password = "";
 	$possible = "12346789abcdfghjkmnpqrtvwxyzABCDFGHJKLMNPQRTVWXYZ";	
@@ -409,6 +434,147 @@ switch ($cmd)
 		$sql = "SELECT donation, donor, value, date FROM donations";
 		getTable($sql);
 		break;
+		
+	///////These are for event
+	
+	case 'get_events':
+		$data['id'] = 5;
+		$data['title'] = 'Events';
+		$sql = "SELECT * FROM events ;";
+		getTable($sql);
+		break;	
+		
+	case 'get_grower_name':
+		$data['id'] = 10;
+		$data['title'] = 'Grower-Name';
+		$sql = "SELECT id, Concat(first_name,' ',middle_name,' ',last_name) FROM growers ;";
+		getName($sql);
+		break;	
+		
+	case 'get_volunteer_name':
+		$data['id'] = 11;
+		$data['title'] = 'Volunteer-Name';
+		$sql = "SELECT id, Concat(first_name,' ',middle_name,' ',last_name) FROM volunteers ;";
+		getName($sql);
+		break;	
+	
+		
+	case 'get_tree_name':
+		$id = $_REQUEST['grower_id'];
+		$data['id'] = 12;
+		$data['title'] = 'Tree-Name';
+		$sql = "SELECT gt.id, Concat(tt.name,'-',gt.varietal) FROM tree_types tt, grower_trees gt Where gt.tree_type = tt.id AND gt.grower_id = $id";
+		getName($sql);
+		break;
+		
+	case 'get_event_tree':
+		$grower_id = $_REQUEST['id'];
+		$event_id = $_REQUEST['event_id'];
+		$data['id'] = 13;
+		$data['title'] = 'Event Tree';
+		$sql = "SELECT gt.id, h.pound FROM harvests h, grower_trees gt, events e where e.grower_id = gt.grower_id AND e.id = $event_id  And gt.id = h.tree_id And gt.grower_id = $grower_id And h.event_id = $event_id";
+		getName($sql);
+		break;
+	
+	case 'get_event_volunteer_name':
+		$event_id = $_REQUEST['event_id'];
+		$data['id'] = 14;
+		$data['title'] = 'Volunteer-Name';
+		$sql = "SELECT v.id, Concat(v.first_name,' ',v.middle_name,' ',v.last_name), ve.driver, ve.hour FROM volunteers v, events e, volunteer_events ve Where v.id = ve.volunteer_id And e.id = ve.event_id And e.id = $event_id;";
+		getName($sql);
+		break;
+		
+	case 'get_distribution_name':
+		$data['id'] = 15;
+		$data['title'] = 'Distribution-Name';
+		$sql = "SELECT id, name FROM distributions ;";
+		getName($sql);
+		break;
+		
+	case 'get_driver':
+		$data['id'] = 16;
+		$data['title'] = 'Driver-Name';
+		$id = $_REQUEST['id'];
+		$sql = "SELECT * FROM drivings Where volunteer_id = $id ;";
+		getName($sql);
+		break;
+		
+	case 'update_event':
+		$data['id'] = 16;
+		$data['title'] = 'Update Event';
+		$rawData = $_POST;
+		$event_id = ($rawData["event_id"]);
+		$event_name = ($rawData["event_name"]);
+		$event_date = ($rawData["event_date"]);
+		$grower_id = ($rawData["grower_id"]);
+		$captain_id = ($rawData["captain_id"]);
+		$tree_type = array();
+		$volunteers = array();
+		if (isset($rawData["treeType"]))
+		 $tree_type = $rawData["treeType"];
+		if (isset($rawData["volunteers"])) 
+		 $volunteers = $rawData["volunteers"];
+		
+		$hostname =  MYSQL_SERVER;
+		$dbname =  MYSQL_DB;
+		$username = MYSQL_USER;
+		$password = MYSQL_PASS;
+		try {
+			$dbh = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
+		}
+		catch(PDOException $e)
+		{
+			echo $e->getMessage();
+		}
+		
+		if ($dbh != null)
+		{
+			$dbh->setAttribute (PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			   try
+			   {
+				$dbh->beginTransaction ();           # start the transaction
+				// Delete old info
+				$dbh->exec ("Delete From drivings Where event_id=$event_id");
+				$dbh->exec ("Delete From volunteer_events Where event_id=$event_id");
+				$dbh->exec ("Delete From harvests Where event_id=$event_id");		
+				// Adding new info	
+				$dbh->exec ("Update events Set name = '$event_name', grower_id = $grower_id, captain_id = $captain_id , date ='event_day' Where id = $event_id");
+				
+				for( $i=0; $i< count($tree_type); $i++)
+				{
+				  $treeID = $tree_type[$i]["tree_id"];
+				  $pound = $tree_type[$i]["pound"];
+				  $dbh->exec ("Insert into harvests(event_id, tree_id, pound) Values ($event_id,$treeID,$pound)");
+				}
+				
+				for( $i=0; $i< count($volunteers); $i++)
+				{
+				  $d=0;
+				  $volunteerID = $volunteers[$i]["volunteer_id"];
+				  $hour = $volunteers[$i]["hour"];
+				  $driver = $volunteers[$i]["driver"];
+				  if ( $driver == 'true')
+				  {		
+					$d++;
+				    $treeID = $volunteers[$i]["tree_id"];
+					$pound =  $volunteers[$i]["pound"];
+					$distributionID = $volunteers[$i]["distribution_id"];
+					$dbh->exec ("Insert into drivings(event_id, tree_id, volunteer_id, distribution_id, pound) Values ($event_id,$treeID,$volunteerID,$distributionID, $pound)");	
+				  }
+					$dbh->exec ("Insert into volunteer_events(event_id, volunteer_id, hour, driver) Values ($event_id, $volunteerID, $hour, $d)");
+				  
+				  
+				}
+				$dbh->commit ();                     # success
+			   }
+			   catch (PDOException $e)
+			   {
+				 print ("Transaction failed: " . $e->getMessage () . "\n");
+				 $dbh->rollback ();                   # failure
+			   }
+		}
+		break;
+	
 
 	default:
 		$data['status'] = 404; // Not found
