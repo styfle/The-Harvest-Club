@@ -230,17 +230,20 @@ DROP TABLE IF EXISTS privileges;
 CREATE TABLE privileges (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	name 			NVARCHAR(255),
+
 	can_login 		TINYINT(1)	DEFAULT 0,
 
 	view_volunteer	TINYINT(1)	DEFAULT 0,
 	edit_volunteer	TINYINT(1)	DEFAULT 0,
 	del_volunteer	TINYINT(1)	DEFAULT 0,
 	exp_volunteer	TINYINT(1)	DEFAULT 0,
+	appr_volunteer	TINYINT(1)	DEFAULT 0,
 
 	view_grower		TINYINT(1)	DEFAULT 0, -- grower implies trees too
 	edit_grower		TINYINT(1)	DEFAULT 0,
 	del_grower		TINYINT(1)	DEFAULT 0,
 	exp_grower		TINYINT(1)	DEFAULT 0,
+	appr_grower		TINYINT(1)	DEFAULT 0,
 
 	view_event		TINYINT(1)	DEFAULT 0,
 	edit_event		TINYINT(1)	DEFAULT 0,
@@ -278,8 +281,13 @@ INSERT INTO privileges
 	(SELECT 'Admin', can_login, view_volunteer, view_grower, send_email, recv_email, exp_grower, exp_volunteer, view_event, edit_event, view_distrib, edit_distrib
 	FROM privileges WHERE name = 'Harvest Captain');
 
+UPDATE privileges
+	SET view_grower=1, edit_grower=1, appr_grower=1,
+	view_volunteer=1, edit_volunteer=1, appr_volunteer=1
+	WHERE name = 'Admin';
+
 INSERT INTO privileges VALUES
-	(NULL, 'Executive', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+	(NULL, 'Executive', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1 ,1);
 
 DROP TABLE IF EXISTS volunteers;
 CREATE TABLE volunteers (
@@ -305,8 +313,9 @@ CREATE TABLE volunteers (
 ) ENGINE=innodb;
 
 -- start temp insert
-INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, status, street, city, state, zip, privilege_id, signed_up,notes) VALUES
-('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', password('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 4,'2010-05-01',"");
+INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, status, street, city, state, zip, privilege_id, signed_up, notes) VALUES
+('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', SHA2('password', 256), 1, '456 Fake St', 'Irvine', 'CA', '91234', 4,'2010-05-01', 'Fearless mascot'),
+('Johnny','', 'Rocket', '(949) 554-7890', 'johnny@uci.edu', SHA2('password', 256), 1, '33 Rocket St', 'Irvine', 'CA', '91234', 3,'2012-02-02', 'Blasting off');
 -- end temp insert
 
 -- A volunteer can have many rolls
