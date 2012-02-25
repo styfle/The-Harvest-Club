@@ -361,6 +361,7 @@
 			//pop up confirmation window
 			var deleteList = [];
 
+/*
 			//if yes, then delete selected 
 			$('input[name=select-row]:checked').each(function(){
 				var row = $(this).parent().parent();
@@ -378,7 +379,46 @@
 				});
 				row.remove();
 			});
-			setInfo('Deleted ' + deleteList.length + ' items');
+*/
+			switch (currentTable)
+			{
+				case 1: //volunteer
+					$('input[name=select-row]:checked').each(function(){
+						deleteList.push($(this).parent().parent());
+					});
+					if(deleteList.length > 0)
+					{
+						var x = window.confirm("Are you sure you want to delete "+deleteList.length+" items");
+						if(x)
+						{
+							$(deleteList).each(function()
+							{
+								var row = $(this);
+								var data = dt.fnGetData(row[0]);
+								var id = data[1];
+								$.ajax({							
+									'type': 'GET',
+									'url': 'ajax.php?cmd=remove_volunteer&id='+id,
+									'success': function (data) {
+										//alert('Information is Removed!');
+									},
+									'error': ajaxError
+								});
+								row.remove();
+							});
+							setInfo('Deleted ' + deleteList.length + ' items');
+						}
+					}
+				break;
+				
+				case 2: // grower
+					switchForm('grower');
+				break;
+				
+				case 4: // distribution
+					switchForm('distribution');
+                break;
+			}			
 		});
 
 		$('#email-button').button({
@@ -654,6 +694,7 @@
 				case 6: // donation
 					switchForm('donation');
 				break;	
+
 		
 			}			
 			

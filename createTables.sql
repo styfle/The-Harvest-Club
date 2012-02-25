@@ -116,8 +116,7 @@ CREATE TABLE sources (
 
 INSERT INTO sources (name) VALUES
 	('Flyer'),
-	('Facebook'),
-	('Twitter'),
+	('Facebook/Twitter'),
 	('Family or Friend'),
 	('Newspaper/Local Magazine'),
 	('Website/Search Engine'),
@@ -222,7 +221,7 @@ INSERT INTO volunteer_types (type, description) VALUES
 	('Harvester', 'Volunteers at harvesting events'),
 	('Harvest Captain', 'Leads a harvest crew'),
 	('Driver', 'Transports harvested food to local distribution establishments'),
-	('Ambassador', 'Canvasses neighborhoods and hands out leaflets to homes with visible fruit trees'),
+	('Ambassador', 'Distributes flyers in neighborhoods with visible fruit trees'),
 	('Tree Scout', 'Meets with growers and inspects properties before harvest events')
 ;
     
@@ -307,7 +306,7 @@ CREATE TABLE volunteers (
 	privilege_id INT DEFAULT 1,
 	signed_up DATE,
 	notes TEXT,
-	source_id INT DEFAULT 8,
+	source_id INT DEFAULT 7,
 	CONSTRAINT fk_privilege_id FOREIGN KEY (privilege_id) REFERENCES privileges(id),
 	CONSTRAINT fk_source_id_volunteers FOREIGN KEY (source_id) REFERENCES sources(id)
 ) ENGINE=innodb;
