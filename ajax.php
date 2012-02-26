@@ -313,9 +313,9 @@ switch ($cmd)
 	case 'get_trees':
 		$data['id'] = 3;
 		$data['title'] = 'Trees';
-		$sql = "SELECT g.id AS grower_id, g.last_name AS last_name, tt.name AS tree_type, gt.varietal, m.name AS month, gt.number, gt.chemicaled
-				FROM grower_trees gt, month_harvests mh, tree_types tt, growers g, months m
-				WHERE g.id = gt.grower_id AND gt.id = mh.tree_id AND gt.tree_type=tt.id AND mh.month_id = m.id;";
+		$sql = "SELECT gt.id AS tree_id, Concat(g.first_name,' ', g.last_name) AS Owner, g.id AS grower_id , tt.id AS 'tree_type_id', tt.name AS 'Tree type', gt.varietal AS Varietal, gt.number AS Number, gt.chemicaled AS Chemicaled_id, IF((gt.chemicaled=0),'No','Yes') AS Chemicaled, th.id AS avgHeight_id, m.id AS month_id, th.name AS Height, m.name AS Month
+				FROM grower_trees gt, month_harvests mh, tree_types tt, growers g, months m, tree_heights th
+				WHERE g.id = gt.grower_id AND gt.id = mh.tree_id AND gt.tree_type=tt.id AND mh.month_id = m.id AND gt.avgHeight_id = th.id;";
 		getTable($sql);
 		break;
 	case 'get_distribs':
@@ -404,6 +404,22 @@ switch ($cmd)
 		$sql = "Update growers Set first_name='".$firstname."', middle_name ='".$middlename."', last_name='".$lastname."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."',zip='".$zip."', tools='".$tools."', source_id='".$source_id."', notes='".$notes."', property_type_id ='".$property_type."', property_relationship_id ='".$property_relationship."' where id=".$id;				
 		$r = $db->q($sql);
 		break;
+	case 'update_tree':
+		global $db;	
+		global $data;
+		$id = $_REQUEST['id'];
+		$grower_id = $_REQUEST['grower_id'];
+		$tree_type_id = $_REQUEST['tree_type_id'];
+		$varietal = $_REQUEST['varietal'];		
+		$number = $_REQUEST['number'];		
+		$chemicaled_id = $_REQUEST['chemicaled_id'];
+		$avgHeight_id = $_REQUEST['avgHeight_id'];
+		$month_id = $_REQUEST['month_id'];		
+		$sql = "Update grower_trees Set grower_id='".$grower_id."', tree_type='".$tree_type_id."', varietal='".$varietal."', number='".$number."',  avgHeight_id='".$avgHeight_id."',  chemicaled='".$chemicaled_id."' where id=".$id;				
+		$r = $db->q($sql);		
+		$sql = "Update month_harvests Set month_id=".$month_id." Where tree_id=".$id;
+		$r = $db->q($sql);
+		break;	
 	case 'update_volunteer':
 		updateVolunteer(true);
 		break;

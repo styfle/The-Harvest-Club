@@ -27,6 +27,18 @@ $property_relationships = $r->buildArray();
 $r = $db->q("SELECT id, name FROM property_types;");
 $property_types = $r->buildArray();
 
+$r = $db->q("SELECT id, Concat(first_name,' ',last_name) AS name FROM growers;");
+$grower_id = $r->buildArray();
+
+$r = $db->q("SELECT id, name FROM months;");
+$tree_month = $r->buildArray();
+
+$r = $db->q("SELECT id, name FROM tree_types;");
+$tree_type_id = $r->buildArray();
+
+$r = $db->q("SELECT id, name FROM tree_heights;");
+$avgHeight = $r->buildArray();
+
 ?>
 <!-- all hidden forms go here -->
 <div id="edit-dialog" class="hidden">
@@ -271,6 +283,78 @@ $property_types = $r->buildArray();
 	</div>		
 	</form>
 	<!-- Grower end -->
+	
+	<!-- Tree form -->	
+	<form id="tree" class="hidden">
+		<h3>Tree</h3>
+		<table>	
+		<tr>
+			<td colspan="3" class="hidden"><input id="tree1" name="id" type="text" size="2"/></td>
+		</tr>		
+		<tr>
+			<td colspan="3" class="hidden"><input id="tree2" name="name" type="text" size="2"/></td>
+		</tr>
+		<tr>			
+			<td colspan="3" class="hidden"><input id="tree5" name="tree_type_name" type="text" size="2"/></td>	
+		</tr>
+		<tr>
+			<td colspan="3" class="hidden"><input id="tree9" name="chemicaled" type="text" size="2"/></td>
+		</tr>
+		<tr>
+			<td colspan="3" class="hidden"><input id="tree12" name="height_name" type="text" size="2"/></td>
+		</tr>
+		<tr>
+			<td colspan="3" class="hidden"><input id="tree13" name="month_name" type="text" size="2"/></td>
+		</tr>
+		
+		<tr>			
+			<td colspan="3">
+			<label for="grower_id"> Owner</label>
+			</td>
+		</tr>
+		<tr>			
+			<td colspan="3">				
+				<?php echo options('tree3', 'grower_id', $grower_id); ?>
+			</td>
+		</tr>		
+		<tr>
+			<td><label for="tree4">Tree Type</label></td>	
+			<td><label for="tree6">Varietal</label></td>			
+		</tr>
+		<tr>			
+			<td><?php echo options('tree4', 'tree_type_id', $tree_type_id); ?></td>			
+			<td><input type="text" name="varietal" id="tree6" size="10"/></td>
+		</tr>
+		<tr>
+			<td><label for="tree7">Number</label></td>
+			<td><label for="tree8">Chemical</label></td>
+		</tr>
+		<tr>			
+			<td><input type="text" name="number" id="tree7" size="10"/></td>
+			<td>
+				<select id="tree8" name="chemicaled_id">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</select>
+			</td>
+		</tr>	
+		<tr>
+			<td><label for="tree10">Height</label></td>
+		</tr>
+		<tr>			
+			<td><?php echo options('tree10', 'avgHeight_id', $avgHeight); ?></td>
+		</tr>
+		<tr>
+			<td><label for="tree11">Month</label></td>
+		</tr>
+		<tr>			
+			<td><?php echo options('tree11', 'month_id', $tree_month); ?></td>
+		</tr>
+		
+			
+		</table>	
+	</form>	
+	<!-- Tree end -->
 	
 	<!-- Distribution form -->
 	<form id="distribution" class="hidden">
