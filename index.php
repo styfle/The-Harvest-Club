@@ -10,6 +10,8 @@ if (isExpired()) { // if session expired
 	header('Location: logout.php'); // redirect to logout page
 	exit();
 }
+
+updateLastReq(); // loading page means user is active
 ?>
 <!doctype html>
 <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->

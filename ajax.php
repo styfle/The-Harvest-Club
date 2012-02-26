@@ -23,6 +23,8 @@ if (isExpired()) { // if session expired, tell user
 	exit();
 }
 
+updateLastReq(); // calling ajax means user is active
+
 
 $cmd = $_REQUEST['cmd'];
 $data = array('status'=>200); // default to OK
