@@ -1,9 +1,12 @@
 <?php
 require_once('include/Database.inc.php');
 
-function options($id, $name, $data) {
+function options($id, $name, $data, $disabled=false) {
 	//$optionSelect = '<option value="" disabled="disabled" selected="selected">Select...</option>';
-	$s = "<select id='$id' name='$name'>";
+	$s = "<select id='$id' name='$name' ";
+	if ($disabled)
+		$s .= ' disabled="disabled"';
+	$s .= '>';
 	foreach ($data as $o) {
 		$s .= "<option value='$o[id]'>$o[name]</option>";
 	}
@@ -96,8 +99,8 @@ $property_types = $r->buildArray();
 	
 		<tr>
 			<td><b>Source</b></td>
-			<td>
-				<?php echo options('volunteer17', 'source_id', $sources); ?>
+			<td colspan="2">
+				<?php echo options('volunteer17', 'source_id', $sources, true); ?>
 			</td>
 		</tr>
 	
@@ -166,7 +169,7 @@ $property_types = $r->buildArray();
 		
 		<tr>
 			<td><b>User Type</b></td>
-			<td>
+			<td colspan="2">
 				<?php echo options('volunteer14', 'privilege_id', $privileges); ?>
 			</td>
 		</tr>
@@ -235,7 +238,7 @@ $property_types = $r->buildArray();
 			<td colspan="3"><b>Sources</b></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><?php echo options('grower13', 'source_id', $sources); ?></td>			
+			<td colspan="3"><?php echo options('grower13', 'source_id', $sources, true); ?></td>			
 		</tr>	
 		<tr>
 			<td colspan="3"><label for="grower16">Property Type</label></td>
