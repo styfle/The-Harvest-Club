@@ -19,6 +19,8 @@ define('MYSQL_DB', 'harvest');
 define('MAIL_FROM', 'admin@example.com');
 define('MAIL_TO', 'admin@example.com');
 define('MAIL_REPLYTO', 'noreply@example.com');
+
+define('SESSION_MAX_LENGTH', 60); // logout after inactive for x seconds
 ?>
 ```
 

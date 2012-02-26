@@ -1,3 +1,16 @@
+<?php
+require_once('include/auth.inc.php');
+
+if (!isLoggedIn()) { // if we're not logged in
+	header('Location: logout.php'); // redirect to login page
+	exit();
+}
+
+if (isExpired()) { // if session expired
+	header('Location: logout.php'); // redirect to logout page
+	exit();
+}
+?>
 <!doctype html>
 <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
@@ -35,7 +48,7 @@
 	<script type="text/javascript" src="js/script.js"></script>
 	<script type="text/javascript" src="js/event.js"></script>
 
-	</head>
+</head>
 
 <body id="dt_example">
 <div id="container">
@@ -43,7 +56,7 @@
 		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Home<span></h1>
 		<div id="quote">"The harvest is plentiful but the workers are few"</div>
 
-		<div id="status"class="invisible">Welcome!</div><!-- alert user -->
+		<div id="status" class="invisible">Welcome!</div><!-- alert user -->
 
 		<div class="toolbar">
 			<span id="toolbar" style="float: right" class="ui-widget-header ui-corner-all">
@@ -80,6 +93,7 @@
 		<?php 
 			date_default_timezone_set('America/Los_Angeles');
 			echo date('Y');
+			echo '<br/>Logged in as ' . $_SESSION['first_name'] . ' ' . $_SESSION['last_name'];
 		?>
 	</footer>
 	
@@ -122,6 +136,20 @@
 		$('#donation').addClass('hidden');
 
 		$('#'+id).removeClass('hidden'); // show form
+	}
+
+	// check ajax response for our standard format
+	function validResponse(data) {
+		if (!data || !data.status) { // bad data
+			alert('Error: Corrupt data returned from server!');
+			return false;
+		}
+		if (data.status == 401) { // unauthorized
+			alert(data.message);
+			window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1 ) + 'logout.php';
+			return false;
+		}
+		return true;
 	}
 
 	// Generic Ajax Error
@@ -275,8 +303,8 @@
 				'type': 'GET',
 				'url': 'ajax.php?cmd=send_email&'+para,
 				'success': function (data) {
-					if (!data || !data.status)
-						return alert('Error: Corrupt data returned from server!');
+					if (!validResponse(data))
+						return false;
 					if (data.status != 200) {
 						setError('Email not sent. Maybe the mailserver is overloaded?');
 						return alert('Status '+ data.status + '\n' + data.message);
@@ -503,8 +531,8 @@
 				'type': 'GET', 
 				'url': 'ajax.php?cmd=' + cmd, 
 				'success': function (data) {
-					if (!data || !data.status)
-						return alert('Error: Corrupt data returned from server!');
+					if (!validResponse(data))
+						return false;
 					if (data.status != 200)
 						return alert('Status '+ data.status + '\n' + data.message);
 					if (!data.datatable || !data.datatable.aoColumns || !data.datatable.aaData)

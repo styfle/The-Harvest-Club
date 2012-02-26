@@ -1,10 +1,28 @@
 <?php
-
 require_once('include/Database.inc.php');
 require_once('include/Mail.inc.php');
-// TODO add authentication
+require_once('include/auth.inc.php');
 
 header('Content-type: application/json');
+
+if (!isLoggedIn(false)) { // if we're not logged in, tell user
+	echo json_encode(array(
+		'status'=>401,
+		'message'=>'Unauthorized. Please login to complete your request.'
+		)
+	);
+	exit();
+}
+
+if (isExpired()) { // if session expired, tell user
+	echo json_encode(array(
+		'status'=>401,
+		'message'=>'Session expired. Please login to complete your request.'
+		)
+	);
+	exit();
+}
+
 
 $cmd = $_REQUEST['cmd'];
 $data = array('status'=>200); // default to OK
