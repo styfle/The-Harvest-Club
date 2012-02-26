@@ -115,13 +115,14 @@ CREATE TABLE sources (
 ) ENGINE=innodb;
 
 INSERT INTO sources (name) VALUES
+	('Other'),
 	('Flyer'),
 	('Facebook/Twitter'),
 	('Family or Friend'),
 	('Newspaper/Local Magazine'),
 	('Website/Search Engine'),
-	('Village Harvest'),
-	('Other');
+	('Village Harvest')
+;
 
 DROP TABLE IF EXISTS growers;
 CREATE TABLE growers (
@@ -137,7 +138,7 @@ CREATE TABLE growers (
 	state		CHAR(2)	NOT NULL, -- this makes sense right?
 	zip			VARCHAR(5) NOT NULL, -- can it be bigger?
 	tools		TINYTEXT,
-	source_id	INT DEFAULT 8, -- this should probably be another INT type and a FK to a table
+	source_id	INT DEFAULT 1,
 	notes		TEXT,
   	pending TINYINT(1) DEFAULT 1, -- 1-Yes 0-No     
 	property_type_id INT NULL,
@@ -306,7 +307,7 @@ CREATE TABLE volunteers (
 	privilege_id INT DEFAULT 1,
 	signed_up DATE,
 	notes TEXT,
-	source_id INT DEFAULT 7,
+	source_id INT DEFAULT 1,
 	CONSTRAINT fk_privilege_id FOREIGN KEY (privilege_id) REFERENCES privileges(id),
 	CONSTRAINT fk_source_id_volunteers FOREIGN KEY (source_id) REFERENCES sources(id)
 ) ENGINE=innodb;

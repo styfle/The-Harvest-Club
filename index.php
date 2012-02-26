@@ -427,12 +427,26 @@
 			text: false
 		}).click(function() {
 			var emailList = [];
+			var iEmail = -1;
 			$('input[name=select-row]:checked').each(function(){
+				var cols = dt.fnSettings().aoColumns;
+				for (var i=0; i<cols.length; i++) {
+					if (cols[i].sTitle == "email") {
+						iEmail = i;
+						break;
+					}
+				}
+				if (iEmail == -1)
+					return false;
 				var row = $(this).parent().parent();
 				var data = dt.fnGetData(row[0]);
-				var emailAddr = data[7];
+				var emailAddr = data[iEmail];
 				emailList.push(emailAddr);
 			}); // :checked end
+			if (iEmail == -1) {
+				setInfo('There is no email address in this table. How do you expect to send email?');
+				return false;
+			}
 			if (emailList.length == 0) {
 				setInfo('Select 1 or more checkboxes to choose email recipients.');
 				return false;
