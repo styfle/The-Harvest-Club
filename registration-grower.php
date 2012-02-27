@@ -74,9 +74,9 @@ $months = $r->buildArray();
     		<label for="email">Email*</label><input id="email" type="email" name="email" placeholder="peter@uci.edu" required="required" />
     		<label for="phone">Phone*</label><input id="phone" type="tel" name="phone" placeholder="9495551234" pattern="[0-9]{10}" required="required" />
     		<div>
-				<label>Preferred Contact </label>
+				<label>Preferred Contact* </label>
 				&nbsp;
-				<input id="contact-email" name="prefer" type="radio" value="email"/><label for="contact-email">Email</label>
+				<input id="contact-email" name="prefer" type="radio" value="email" checked="checked" /><label for="contact-email">Email</label>
 				&nbsp;
 				<input id="contact-phone" name="prefer" type="radio" value="phone"/><label for="contact-phone">Phone</label>
 				<!--input id="contact-address" name="prefer" type="radio" /><label for="contact-address">Mail</label-->
