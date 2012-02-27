@@ -90,8 +90,7 @@ INSERT INTO months (name) VALUES
 	('September'),
 	('October'),
 	('November'),
-	('December'),
-	('None'); -- is this needed?
+	('December'):
 
 DROP TABLE IF EXISTS days;
 CREATE TABLE days (
