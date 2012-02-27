@@ -140,10 +140,11 @@ $roles = $r->buildArray();
 		<p>There are many ways to volunteer with The Harvest Club.  Please select any of the volunteer roles below that are of interest to you.</p>
 		<fieldset>
 			<legend>Preferred Roles</legend>
-			Hover over each role for a description.
+			<i>Hover mouse over each role for a description.</i>
 				<div id="roles"></div>
 				<script type="text/javascript">
 				var container = document.getElementById('roles');
+<<<<<<< HEAD
 					for (var i=0; i<roles.length; i++) {
 						var o = roles[i];
 						var checkbox = document.createElement('input');
@@ -151,25 +152,53 @@ $roles = $r->buildArray();
 						checkbox.name = "roles[]";
 						checkbox.value = o.id;
 						checkbox.id = "id";
+=======
+				container.innerHTML = '';
+				var role = '<div>';
+				for (var i=0; i<roles.length; i++) {
+					var o = roles[i];
+					role += '<div title = "'+o.description+'">';
+					role += '<input type="checkbox" name="roles[]" value="'+o.id+'" />' + o.type;
+					role += '</div>';
+/*
+					var checkbox = document.createElement('input');
+					checkbox.type = "checkbox";
+					checkbox.name = "roles[]";
+					checkbox.value = '"'+o.id+'"';
+					checkbox.id = "id";
+>>>>>>> 941e866f7e65e9ae3d5a71bf0374e8cc90c7f61c
 
-						var label = document.createElement('label')
-						label.htmlFor = "id";
-						label.appendChild(document.createTextNode(o.type));
-						label.title = o.description;
+					var label = document.createElement('label')
+					label.htmlFor = "id";
+					label.appendChild(document.createTextNode(o.type));
+					label.title = o.description;
 
-						container.appendChild(checkbox);
-						container.appendChild(label);
-						// container.append('<br>');
-					}
+					container.appendChild(checkbox);
+					container.appendChild(label);
+					// container.append('<br>');
+*/
+				}
+				role += '</div>';
+				$(container).append(role);
 				</script>
 		</fieldset>
 
 		<fieldset>
 			<legend>Preferred Days to volunteer</legend>
+			<i>Note: Harvest Events usually takes two hours long and generally take place over the weekends.</i>
 				<tr>
 				<div id="days"></div>
 				</tr>
 				<script type="text/javascript">
+				var container = document.getElementById('days');
+				container.innerHTML = '';
+				var day = '<div>';
+				for (var i=0; i<days.length; i++) {
+					var o = days[i];
+					day += '<div title = "'+o.name+'">';
+					day += '<input type="checkbox" name="days[]" value="'+o.id+'" />' + o.name;
+					day += '</div>';
+/*
 				var container = document.getElementById('days');
 					for (var i=0; i<days.length; i++) {
 						var o = days[i];
@@ -186,6 +215,10 @@ $roles = $r->buildArray();
 						container.appendChild(checkbox);
 						container.appendChild(label);
 					}
+*/
+				}
+				day += '</div>';
+				$(container).append(day);
 				</script>
 			
 		</fieldset>
@@ -276,7 +309,7 @@ $roles = $r->buildArray();
 			</div>
 			<br />
 			<label>Additional comments:</label><br/>
-				<textarea name="comments" type="textarea" cols="50" rows="3" placeholder="For Group Registration, please enter the information in this area: provide the Age Range, Number of Members, and When the able to volunteer."></textarea>
+				<textarea name="comments" type="textarea" cols="50" rows="3" placeholder="For Group Registration, please enter the information in this area: provide the Age Range, Number of Members, and When are they able to volunteer."></textarea>
 		</fieldset>
 				
 		<br />

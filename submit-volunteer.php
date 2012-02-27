@@ -17,7 +17,12 @@ include('include/Database.inc.php');
    //$group_age = $_POST['group-age'];
    //$group_availability = $_POST['group-avail'];
    //$group_note = $_POST['group-notes'];
-   $source = $_POST['source'];
+   if(empty($_POST['source']))
+   {
+    $source = 7; // Default to "Others";
+   }
+   else
+	$source = $_POST['source'];
    $comments = $_POST['comments'];
    $errorMessage = "";
    
@@ -74,27 +79,49 @@ include('include/Database.inc.php');
 	}
 
 	$volunteerID = mysql_insert_id();
+	
+	if(!empty($_POST['roles']))
+	{
+		foreach($_POST['roles'] as $role) {
+			$tableinfo = "volunteer_roles (volunteer_id, volunteer_type_id)";
+			$valueinfo = "$volunteerID, $role";
 
+<<<<<<< HEAD
 	foreach($_POST['roles'] as $role) {
 		$sql = "INSERT INTO volunteer_roles (volunteer_id, volunteer_type_id) VALUES ('%s', '%s');";
 		$inputs = array($volunteerID, $role);
 
 		$r = $db->q($sql, $inputs);
+=======
+			$r = $db->q($sql, array($tableinfo, $valueinfo));
+>>>>>>> 941e866f7e65e9ae3d5a71bf0374e8cc90c7f61c
 
-		if (!$r->isValid()) {
-			echo $db->error();
+			if (!$r->isValid()) {
+				echo $db->error();
+			}
 		}
 	}
+<<<<<<< HEAD
 
 	foreach($_POST['days'] as $day) {
 		$sql = "INSERT INTO volunteer_prefers (volunteer_id, day_id) VALUES ('%s', '%s');";
 		$inputs = array($volunteerID, $day);
 	
 		$r = $db->q($sql, $inputs);
+=======
+	
+	if(!empty($_POST['days']))
+	{
+		foreach($_POST['days'] as $day) {
+			$tableinfo = "volunteer_prefers (volunteer_id, day_id)";
+			$valueinfo = "$volunteerID, $day";
+>>>>>>> 941e866f7e65e9ae3d5a71bf0374e8cc90c7f61c
 		
-		if (!$r->isValid()) {
-			echo $db->error();
+			$r = $db->q($sql, array($tableinfo, $valueinfo));
+			
+			if (!$r->isValid()) {
+				echo $db->error();
+			}
 		}
 	}
-
 ?>

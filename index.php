@@ -105,6 +105,80 @@ updateLastReq(); // loading page means user is active
 	<script type="text/javascript" charset="utf-8">
 
 	// GLOBAL FUNCTIONS (probably move to separate file)
+	
+	function reloadTable()
+	{
+		var cmd; 
+		
+		switch (currentTable)
+		{
+			case 0:		//Notifications				
+			break;
+				
+			case 1:		//Volunteers Tab
+				cmd = "get_volunteers";
+			break;
+			
+			case 2:	
+			break;
+
+			case 3:
+			break;
+				
+			case 4:
+			break;
+		}		
+		
+		$.ajax( {
+			'dataType': 'json', 
+			'type': 'GET', 
+			'url': 'ajax.php?cmd=' + cmd, 
+			'success': function (data) {
+				if (!data || !data.status)
+					return alert('Error: Corrupt data returned from server!');
+				if (data.status != 200)
+					return alert('Status '+ data.status + '\n' + data.message);
+				if (!data.datatable || !data.datatable.aoColumns || !data.datatable.aaData)
+					return alert('There is no column and row data!');
+				
+				// destroy datatable on each click
+				dt.fnDestroy(); // destroy
+				
+				// clear out data in table head and body
+				$('#dt thead').html('');
+				$('#dt tbody').html('');
+				
+				dt = $('#dt').dataTable({
+					'bJQueryUI': true, // style using jQuery UI
+					'sPaginationType': 'full_numbers', // full pagination
+					'bProcessing': true, // show loading bar text
+					'bAutoWidth': true, // auto column size
+					'aaSorting': [], // disable initial sort
+					"aLengthMenu": [[10, 25, 50, 100, -1], // sort length
+									[10, 25, 50, 100, "All"]], // sort name
+					'aoColumns': data.datatable.aoColumns,
+					'aaData': data.datatable.aaData,
+					//"sScrollX": "100%",
+					//"bScrollCollapse": true
+				});
+
+				currentTable = data.id; // set current table after it is populated
+				$('#page_title').text(data.title); // set page title
+				if(currentTable == 3){									//If current Tab is Trees 
+					if(growerID != 0){
+						$('#dt tbody tr').each(function() {				//For every row in the table
+							tempId = dt.fnGetData(this)[1];    			//Get growerID of current row in Tree tabs
+							if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
+								//$(this).hide();							//So it is hidden
+								dt.fnDeleteRow(this);					// so it is not in this view
+						});					
+					}						
+					growerID = 0;										//Reset growerID
+				}
+			},
+			'error': ajaxError
+		});
+	}
 
 	function hideStatus() {
 		$('#status').addClass('invisible');
@@ -319,6 +393,12 @@ updateLastReq(); // loading page means user is active
 					break;
 					
 				case 1:		//Volunteers Tab
+					var required = $('#volunteer input[required="required"]');
+					for(var i=0; i<required.length; i++)
+					{
+						if (required[i].value == '')
+							return alert(required[i].name + ' is required!');
+					}
 					
 					//Update DB
 					var para = $('#volunteer').serialize();
@@ -326,12 +406,12 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=add_volunteer&'+para,
 						'success': function (data) {
-							setInfo('Information Updated');
+							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
 						},
 						'error': ajaxError
 					});
-														
+					reloadTable();									
 					break;
 				
 				case 2:	
@@ -475,7 +555,6 @@ updateLastReq(); // loading page means user is active
 					loadAllEventForm(0,1,1);
                 break;
 				
-
 				case 6: // donation
 					for (var i = 0; i < 6; i++)
 						$('#donations'+i).val('');
@@ -549,7 +628,6 @@ updateLastReq(); // loading page means user is active
 				break;
 				
 				case 2: // grower
-					switchForm('grower');
 				break;
 				
 				case 4: // distribution
@@ -588,7 +666,6 @@ updateLastReq(); // loading page means user is active
 						});
 						row.remove();
 					});
-
                 break;
 				
 				case 6: // donation
@@ -864,14 +941,13 @@ updateLastReq(); // loading page means user is active
 				break;
 			
 				case 5: // event				
-				for (var i = 1; i < row.length; i++)
-					$('#event' + i).val(row[i]);
-				event_id = row[1];	
+					for (var i = 1; i < row.length; i++)
+						$('#event' + i).val(row[i]);
+					event_id = row[1];	
 
-				grower_id = row[3];	
-				captain_id = row[4];
-				loadAllEventForm(event_id,grower_id,captain_id);
-
+					grower_id = row[3];	
+					captain_id = row[4];
+					loadAllEventForm(event_id,grower_id,captain_id);
 				break;
 				
 				case 6: // donation
@@ -879,7 +955,6 @@ updateLastReq(); // loading page means user is active
 					$("#donations5").datepicker({dateFormat: 'yy-mm-dd'});
 					for (var i = 1; i < row.length; i++)
                         $('#donations' + i).val(row[i]);                                                                            
-                    
 				break;	
 
 
