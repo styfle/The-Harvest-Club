@@ -105,6 +105,70 @@ function updateVolunteer($exists) {
 	}
 }
 
+function updateTree($exist){
+	global $db;	
+	global $data;
+	$id = $_REQUEST['id'];
+	$grower_id = $_REQUEST['grower_id'];
+	$tree_type_id = $_REQUEST['tree_type_id'];
+	$varietal = $_REQUEST['varietal'];		
+	$number = $_REQUEST['number'];		
+	$avgHeight_id = $_REQUEST['avgHeight_id'];
+	$chemicaled_id = $_REQUEST['chemicaled_id'];
+			
+	if($exist){
+		$sql = "Update grower_trees Set grower_id='".$grower_id."', tree_type='".$tree_type_id."', varietal='".$varietal."', number='".$number."',  avgHeight_id='".$avgHeight_id."',  chemicaled='".$chemicaled_id."' where id=".$id;				
+		$r = $db->q($sql);	
+		for ($i=1; $i<13 ; $i++) {
+			if (isset($_GET["tree_month$i"])) { //it is checked
+				$sql = "Insert into month_harvests(tree_id, month_id) Values($id,$i)";
+				$r = $db->q($sql);
+			} else { // it is unchecked
+				$sql = "Delete From month_harvests Where month_id=$i And tree_id=$id";					
+				$r = $db->q($sql);
+			}
+		}
+		
+	}
+	else{
+		$sql = "INSERT INTO grower_trees(grower_id, tree_type, varietal, number, avgHeight_id, chemicaled)
+				VALUES ('$grower_id', '$tree_type_id', '$varietal', '$number', '$avgHeight_id', '$chemicaled_id')";				
+		$r = $db->q($sql);
+		$treeID =  mysql_insert_id();
+		for ($i=1; $i<13 ; $i++) {			
+			if (isset($_GET["tree_month$i"])) { //it is checked
+				$sql = "INSERT INTO month_harvests(tree_id,month_id) VALUES('$treeID', '$i')";
+				$r = $db->q($sql);
+			} else { // it is unchecked
+				$sql = "Delete From month_harvests Where month_id=$i And tree_id=$treeID";					
+				$r = $db->q($sql);
+			}
+		}
+		getError($r);
+	}
+}
+
+function getTree_Months($sql){
+	global $db;
+	global $data;
+	$r = $db->q($sql);
+	if (getError($r))
+		return $data;
+	
+	// get result as giant array
+	$a = $r->buildArray();	
+	
+	foreach ($a as $v) {
+		// add a checkbox to each row (might need unique names)
+		$record = array();
+		foreach ($v as $name=>$value) {
+			$record[] = $value;
+		}
+		$data['datatable']['aaData'][] = $record;
+	}
+}
+
+
 function getError($r) {
 	global $data;
 	global $db;
@@ -313,9 +377,9 @@ switch ($cmd)
 	case 'get_trees':
 		$data['id'] = 3;
 		$data['title'] = 'Trees';
-		$sql = "SELECT gt.id AS tree_id, Concat(g.first_name,' ', g.last_name) AS Owner, g.id AS grower_id , tt.id AS 'tree_type_id', tt.name AS 'Tree type', gt.varietal AS Varietal, gt.number AS Number, gt.chemicaled AS Chemicaled_id, IF((gt.chemicaled=0),'No','Yes') AS Chemicaled, th.id AS avgHeight_id, m.id AS month_id, th.name AS Height, m.name AS Month
-				FROM grower_trees gt, month_harvests mh, tree_types tt, growers g, months m, tree_heights th
-				WHERE g.id = gt.grower_id AND gt.id = mh.tree_id AND gt.tree_type=tt.id AND mh.month_id = m.id AND gt.avgHeight_id = th.id;";
+		$sql = "SELECT gt.id AS tree_id, Concat(g.first_name,' ', g.last_name) AS Owner, g.id AS grower_id , tt.id AS 'tree_type_id', tt.name AS 'Tree type', gt.varietal AS Varietal, gt.number AS Number, gt.chemicaled AS Chemicaled_id, IF((gt.chemicaled=0),'No','Yes') AS Chemicaled, th.id AS avgHeight_id, th.name AS Height
+				FROM grower_trees gt, tree_types tt, growers g, tree_heights th
+				WHERE g.id = gt.grower_id AND gt.tree_type=tt.id AND gt.avgHeight_id = th.id;";
 		getTable($sql);
 		break;
 	case 'get_distribs':
@@ -470,22 +534,18 @@ switch ($cmd)
 		$sql = "Update growers Set first_name='".$firstname."', middle_name ='".$middlename."', last_name='".$lastname."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."',zip='".$zip."', tools='".$tools."', source_id='".$source_id."', notes='".$notes."', property_type_id ='".$property_type."', property_relationship_id ='".$property_relationship."' where id=".$id;				
 		$r = $db->q($sql);
 		break;
-	case 'update_tree':
-		global $db;	
-		global $data;
-		$id = $_REQUEST['id'];
-		$grower_id = $_REQUEST['grower_id'];
-		$tree_type_id = $_REQUEST['tree_type_id'];
-		$varietal = $_REQUEST['varietal'];		
-		$number = $_REQUEST['number'];		
-		$chemicaled_id = $_REQUEST['chemicaled_id'];
-		$avgHeight_id = $_REQUEST['avgHeight_id'];
-		$month_id = $_REQUEST['month_id'];		
-		$sql = "Update grower_trees Set grower_id='".$grower_id."', tree_type='".$tree_type_id."', varietal='".$varietal."', number='".$number."',  avgHeight_id='".$avgHeight_id."',  chemicaled='".$chemicaled_id."' where id=".$id;				
-		$r = $db->q($sql);		
-		$sql = "Update month_harvests Set month_id=".$month_id." Where tree_id=".$id;
-		$r = $db->q($sql);
+	case 'update_tree':		
+		updateTree(true);
 		break;	
+	case 'add_tree':
+		updateTree(false);
+		break;
+	case 'get_tree_month':
+		$id = $_REQUEST['id'];
+		$data['title'] = 'Months';
+		$sql = "SELECT month_id FROM month_harvests mh Where mh.tree_id=".$id;				
+		getTree_Months($sql);		
+		break;
 	case 'update_volunteer':
 		updateVolunteer(true);
 		break;

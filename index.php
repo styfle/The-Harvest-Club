@@ -227,26 +227,23 @@ updateLastReq(); // loading page means user is active
 					});
 					break;
 				case 3:
-					//alert($('#tree4 option:selected').text());
-					$('#tree2').val($('#tree3 option:selected').text());
-					$('#tree5').val($('#tree4 option:selected').text());					
-					$('#tree12').val($('#tree10 option:selected').text());
-					$('#tree13').val($('#tree11 option:selected').text());
-															
-					if($('#tree8 option:selected').val()==1)
+					//Update text fields in table row -- 
+					$('#tree2').val($('#tree3 option:selected').text());	//Update Owner name		
+					$('#tree5').val($('#tree4 option:selected').text());	//Update Tree type
+					$('#tree11').val($('#tree10 option:selected').text());	//Update Height name															
+					if($('#tree8 option:selected').val()==1)				//Update Chemical option
 						$('#tree9').val('Yes');
 					else
 						$('#tree9').val('No');
 						
-					for(var i = 1; i < row.length; i++){
+					for(var i = 1; i < row.length; i++){					//Update Other fields
 						row[i]=$('#tree'+i).val();
 					}					
 					
-					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
+					dt.fnUpdate( row, aPos, 0 );							//Update Table -- Independent from updating db!
 					
 					//Update DB
-					var para = $('#tree').serialize();	
-					//alert(para);					
+					var para = $('#tree').serialize();
 					$.ajax({							
 						'type': 'GET',
 						'url': 'ajax.php?cmd=update_tree&'+para,
@@ -340,6 +337,17 @@ updateLastReq(); // loading page means user is active
 				case 2:	
 					break;
 				case 3:
+					var para = $('#tree').serialize();
+					alert(para);		
+					$.ajax({							
+						'type': 'GET',
+						'url': 'ajax.php?cmd=add_tree&'+para,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+						},
+						'error': ajaxError
+					});
 					break;
 					
 				case 4:
@@ -719,7 +727,7 @@ updateLastReq(); // loading page means user is active
 					if(currentTable == 3){									//If current Tab is Trees 
 						if(growerID != 0){
 							$('#dt tbody tr').each(function() {				//For every row in the table
-								tempId = dt.fnGetData(this)[1];    			//Get growerID of current row in Tree tabs
+								tempId = dt.fnGetData(this)[3];    			//Get growerID of current row in Tree tabs
 								if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
 									dt.fnDeleteRow(this);					// so it is not in this view
 							});					
@@ -802,6 +810,23 @@ updateLastReq(); // loading page means user is active
 					switchForm('tree');
 					for (var i = 1; i < row.length; i++)
 						$('#tree' + i).val(row[i]);
+					$.ajax({
+                        'dataType': 'json',
+                        'type': 'GET',
+                        'url': 'ajax.php?cmd=get_tree_month&id='+row[1],
+                        'success': function (data) {
+							for ( var i=1; i< 13; ++i )   // clear data
+							  $('#tree_month'+i).prop("checked", false);
+							
+							if( data.datatable != null) 							
+					   		 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
+								$('#tree_month'+data.datatable.aaData[i][0]).prop("checked", true);									
+								
+							
+									
+                        },
+                        'error': ajaxError
+                    });
 				break;
 				
 				case 4: // distribution

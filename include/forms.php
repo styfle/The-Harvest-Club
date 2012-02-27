@@ -284,54 +284,51 @@ $avgHeight = $r->buildArray();
 	</form>
 	<!-- Grower end -->
 	
+	
 	<!-- Tree form -->	
 	<form id="tree" class="hidden">
 		<h3>Tree</h3>
 		<table>	
 		<tr>
-			<td colspan="3" class="hidden"><input id="tree1" name="id" type="text" size="2"/></td>
+			<td class="hidden"><input id="tree1" name="id" type="text" size="2"/></td>
 		</tr>		
 		<tr>
-			<td colspan="3" class="hidden"><input id="tree2" name="name" type="text" size="2"/></td>
+			<td class="hidden"><input id="tree2" name="name" type="text" size="2"/></td>
 		</tr>
 		<tr>			
-			<td colspan="3" class="hidden"><input id="tree5" name="tree_type_name" type="text" size="2"/></td>	
+			<td class="hidden"><input id="tree5" name="tree_type_name" type="text" size="2"/></td>	
 		</tr>
 		<tr>
-			<td colspan="3" class="hidden"><input id="tree9" name="chemicaled" type="text" size="2"/></td>
+			<td class="hidden"><input id="tree9" name="chemicaled" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="hidden"><input id="tree12" name="height_name" type="text" size="2"/></td>
-		</tr>
-		<tr>
-			<td colspan="3" class="hidden"><input id="tree13" name="month_name" type="text" size="2"/></td>
-		</tr>
-		
+			<td class="hidden"><input id="tree11" name="height_name" type="text" size="2"/></td>
+		</tr>		
 		<tr>			
-			<td colspan="3">
+			<td colspan="4">
 			<label for="grower_id"> Owner</label>
 			</td>
 		</tr>
 		<tr>			
-			<td colspan="3">				
+			<td colspan="4">				
 				<?php echo options('tree3', 'grower_id', $grower_id); ?>
 			</td>
 		</tr>		
 		<tr>
-			<td><label for="tree4">Tree Type</label></td>	
-			<td><label for="tree6">Varietal</label></td>			
+			<td colspan="2"><label for="tree4">Tree Type</label></td>	
+			<td colspan="2"><label for="tree6">Varietal</label></td>			
 		</tr>
 		<tr>			
-			<td><?php echo options('tree4', 'tree_type_id', $tree_type_id); ?></td>			
-			<td><input type="text" name="varietal" id="tree6" size="10"/></td>
+			<td colspan="2"><?php echo options('tree4', 'tree_type_id', $tree_type_id); ?></td>			
+			<td colspan="2"><input type="text" name="varietal" id="tree6" size="10"/></td>
 		</tr>
 		<tr>
-			<td><label for="tree7">Number</label></td>
-			<td><label for="tree8">Chemical</label></td>
+			<td colspan="2"><label for="tree7">Number</label></td>
+			<td colspan="2"><label for="tree8">Chemical</label></td>
 		</tr>
 		<tr>			
-			<td><input type="text" name="number" id="tree7" size="10"/></td>
-			<td>
+			<td colspan="2"><input type="text" name="number" id="tree7" size="10"/></td>
+			<td colspan="2">
 				<select id="tree8" name="chemicaled_id">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
@@ -339,18 +336,51 @@ $avgHeight = $r->buildArray();
 			</td>
 		</tr>	
 		<tr>
-			<td><label for="tree10">Height</label></td>
+			<td colspan="4"><label for="tree10">Height</label></td>
 		</tr>
 		<tr>			
-			<td><?php echo options('tree10', 'avgHeight_id', $avgHeight); ?></td>
-		</tr>
-		<tr>
-			<td><label for="tree11">Month</label></td>
-		</tr>
-		<tr>			
-			<td><?php echo options('tree11', 'month_id', $tree_month); ?></td>
+			<td colspan="4"><?php echo options('tree10', 'avgHeight_id', $avgHeight); ?></td>
 		</tr>
 		
+		<?php echo $empty_cell ?>
+		
+		<tr><td><label>Month</label></td></tr>
+		<tr>
+			<td width="20"><input type="checkbox" name="tree_month1" id="tree_month1"/></td>	
+			<td width="100"><label for="tree_month1">January</label></td>
+			<td width="20"><input type="checkbox" name="tree_month7" id="tree_month7"/></td>		
+			<td width="100"><label for="tree_month7">July</label></td>
+		</tr>
+		<tr>
+			<td width="20"><input type="checkbox" name="tree_month2" id="tree_month2"  size="28"/></td>
+			<td width="100"><label for="tree_month2">Febuary</label></td>
+			<td width="20"><input type="checkbox" name="tree_month8" id="tree_month8"  size="28"/></td>			
+			<td width="100"><label for="tree_month8">August</label></td>			
+		</tr>
+		<tr>			
+			<td width="20"><input type="checkbox" name="tree_month3" id="tree_month3"  size="28"/></td>
+			<td width="100"><label for="tree_month3">March</label></td>
+			<td width="20"><input type="checkbox" name="tree_month9" id="tree_month9"  size="28"/></td>
+			<td width="100"><label for="tree_month9">September</label></td>
+		</tr>
+		<tr>
+			<td width="20"><input type="checkbox" name="tree_month4" id="tree_month4"  size="28"/></td>
+			<td width="100"><label for="tree_month4">April</label></td>			
+			<td width="20"><input type="checkbox" name="tree_month10" id="tree_month10"  size="28"/></td>
+			<td width="100"><label for="tree_month10">October</label></td>
+		</tr>
+		<tr>			
+			<td width="20"><input type="checkbox" name="tree_month5" id="tree_month5"  size="28"/></td>
+			<td width="100"><label for="tree_month5">May</label></td>
+			<td width="20"><input type="checkbox" name="tree_month11" id="tree_month11"  size="28"/></td>
+			<td width="100"><label for="tree_month11">November</label></td>
+		</tr>
+		<tr>			
+			<td width="20"><input type="checkbox" name="tree_month6" id="tree_month6"  size="28"/></td>
+			<td width="100"><label for="tree_month6">June</label></td>			
+			<td width="20"><input type="checkbox" name="tree_month12" id="tree_month12"  size="28"/></td>
+			<td width="100"><label for="tree_month12">September</label></td>
+		</tr>
 			
 		</table>	
 	</form>	
