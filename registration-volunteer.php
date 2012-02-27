@@ -144,15 +144,6 @@ $roles = $r->buildArray();
 				<div id="roles"></div>
 				<script type="text/javascript">
 				var container = document.getElementById('roles');
-<<<<<<< HEAD
-					for (var i=0; i<roles.length; i++) {
-						var o = roles[i];
-						var checkbox = document.createElement('input');
-						checkbox.type = "checkbox";
-						checkbox.name = "roles[]";
-						checkbox.value = o.id;
-						checkbox.id = "id";
-=======
 				container.innerHTML = '';
 				var role = '<div>';
 				for (var i=0; i<roles.length; i++) {
@@ -166,7 +157,6 @@ $roles = $r->buildArray();
 					checkbox.name = "roles[]";
 					checkbox.value = '"'+o.id+'"';
 					checkbox.id = "id";
->>>>>>> 941e866f7e65e9ae3d5a71bf0374e8cc90c7f61c
 
 					var label = document.createElement('label')
 					label.htmlFor = "id";
@@ -205,7 +195,7 @@ $roles = $r->buildArray();
 						var checkbox = document.createElement('input');
 						checkbox.type = "checkbox";
 						checkbox.name = "days[]";
-						checkbox.value = o.id;
+						checkbox.value = '"'+o.id+'"';
 						checkbox.id = "id";
 
 						var label = document.createElement('label')
