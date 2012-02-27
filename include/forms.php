@@ -600,25 +600,25 @@ $avgHeight = $r->buildArray();
 			<td colspan="3" class="hidden"><input id="donations1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="donations2">Donation</label></td>	
+			<td colspan="3"><label for="donations2">Donation (What was donated)</label></td>	
 		</tr>
 		<tr>
 			<td colspan="3"><input type="text" name="donation" id="donations2" size="33"/></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><label for="donations3">Donor</label></td>		
+			<td colspan="3"><label for="donations3">Donor (Who donated it)</label></td>		
 		</tr>
 		<tr>
 			<td colspan="3"><input type="text" name="donor" id="donations3" size="33"/></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><label for="donations4">Value</label></td>		
+			<td colspan="3"><label for="donations4">Value (Estimated value in dollars)</label></td>
 		</tr>
 		<tr>
 			<td colspan="3"><input type="text" name="value" id="donations4" size="33"/></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><label for="donations5">Date</label></td>		
+			<td colspan="3"><label for="donations5">Date (When was it donated)</label></td>
 		</tr>
 		<tr>
 			<td colspan="3"><input type="text" name="date" id="donations5" size="33"/></td>			

@@ -246,9 +246,9 @@ updateLastReq(); // loading page means user is active
 	var loadVolunteer = 0;
 	var loadTreeType = 0;
 	var loadDistribution = 0;
-	var treeNames = new Array();
-	var volunteerNames = new Array();
-	var distributionNames = new Array();
+	var treeNames = [];
+	var volunteerNames = [];
+	var distributionNames = [];
 	var grower_id,event_id, captain_id;
 	////
 	
@@ -257,14 +257,10 @@ updateLastReq(); // loading page means user is active
 		click: function() {
 			switch (currentTable)
 			{
-				case 0:		//				
+				case 0:		// Notifications
 					break;
 					
 				case 1:		//Volunteers Tab
-					for(var i = 2; i < 16; i++){								
-						row[i]=$('#volunteer'+i).val();								
-					}
-					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
 					
 					//Update DB
 					var para = $('#volunteer').serialize();
@@ -274,6 +270,10 @@ updateLastReq(); // loading page means user is active
 						'success': function (data) {
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
+							for(var i = 2; i < 16; i++) {								
+								row[i]=$('#volunteer'+i).val();								
+							}
+							dt.fnUpdate(row, aPos, 0);	//Update Table -- Independent from updating db!
 						},
 						'error': ajaxError
 					});
@@ -282,11 +282,6 @@ updateLastReq(); // loading page means user is active
 					break;
 				
 				case 2:	
-					for(var i = 2; i < 17; i++){
-						row[i]=$('#grower'+i).val();								
-					}
-					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!
-					
 					//Update DB
 					var para = $('#grower').serialize();					
 					$.ajax({							
@@ -296,6 +291,10 @@ updateLastReq(); // loading page means user is active
 							// check data.status if actually successful
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
+							for(var i = 2; i < 17; i++) {
+								row[i]=$('#grower'+i).val();								
+							}
+							dt.fnUpdate(row, aPos, 0);	//Update Table -- Independent from updating db!
 						},
 						'error': ajaxError
 					});
@@ -309,12 +308,6 @@ updateLastReq(); // loading page means user is active
 						$('#tree9').val('Yes');
 					else
 						$('#tree9').val('No');
-						
-					for(var i = 1; i < row.length; i++){					//Update Other fields
-						row[i]=$('#tree'+i).val();
-					}					
-					
-					dt.fnUpdate( row, aPos, 0 );							//Update Table -- Independent from updating db!
 					
 					//Update DB
 					var para = $('#tree').serialize();
@@ -325,6 +318,10 @@ updateLastReq(); // loading page means user is active
 							// check data.status if actually successful
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
+							for(var i = 1; i < row.length; i++){					//Update Other fields
+								row[i]=$('#tree'+i).val();
+							}
+							dt.fnUpdate(row, aPos, 0);								//Update Table
 						},
 						'error': ajaxError
 					});
@@ -332,10 +329,6 @@ updateLastReq(); // loading page means user is active
 					
 				case 4:
 					var para = $('#distribution').serialize();															
-					for(var i = 1; i < row.length; i++){
-						row[i]=$('#distribution'+i).val();								
-					}
-					dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!									
 					
 					//Update DB
 					$.ajax({							
@@ -344,25 +337,27 @@ updateLastReq(); // loading page means user is active
 						'success': function (data) {
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
+							for(var i = 1; i < row.length; i++){
+								row[i]=$('#distribution'+i).val();								
+							}
+							dt.fnUpdate(row, aPos, 0);	//Update Table -- Independent from updating db!	
 						},
 						'error': ajaxError
 						});							
 					break;
 					
 				case 5:  //event
-						if (checkEventForm() != -1)
-						{
-							row[2] = $('#event2').val();
-							row[3] = $('#event-grower-name').val();
-							row[4] = $('#event-volunteer-name').val();
-							row[5] =  $('#event5').val();
-							
-							dt.fnUpdate( row, aPos, 0 );
-							
-							updateEvent();
-						}
-							break;
-				case 6:								
+					if (checkEventForm() != -1) {
+						row[2] = $('#event2').val();
+						row[3] = $('#event-grower-name').val();
+						row[4] = $('#event-volunteer-name').val();
+						row[5] =  $('#event5').val();
+						
+						updateEvent();
+						dt.fnUpdate(row, aPos, 0);
+					}
+					break;
+				case 6:	// donation
 					var para = $('#donation').serialize();
 					//Update DB
 					$.ajax({							
@@ -371,14 +366,13 @@ updateLastReq(); // loading page means user is active
 						'success': function (data) {
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
-																							
 							for(var i = 1; i < row.length; i++){
 								row[i]=$('#donations'+i).val();								
 							}
-							dt.fnUpdate( row, aPos, 0 );
+							dt.fnUpdate(row, aPos, 0);
 						},
 						'error': ajaxError
-						});							
+					});
 					break;
 			}		
 		}
@@ -559,7 +553,8 @@ updateLastReq(); // loading page means user is active
 					for (var i = 0; i < 6; i++)
 						$('#donations'+i).val('');
 					switchForm('donation');
-					$("#donations5").datepicker({dateFormat: 'yy-mm-dd'});
+					//$("#donations5").datepicker({dateFormat: 'yy-mm-dd'});
+					$('#donations5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
 				break;
 			}			
 
@@ -951,10 +946,11 @@ updateLastReq(); // loading page means user is active
 				break;
 				
 				case 6: // donation
-					switchForm('donation');
-					$("#donations5").datepicker({dateFormat: 'yy-mm-dd'});
+					//$("#donations5").datepicker({dateFormat: 'yy-mm-dd'});
+					$('#donations5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
 					for (var i = 1; i < row.length; i++)
-                        $('#donations' + i).val(row[i]);                                                                            
+                    	$('#donations' + i).val(row[i]);
+					switchForm('donation');
 				break;	
 
 

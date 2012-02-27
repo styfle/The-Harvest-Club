@@ -622,7 +622,7 @@ switch ($cmd)
 	case 'get_donors':
 		$data['id'] = 6;
 		$data['title'] = 'Donations';
-		$sql = "SELECT * FROM donations";
+		$sql = "SELECT id, donation, donor, value, date FROM donations WHERE deleted=0";
 		getTable($sql);
 		break;
 		

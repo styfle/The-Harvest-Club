@@ -90,7 +90,7 @@ INSERT INTO months (name) VALUES
 	('September'),
 	('October'),
 	('November'),
-	('December'):
+	('December');
 
 DROP TABLE IF EXISTS days;
 CREATE TABLE days (
@@ -420,8 +420,8 @@ CREATE TABLE donations (
 	donation nVARCHAR(255) NOT NULL,
 	donor nVARCHAR(255) DEFAULT "Anonymous",
 	value double,
-	deleted TINYINT(1) DEFAULT 0, -- 1-Deleted, 0-Available
-	date datetime
+	date DATE,
+	deleted TINYINT(1) DEFAULT 0 -- 1-Deleted, 0-Available
 ) ENGINE=innodb;
 
 -- start temp insert
