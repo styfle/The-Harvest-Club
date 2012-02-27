@@ -23,8 +23,6 @@ if (isExpired()) { // if session expired, tell user
 	exit();
 }
 
-updateLastReq(); // calling ajax means user is active
-
 
 $cmd = $_REQUEST['cmd'];
 $data = array('status'=>200); // default to OK
@@ -357,7 +355,7 @@ switch ($cmd)
 			$r = $db->q($sql);
 			if($r->hasRows()) {
 				if (($openHour!='') && ($openMin!='') && ($closeHour!='') && ($closeMin!='')) {
-				  $sql = "Update distribution_hours Set open='".$openHour.":".$openMin."', close='".$closeHour.":".$closeMin."' Where distribution_id=".$id." And day_id=".$i;						   
+				  $sql = "Update distribution_hours Set open='".$openHour.":".$openMin."', close='".$closeHour.":".$closeMin."' Where distribution_id=".$id." And day_id=".$i;							  
 				  $db->q($sql);
 				}
 				if (($openHour=='') && ($openMin=='') && ($closeHour=='') && ($closeMin=='')) {
@@ -371,7 +369,73 @@ switch ($cmd)
 		
 		}
 		break;
+	
+	case 'add_distribution':
+		global $db;
+		global $data;
+	
+		if (isset($_REQUEST['name']))
+			$name = $_REQUEST['name'];
+		else $name ="";
 		
+		if (isset($_REQUEST['phone']))
+			$phone = $_REQUEST['phone'];
+		else $phone ="";
+		
+		if (isset($_REQUEST['email']))
+			$email = $_REQUEST['email'];
+		else $email ="";
+		
+		if (isset($_REQUEST['street']))
+			$street = $_REQUEST['street'];
+		else $street ="";
+		
+		if (isset($_REQUEST['city']))
+			$city = $_REQUEST['city'];
+		else $city ="";
+		
+		if (isset($_REQUEST['state']))
+			$state = $_REQUEST['state'];
+		else $state ="";
+		
+		if (isset($_REQUEST['zip']))
+			$zip = $_REQUEST['zip'];
+		else $zip ="";
+		
+		if (isset($_REQUEST['notes']))
+			$notes = $_REQUEST['notes'];
+		else $notes ="";
+		
+		$sql = "Insert into distributions(name,phone, email, street, city, state, zip, notes) Values ('$name', '$phone', '$email','$street','$city', '$state','$zip','$notes')";				
+		$r = $db->q($sql);
+		if (!$r->isValid())
+			$data = getError();
+		else
+			$id = $db->getInsertId();	
+		
+		for ($i=1; $i<8 ; $i++) {
+			$openHour = $_REQUEST['distributionHour'.$i.'-OpenHour'];			
+			$openMin = $_REQUEST['distributionHour'.$i.'-OpenMin'];			
+			$closeHour = $_REQUEST['distributionHour'.$i.'-CloseHour'];			
+			$closeMin= $_REQUEST['distributionHour'.$i.'-CloseMin'];			
+			 if (($openHour!='') && ($openMin!='') && ($closeHour!='') && ($closeMin!='')) {
+			   $sql = "Insert into distribution_hours(distribution_id, day_id, open, close) values (".$id.",".$i.",'".$openHour.":".$openMin."','".$closeHour.":".$closeMin."')";						   
+			   $db->q($sql);
+			}
+		
+		}
+		break;
+		
+	case 'remove_distribution':
+		global $db;
+		global $data;
+		$id = $_REQUEST['id'];
+		$sql = "DELETE FROM distribution_hours WHERE distribution_id=$id";
+		$r = $db->q($sql);
+		$sql = "DELETE FROM distributions WHERE id=$id";
+		$r = $db->q($sql);
+		getError($r);
+		break;
 	case 'get_volunteer_role':
 		$id = $_REQUEST['id'];
 		$data['title'] = 'Roles';
@@ -467,7 +531,7 @@ switch ($cmd)
 	case 'get_donors':
 		$data['id'] = 6;
 		$data['title'] = 'Donations';
-		$sql = "SELECT donation, donor, value, date FROM donations";
+		$sql = "SELECT id, donation as Donation, donor as Donor, value as Value, date(date) as Date FROM donations";
 		getTable($sql);
 		break;
 		
@@ -475,10 +539,10 @@ switch ($cmd)
 	
 	case 'get_events':
 		$data['id'] = 5;
-		$data['title'] = 'Events';
-		$sql = "SELECT * FROM events ;";
+		$data['title'] = 'Events';		
+		$sql = "SELECT id, name as 'Event Name', grower_id, captain_id, date(date) as Date FROM events ;";
 		getTable($sql);
-		break;	
+		break;
 		
 	case 'get_grower_name':
 		$data['id'] = 10;
@@ -574,7 +638,7 @@ switch ($cmd)
 				$dbh->exec ("Delete From volunteer_events Where event_id=$event_id");
 				$dbh->exec ("Delete From harvests Where event_id=$event_id");		
 				// Adding new info	
-				$dbh->exec ("Update events Set name = '$event_name', grower_id = $grower_id, captain_id = $captain_id , date ='event_day' Where id = $event_id");
+				$dbh->exec ("Update events Set name = '$event_name', grower_id = $grower_id, captain_id = $captain_id , date ='$event_date' Where id = $event_id");
 				
 				for( $i=0; $i< count($tree_type); $i++)
 				{
@@ -612,6 +676,156 @@ switch ($cmd)
 		break;
 	
 
+	case 'create_event':
+		$data['id'] = 17;
+		$data['title'] = 'Create Event';
+		$rawData = $_POST;		
+		$event_name = ($rawData["event_name"]);
+		$event_date = ($rawData["event_date"]);
+		$grower_id = ($rawData["grower_id"]);
+		$captain_id = ($rawData["captain_id"]);
+		$tree_type = array();
+		$volunteers = array();
+		if (isset($rawData["treeType"]))
+		 $tree_type = $rawData["treeType"];
+		if (isset($rawData["volunteers"])) 
+		 $volunteers = $rawData["volunteers"];
+		 
+		$hostname =  MYSQL_SERVER;
+		$dbname =  MYSQL_DB;
+		$username = MYSQL_USER;
+		$password = MYSQL_PASS;
+		 
+		$sql = "Insert into events( name, grower_id, captain_id, date) Values ('$event_name', $grower_id, $captain_id,'$event_date')";			
+		$r = $db->q($sql);
+		if (!$r->isValid())
+			$data = getError();
+		else
+			$event_id = $db->getInsertId();
+		
+		try {
+			$dbh = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
+		}
+		catch(PDOException $e)
+		{
+			echo $e->getMessage();
+		}
+		
+		if ($dbh != null)
+		{
+			$dbh->setAttribute (PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			   try
+			   {
+				$dbh->beginTransaction ();           # start the transaction
+				
+				// Creating new info	
+				//$dbh->exec ("Insert into events(id, name, grower_id, captain_id, date) Values ($event_id, $event_name, $grower_id, $captain_id,'$event_date')");
+				
+				for( $i=0; $i< count($tree_type); $i++)
+				{
+				  $treeID = $tree_type[$i]["tree_id"];
+				  $pound = $tree_type[$i]["pound"];
+				  $dbh->exec ("Insert into harvests(event_id, tree_id, pound) Values ($event_id,$treeID,$pound)");
+				}
+				
+				for( $i=0; $i< count($volunteers); $i++)
+				{
+				  $d=0;
+				  $volunteerID = $volunteers[$i]["volunteer_id"];
+				  $hour = $volunteers[$i]["hour"];
+				  $driver = $volunteers[$i]["driver"];
+				  if ( $driver == 'true')
+				  {		
+					$d++;
+				    $treeID = $volunteers[$i]["tree_id"];
+					$pound =  $volunteers[$i]["pound"];
+					$distributionID = $volunteers[$i]["distribution_id"];
+					$dbh->exec ("Insert into drivings(event_id, tree_id, volunteer_id, distribution_id, pound) Values ($event_id,$treeID,$volunteerID,$distributionID, $pound)");	
+				  }
+					$dbh->exec ("Insert into volunteer_events(event_id, volunteer_id, hour, driver) Values ($event_id, $volunteerID, $hour, $d)");
+				  
+				  
+				}
+				$dbh->commit ();                     # success
+			   }
+			   catch (PDOException $e)
+			   {
+				 print ("Transaction failed: " . $e->getMessage () . "\n");
+				 $dbh->rollback ();                   # failure
+			   }
+		}
+		
+		
+		break;
+		
+	case 'remove_event':
+		$event_id = $_REQUEST['id'];
+		$hostname =  MYSQL_SERVER;
+		$dbname =  MYSQL_DB;
+		$username = MYSQL_USER;
+		$password = MYSQL_PASS;
+		try {
+			$dbh = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
+		}
+		catch(PDOException $e)
+		{
+			echo $e->getMessage();
+		}		
+		
+		if ($dbh != null)
+		{
+			$dbh->setAttribute (PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			   try
+			   {				
+				$dbh->beginTransaction ();           # start the transaction
+				// Delete old info
+				$dbh->exec ("Delete From drivings Where event_id=$event_id");
+				$dbh->exec ("Delete From volunteer_events Where event_id=$event_id");
+				$dbh->exec ("Delete From harvests Where event_id=$event_id");		
+				$dbh->exec ("Delete From events Where id=$event_id");		
+				
+				$dbh->commit ();                     # success
+			   }
+			   catch (PDOException $e)
+			   {
+				 print ("Transaction failed: " . $e->getMessage () . "\n");
+				 $dbh->rollback ();                   # failure
+			   }
+		}
+		break;
+	case 'update_donation':
+		global $db;
+		global $data;
+		$id = $_REQUEST['id'];
+		$donation = $_REQUEST['donation'];
+		$donor = $_REQUEST['donor'];
+		$value = $_REQUEST['value'];
+		$date = $_REQUEST['date'];
+		$sql = "Update donations Set donation = '$donation', donor = '$donor', value =$value, date ='$date' where id=$id";	
+		$r = $db->q($sql);
+		break;
+		
+	case 'add_donation':
+		global $db;
+		global $data;
+		$id = $_REQUEST['id'];
+		$donation = $_REQUEST['donation'];
+		$donor = $_REQUEST['donor'];
+		$value = $_REQUEST['value'];
+		$date = $_REQUEST['date'];
+		$sql = "Insert into donations(donation, donor, value, date) Values('$donation','$donor', $value, '$date')";	
+		$r = $db->q($sql);
+		break;
+		
+	case 'remove_donation':
+		global $db;
+		global $data;
+		$id = $_REQUEST['id'];
+		$sql = "DELETE FROM donations
+				WHERE id=$id";
+		$r = $db->q($sql);
+		getError($r);
+		break;
 	default:
 		$data['status'] = 404; // Not found
 		$data['message'] = "Unknown ajax command: $cmd";

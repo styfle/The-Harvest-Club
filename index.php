@@ -175,7 +175,7 @@ updateLastReq(); // loading page means user is active
 	var treeNames = new Array();
 	var volunteerNames = new Array();
 	var distributionNames = new Array();
-	var grower_id;
+	var grower_id,event_id, captain_id;
 	////
 	
 	var saveButton = {
@@ -259,7 +259,6 @@ updateLastReq(); // loading page means user is active
 					});
 					break;
 					
-					
 				case 4:
 					var para = $('#distribution').serialize();															
 					for(var i = 1; i < row.length; i++){
@@ -280,6 +279,8 @@ updateLastReq(); // loading page means user is active
 					break;
 					
 				case 5:  //event
+						if (checkEventForm() != -1)
+						{
 							row[2] = $('#event2').val();
 							row[3] = $('#event-grower-name').val();
 							row[4] = $('#event-volunteer-name').val();
@@ -288,7 +289,26 @@ updateLastReq(); // loading page means user is active
 							dt.fnUpdate( row, aPos, 0 );
 							
 							updateEvent();
+						}
 							break;
+				case 6:								
+					var para = $('#donation').serialize();
+					//Update DB
+					$.ajax({							
+						'type': 'GET',
+						'url': 'ajax.php?cmd=update_donation&'+para,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+																							
+							for(var i = 1; i < row.length; i++){
+								row[i]=$('#donations'+i).val();								
+							}
+							dt.fnUpdate( row, aPos, 0 );
+						},
+						'error': ajaxError
+						});							
+					break;
 			}		
 		}
 	};
@@ -323,6 +343,35 @@ updateLastReq(); // loading page means user is active
 					break;
 					
 				case 4:
+					var para = $('#distribution').serialize();
+					$.ajax({							
+						'type': 'GET',
+						'url': 'ajax.php?cmd=add_distribution&'+para,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+						},
+						'error': ajaxError
+					});
+														
+					break;
+					
+				case 5:  // event
+					if (checkEventForm() != -1)
+					  createNewEvent();
+					break;
+					
+				case 6:
+					var para = $('#donation').serialize();
+					$.ajax({							
+						'type': 'GET',
+						'url': 'ajax.php?cmd=add_donation&'+para,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+						},
+						'error': ajaxError
+					});
 					break;
 			}		
 		}
@@ -406,10 +455,24 @@ updateLastReq(); // loading page means user is active
 				
 				case 4: // distribution
 					switchForm('distribution');
+					for (var i = 0; i < 9; i++)
+						$('#donations'+i).val('');
+					initHours();
+					
                 break;
+						
+				case 5: // event
+					$('#event2').val('');
+					$('#event5').val('');
+					loadAllEventForm(0,1,1);
+                break;
+				
 
 				case 6: // donation
+					for (var i = 0; i < 6; i++)
+						$('#donations'+i).val('');
 					switchForm('donation');
+					$("#donations5").datepicker({dateFormat: 'yy-mm-dd'});
 				break;
 			}			
 
@@ -478,16 +541,66 @@ updateLastReq(); // loading page means user is active
 				break;
 				
 				case 2: // grower
-					//switchForm('grower');
-				break;
-				
-				case 3: // tree
-					//switchForm('tree');
+					switchForm('grower');
 				break;
 				
 				case 4: // distribution
-					//switchForm('distribution');
+					$('input[name=select-row]:checked').each(function(){
+						var row = $(this).parent().parent();
+						var data = dt.fnGetData(row[0]);
+						var id = data[1];
+						deleteList.push(id);
+						//TODO Ajax needs to be sent at the end
+						$.ajax({							
+							'type': 'GET',
+							'url': 'ajax.php?cmd=remove_distribution&id='+id,
+							'success': function (data) {								
+								
+							},
+							'error': ajaxError
+						});
+						row.remove();
+					});					
+				break;
+						
+				case 5: // event
+					$('input[name=select-row]:checked').each(function(){
+						var row = $(this).parent().parent();
+						var data = dt.fnGetData(row[0]);
+						var id = data[1];	
+						deleteList.push(id);						
+						//TODO Ajax needs to be sent at the end
+						$.ajax({							
+							'type': 'GET',
+							'url': 'ajax.php?cmd=remove_event&id='+id,
+							'success': function (data) {								
+								
+							},
+							'error': ajaxError
+						});
+						row.remove();
+					});
+
                 break;
+				
+				case 6: // donation
+						$('input[name=select-row]:checked').each(function(){
+						var row = $(this).parent().parent();
+						var data = dt.fnGetData(row[0]);
+						var id = data[1];
+						deleteList.push(id);
+						//TODO Ajax needs to be sent at the end
+						$.ajax({							
+							'type': 'GET',
+							'url': 'ajax.php?cmd=remove_donation&id='+id,
+							'success': function (data) {								
+								
+							},
+							'error': ajaxError
+						});
+						row.remove();
+					});					
+				break;
 			}			
 		});
 
@@ -606,10 +719,9 @@ updateLastReq(); // loading page means user is active
 					if(currentTable == 3){									//If current Tab is Trees 
 						if(growerID != 0){
 							$('#dt tbody tr').each(function() {				//For every row in the table
-								tempId = dt.fnGetData(this)[3];    			//Get growerID of current row in Tree tabs
+								tempId = dt.fnGetData(this)[1];    			//Get growerID of current row in Tree tabs
 								if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
 									dt.fnDeleteRow(this);					// so it is not in this view
-									//$(this).remove();						// would this be more efficient???
 							});					
 						}						
 						growerID = 0;										//Reset growerID
@@ -693,6 +805,7 @@ updateLastReq(); // loading page means user is active
 				break;
 				
 				case 4: // distribution
+					initHours();
 					switchForm('distribution');
                     for (var i = 1; i < row.length; i++)
                         $('#distribution' + i).val(row[i]);                                                                            
@@ -714,7 +827,7 @@ updateLastReq(); // loading page means user is active
 									var myData = data.datatable.aaData[i];
 									var dateID = myData[1];
 									var open   = myData[2].split(":",3);
-									var close  = myData[3].split(":",3);																			
+									var close  = myData[3].split(":",3);										
 									$('#distributionHour' +dateID+'-OpenHour').val(open[0]);
 									$('#distributionHour' +dateID+'-OpenMin').val(open[1]);
 									$('#distributionHour' +dateID+'-CloseHour').val(close[0]);
@@ -725,67 +838,26 @@ updateLastReq(); // loading page means user is active
                     });
 				break;
 			
-				case 5: // event
-				deleteAllTreeRows();
-				treeNames.length = 0;
-				deleteAllVolunteerRows();
-				loadDistribution = 0;
-				switchForm('event');
+				case 5: // event				
 				for (var i = 1; i < row.length; i++)
 					$('#event' + i).val(row[i]);
-					
+				event_id = row[1];	
+
 				grower_id = row[3];	
 				captain_id = row[4];
-				
-				if (loadDistribution == 0)
-				{
-					distributionNames.length = 0;
-					loadDistributionName();
-					loadDistribution++;
-				}
-					
-				if(loadGrower == 0)
-				{
-					loadGrowerToForm(grower_id);
-					loadGrower++;
-				}
-				else
-				    getGrower(grower_id);
-				
-				if (loadCaptain ==0)
-				{
-					loadVolunteerToForm($('#event-captain'), captain_id);
-					loadCaptain++;
-				}
-				else
-				    getCaptain(captain_id);
-					
-				if (loadTreeType ==0)
-				{
-					loadTree(grower_id,row[1]);
-					loadTreeType++;
-				}
-				else
-					getTreeType(grower_id, row[1]);
-				
-				if (loadVolunteer == 0)
-				{
-					volunteerNames.length = 0;
-					loadVolunteerName(row[1]);
-					loadVolunteer++;
-				}
-				else
-					getEventVolunteer(row[1]);
-					
-				
-					
+				loadAllEventForm(event_id,grower_id,captain_id);
+
 				break;
 				
 				case 6: // donation
 					switchForm('donation');
+					$("#donations5").datepicker({dateFormat: 'yy-mm-dd'});
+					for (var i = 1; i < row.length; i++)
+                        $('#donations' + i).val(row[i]);                                                                            
+                    
 				break;	
 
-		
+
 			}			
 			
 			$('#edit-dialog').dialog("option", "buttons", [saveButton, cancelButton]);
@@ -794,12 +866,14 @@ updateLastReq(); // loading page means user is active
 		}); // on.click tr
 		
 		$(document).on('change', '#event-grower-name', function(e) {
+			grower_id = $('#event-grower option:selected').val();
 			deleteAllTreeRows();
 			deleteAllVolunteerRows()
 			grower_id = $(this).val();
 			treeNames.length = 0;
-			loadTree(grower_id, row[1]);
-			loadVolunteerName(row[1]);
+			volunteerNames.length = 0;
+			loadTree(grower_id, event_id);
+			loadVolunteerName(event_id);
 			
 		});
 		

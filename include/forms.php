@@ -406,86 +406,86 @@ $avgHeight = $r->buildArray();
 			</tr>
 			<tr>	
 				<td><label for="city">Monday </label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour1-OpenHour" id ="distributionHour1-OpenHour"/></td>
+				<td><select name="distributionHour1-OpenHour" id ="distributionHour1-OpenHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour1-OpenMin" id ="distributionHour1-OpenMin"/></td>
+				<td><select name="distributionHour1-OpenMin" id ="distributionHour1-OpenMin"></select></td>
 				
 				<td><label >  ---   </label></td>
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour1-CloseHour" id ="distributionHour1-CloseHour" /></td>
+				<td><select name="distributionHour1-CloseHour" id ="distributionHour1-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour1-CloseMin" id ="distributionHour1-CloseMin" /></td>
+				<td><select name="distributionHour1-CloseMin" id ="distributionHour1-CloseMin"></select></td>
 				
 			</tr>				
 			<tr>	
 				<td><label for="city">Tuesday </label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour2-OpenHour" id ="distributionHour2-OpenHour"/></td>
+				<td><select name="distributionHour2-OpenHour" id ="distributionHour2-OpenHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour2-OpenMin" id ="distributionHour2-OpenMin"/></td>
+				<td><select name="distributionHour2-OpenMin" id ="distributionHour2-OpenMin"></select></td>
 				
 				<td><label >  ---   </label></td>
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour2-CloseHour" id ="distributionHour2-CloseHour" /></td>
+				<td><select name="distributionHour2-CloseHour" id ="distributionHour2-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour2-CloseMin" id ="distributionHour2-CloseMin" /></td>
+				<td><select name="distributionHour2-CloseMin" id ="distributionHour2-CloseMin"></select></td>
 				
 			</tr>			
 			<tr>	
 				<td><label for="city">Wednesday </label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour3-OpenHour" id ="distributionHour3-OpenHour"/></td>
+				<td><select name="distributionHour3-OpenHour" id ="distributionHour3-OpenHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour3-OpenMin" id ="distributionHour3-OpenMin"/></td>
+				<td><select name="distributionHour3-OpenMin" id ="distributionHour3-OpenMin"></select></td>
 				
 				<td><label >  ---   </label></td>
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour3-CloseHour" id ="distributionHour3-CloseHour" /></td>
+				<td><select name="distributionHour3-CloseHour" id ="distributionHour3-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour3-CloseMin" id ="distributionHour3-CloseMin" /></td>
+				<td><select name="distributionHour3-CloseMin" id ="distributionHour3-CloseMin"></select></td>
 				
 			</tr>		
 			<tr>	
 				<td><label for="city">Thursday </label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour4-OpenHour" id ="distributionHour4-OpenHour"/></td>
+				<td><select name="distributionHour4-OpenHour" id ="distributionHour4-OpenHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour4-OpenMin" id ="distributionHour4-OpenMin"/></td>
+				<td><select name="distributionHour4-OpenMin" id ="distributionHour4-OpenMin"></select></td>
 				
 				<td><label >  ---   </label></td>
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour4-CloseHour" id ="distributionHour4-CloseHour" /></td>
+				<td><select name="distributionHour4-CloseHour" id ="distributionHour4-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour4-CloseMin" id ="distributionHour4-CloseMin" /></td>
+				<td><select name="distributionHour4-CloseMin" id ="distributionHour4-CloseMin"></select></td>
 				
 			</tr>		
 			<tr>	
 				<td><label for="city">Friday </label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour5-OpenHour" id ="distributionHour5-OpenHour"/></td>
+				<td><select name="distributionHour5-OpenHour" id ="distributionHour5-OpenHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour5-OpenMin" id ="distributionHour5-OpenMin"/></td>
+				<td><select name="distributionHour5-OpenMin" id ="distributionHour5-OpenMin"></select></td>
 				
 				<td><label >  ---   </label></td>
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour5-CloseHour" id ="distributionHour5-CloseHour" /></td>
+				<td><select name="distributionHour5-CloseHour" id ="distributionHour5-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour5-CloseMin" id ="distributionHour5-CloseMin" /></td>
+				<td><select name="distributionHour5-CloseMin" id ="distributionHour5-CloseMin"></select></td>
 				
 			</tr>		
 			<tr>	
 				<td><label for="city">Saturday </label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour6-OpenHour" id ="distributionHour6-OpenHour"/></td>
+				<td><select name="distributionHour6-OpenHour" id ="distributionHour6-OpenHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour6-OpenMin" id ="distributionHour6-OpenMin"/></td>
+				<td><select name="distributionHour6-OpenMin" id ="distributionHour6-OpenMin"></select></td>
 				
 				<td><label >  ---   </label></td>
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour6-CloseHour" id ="distributionHour6-CloseHour" /></td>
+				<td><select name="distributionHour6-CloseHour" id ="distributionHour6-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour6-CloseMin" id ="distributionHour6-CloseMin" /></td>
+				<td><select name="distributionHour6-CloseMin" id ="distributionHour6-CloseMin"></select></td>
 				
 			</tr>		
 			<tr>	
 				<td><label for="city">Sunday </label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour7-OpenHour" id ="distributionHour7-OpenHour"/></td>
+				<td><select name="distributionHour7-OpenHour" id ="distributionHour7-OpenHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour7-OpenMin" id ="distributionHour7-OpenMin"/></td>
+				<td><select name="distributionHour7-OpenMin" id ="distributionHour7-OpenMin"></select></td>
 				
 				<td><label >  ---   </label></td>
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour7-CloseHour" id ="distributionHour7-CloseHour" /></td>
+				<td><select name="distributionHour7-CloseHour" id ="distributionHour7-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
-				<td><input type="text" value="" size="2" maxlength="2" name="distributionHour7-CloseMin" id ="distributionHour7-CloseMin" /></td>
+				<td><select name="distributionHour7-CloseMin" id ="distributionHour7-CloseMin"></select></td>
 				
 			</tr>		
 		</table>

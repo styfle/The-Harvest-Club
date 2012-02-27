@@ -109,7 +109,7 @@
 			 var label3 = document.createElement("label");
 			 label3.style.width = "5em";
 			 label3.style.fontWeight = 'bold';
-			 var txt3=document.createTextNode('Hour');
+			 var txt3=document.createTextNode('Hours');
 			 label3.appendChild(txt3);
 			 cell3.appendChild(label3);
 			 
@@ -506,9 +506,8 @@
 							};
 				
 				volunteers.push(data); 
-			}
+			}		
 		
-		var para = ("event_id="+event_id+"&event-name="+event_name+"&event-date="+event_date+"&grower-id="+grower_id+"&captain-id="+captain_id);	
 		var data = {
 					event_id: event_id,
 					event_name: event_name,
@@ -523,13 +522,295 @@
 						url: 'ajax.php?cmd=update_event', 
 						data: data,
 						'success': function (data) {
-							alert('Information is updated!');
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
 						},
 						'error': function (e) {
 							alert('Ajax Error!\n' + e.responseText);
 						}
 					});	
 	}
+	function checkEventForm(){	
+		if ($('#event2').val() =="")
+		{
+			alert("Event Name can't be empty!");
+			return -1;
+		}
+		if ($('#event5').val() =="")
+		{
+			alert("Date can't be empty!");
+			return -1;
+		}
+		
+		var table = document.getElementById("eventTree");
+		var rowCount = table.rows.length;
+		for(var i=1; i<rowCount; i++)
+		{
+			if(table.rows[i].cells[1].childNodes[0].value =="")
+			{
+				alert("Tree Type can't be empty!");
+				return -1;
+			}
+			
+			if(table.rows[i].cells[2].childNodes[0].value =="")
+			{
+				alert("Tree Pound can't be empty!");
+				return -1;
+			}
+			
+			if (isNaN(parseFloat(table.rows[i].cells[2].childNodes[0].value)))
+			{
+				alert("Tree Pound must be a number!");
+				return -1;
+			}
+			
+			if (parseFloat(table.rows[i].cells[2].childNodes[0].value) < 0)
+			{
+				alert("Tree Pound must be greater than zero!");
+				return -1;
+			}
+		}
+
+		var table = document.getElementById("eventVolunteer");
+		var rowCount = table.rows.length;
+		for(var i=1; i<rowCount; i++) 
+		{
+			if((table.rows[i].cells[1].childNodes[0].value ==""))
+			{
+				alert("Volunteer Name can't be empty!");
+				return -1;
+			}
+			
+			if((table.rows[i].cells[2].childNodes[0].value ==""))
+			{
+				alert("Hours can't be empty!");
+				return -1;
+			}
+			
+			if (isNaN(parseFloat(table.rows[i].cells[2].childNodes[0].value)))
+			{
+				alert("Hours must be a number!");
+				return -1;
+			}
+			
+			if (parseFloat(table.rows[i].cells[2].childNodes[0].value) < 0)
+			{
+				alert("Hours must be greater than zero!");
+				return -1;
+			}
+			
+			if (table.rows[i].cells[3].childNodes[0].checked)
+			{
+			
+				if(table.rows[i].cells[4].childNodes[0].value =="")
+				{
+					alert("Tree Type can't be empty!");
+					return -1;
+				}
+				
+				
+				if(table.rows[i].cells[5].childNodes[0].value =="")
+				{
+					alert("Tree Pound can't be empty!");
+					return -1;
+				}
+				
+				if (isNaN(parseFloat(table.rows[i].cells[5].childNodes[0].value)))
+				{
+					alert("Tree Pound must be a number!");
+					return -1;
+				}
+				
+				if (parseFloat(table.rows[i].cells[5].childNodes[0].value) < 0)
+				{
+					alert("Tree Pound must be greater than zero!");
+					return -1;
+				}
+				
+				if(table.rows[i].cells[6].childNodes[0].value =="")
+				{
+					alert("Distribution can't be empty!");
+					return -1;
+				}
+			}
+		}
+			
+		return 0;
+	}
+	function createNewEvent(){			
+		var event_name =  $('#event2').val();
+		var event_date =  $('#event5').val();
+		var grower_id =  $('#event-grower option:selected').val();
+		var captain_id = $('#event-captain option:selected').val();
+		var tree_type = new Array();
+		var volunteers = new Array();
+		
+		var table = document.getElementById("eventTree");
+		var rowCount = table.rows.length;
+		for(var i=1; i<rowCount; i++)
+			if((table.rows[i].cells[1].childNodes[0].value !="") && (table.rows[i].cells[2].childNodes[0].value !=""))
+			{
+				var data = {
+							"tree_id": table.rows[i].cells[1].childNodes[0].value,
+							"pound": table.rows[i].cells[2].childNodes[0].value
+							};
+							
+							console.log(parseFloat(table.rows[i].cells[2].childNodes[0].value));
+				
+				
+				tree_type.push(data); 
+			}
+		
+		var table = document.getElementById("eventVolunteer");
+		var rowCount = table.rows.length;
+		for(var i=1; i<rowCount; i++) 
+			if((table.rows[i].cells[1].childNodes[0].value !="") && (table.rows[i].cells[2].childNodes[0].value !=""))
+			{
+				var data = {
+							"volunteer_id": table.rows[i].cells[1].childNodes[0].value,
+							"hour": table.rows[i].cells[2].childNodes[0].value,
+							"driver": table.rows[i].cells[3].childNodes[0].checked,
+							"tree_id": table.rows[i].cells[4].childNodes[0].value,
+							"pound": table.rows[i].cells[5].childNodes[0].value,
+							"distribution_id": table.rows[i].cells[6].childNodes[0].value
+							};			
+				
+				volunteers.push(data); 
+			}		
+		
+		var data = {					
+					event_name: event_name,
+					event_date: event_date,
+					grower_id : grower_id,
+					captain_id : captain_id,
+					treeType : tree_type,
+					volunteers : volunteers
+					};
+		$.ajax( {
+						type: 'post', 
+						url: 'ajax.php?cmd=create_event', 
+						data: data,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+						},
+						'error': function (e) {
+							alert('Ajax Error!\n' + e.responseText);
+						}
+					});	
+	
+	}
+	
+	function loadAllEventForm(event_id, grower_id, captain_id)
+	{
+		deleteAllTreeRows();
+		treeNames.length = 0;
+		deleteAllVolunteerRows();
+		loadDistribution = 0;
+		switchForm('event');					
+						
+		if (loadDistribution == 0)
+		{
+			distributionNames.length = 0;
+			loadDistributionName();
+			loadDistribution++;
+		}
+			
+		if(loadGrower == 0)
+		{
+			loadGrowerToForm(grower_id);
+			loadGrower++;
+		}
+		else
+			getGrower(grower_id);
+		
+		if (loadCaptain ==0)
+		{
+			loadVolunteerToForm($('#event-captain'), captain_id);
+			loadCaptain++;
+		}
+		else
+			getCaptain(captain_id);
+			
+		if (loadTreeType ==0)
+		{
+			loadTree(grower_id,event_id);
+			loadTreeType++;
+		}
+		else
+			getTreeType(grower_id, event_id);
+		
+		if (loadVolunteer == 0)
+		{
+			volunteerNames.length = 0;
+			loadVolunteerName(event_id);
+			loadVolunteer++;
+		}
+		else
+			getEventVolunteer(event_id);
+			
+		$("#event5").datepicker({dateFormat: 'yy-mm-dd'}); // init datepicker
+	}
+
+// This  is for distribution form
+	
+function options(data) {
+				var s = optionSelect; // first option is always select...
+				for (var i=0; i<data.length; i++) {
+					var o = data[i];
+					s += '<option value="'+o.id+'">'+o.name+'</option>';
+				}
+				return s;
+			}
+function initHours()
+{	
+	var hours = new Array();
+	for ( var i=0;i< 24; ++i )
+		{
+			var v = {
+				"id": i,
+				"name": i
+			};
+			hours.push(v);
+		}
+	var mins = new Array();
+	for ( var i=0;i< 60; ++i )
+		{
+			var v = {
+				"id": i,
+				"name": i
+			};
+			mins.push(v);
+		}
+	var h='<option value="" disabled="disabled" selected="selected"></option>';;
+		for (var i=0; i<hours.length; i++) {
+				var o = hours[i];
+				if (i<10)
+					h += '<option value="0'+o.id+'">'+o.name+'</option>';
+				else
+					h += '<option value="'+o.id+'">'+o.name+'</option>';
+			}
+			
+	var m='<option value="" disabled="disabled" selected="selected"></option>';;
+		for (var i=0; i<mins.length; i++) {
+				var o = mins[i];
+				if (i <10) 
+					m += '<option value="0'+o.id+'">'+o.name+'</option>';
+				else
+					m += '<option value="'+o.id+'">'+o.name+'</option>';
+			}
+	for (var i = 1; i<8; i++)
+	{
+		var selectTab = document.getElementById('distributionHour'+i+'-OpenHour');
+		selectTab.innerHTML = (h);
+		selectTab = document.getElementById('distributionHour'+i+'-CloseHour');
+		selectTab.innerHTML = (h);
+		selectTab = document.getElementById('distributionHour'+i+'-OpenMin');
+		selectTab.innerHTML = (m);
+		selectTab = document.getElementById('distributionHour'+i+'-CloseMin');
+		selectTab.innerHTML = (m);
+	}
+}
 
 	
  
