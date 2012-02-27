@@ -64,13 +64,10 @@ include('include/Database.inc.php');
    }
 */
 
-	$sql = "INSERT INTO %s VALUES (%s);  ";
+	$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source_id, signed_up) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', CURDATE());";
+	$inputs = array($firstname, $middlename, $lastname, $organization, $phone, $email, $street, $city, $state, $zip, $comments, $source);
 
-	$tableinfo = "volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source_id, signed_up)";
-	
-	$valueinfo = "'$firstname', '$middlename', '$lastname', '$organization', '$phone', '$email', '$street', '$city', '$state', '$zip', '$comments', $source, CURDATE()";
-
-	$r = $db->q($sql, array($tableinfo, $valueinfo));
+	$r = $db->q($sql, $inputs);
 
 	if (!$r->isValid()) {
 		echo $db->error();
@@ -79,10 +76,10 @@ include('include/Database.inc.php');
 	$volunteerID = mysql_insert_id();
 
 	foreach($_POST['roles'] as $role) {
-		$tableinfo = "volunteer_roles (volunteer_id, volunteer_type_id)";
-		$valueinfo = "$volunteerID, $role";
+		$sql = "INSERT INTO volunteer_roles (volunteer_id, volunteer_type_id) VALUES ('%s', '%s');";
+		$inputs = array($volunteerID, $role);
 
-		$r = $db->q($sql, array($tableinfo, $valueinfo));
+		$r = $db->q($sql, $inputs);
 
 		if (!$r->isValid()) {
 			echo $db->error();
@@ -90,10 +87,10 @@ include('include/Database.inc.php');
 	}
 
 	foreach($_POST['days'] as $day) {
-		$tableinfo = "volunteer_prefers (volunteer_id, day_id)";
-		$valueinfo = "$volunteerID, $day";
+		$sql = "INSERT INTO volunteer_prefers (volunteer_id, day_id) VALUES ('%s', '%s');";
+		$inputs = array($volunteerID, $day);
 	
-		$r = $db->q($sql, array($tableinfo, $valueinfo));
+		$r = $db->q($sql, $inputs);
 		
 		if (!$r->isValid()) {
 			echo $db->error();

@@ -149,7 +149,7 @@ $roles = $r->buildArray();
 						var checkbox = document.createElement('input');
 						checkbox.type = "checkbox";
 						checkbox.name = "roles[]";
-						checkbox.value = '"'+o.id+'"';
+						checkbox.value = o.id;
 						checkbox.id = "id";
 
 						var label = document.createElement('label')
@@ -176,7 +176,7 @@ $roles = $r->buildArray();
 						var checkbox = document.createElement('input');
 						checkbox.type = "checkbox";
 						checkbox.name = "days[]";
-						checkbox.value = '"'+o.id+'"';
+						checkbox.value = o.id;
 						checkbox.id = "id";
 
 						var label = document.createElement('label')
