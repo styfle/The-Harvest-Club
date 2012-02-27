@@ -69,13 +69,10 @@ include('include/Database.inc.php');
    }
 */
 
-	$sql = "INSERT INTO %s VALUES (%s);  ";
+	$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source_id, signed_up) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', CURDATE());";
+	$inputs = array($firstname, $middlename, $lastname, $organization, $phone, $email, $street, $city, $state, $zip, $comments, $source);
 
-	$tableinfo = "volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source_id, signed_up)";
-	
-	$valueinfo = "'$firstname', '$middlename', '$lastname', '$organization', '$phone', '$email', '$street', '$city', '$state', '$zip', '$comments', $source, CURDATE()";
-
-	$r = $db->q($sql, array($tableinfo, $valueinfo));
+	$r = $db->q($sql, $inputs);
 
 	if (!$r->isValid()) {
 		echo $db->error();
@@ -89,19 +86,36 @@ include('include/Database.inc.php');
 			$tableinfo = "volunteer_roles (volunteer_id, volunteer_type_id)";
 			$valueinfo = "$volunteerID, $role";
 
+<<<<<<< HEAD
+	foreach($_POST['roles'] as $role) {
+		$sql = "INSERT INTO volunteer_roles (volunteer_id, volunteer_type_id) VALUES ('%s', '%s');";
+		$inputs = array($volunteerID, $role);
+
+		$r = $db->q($sql, $inputs);
+=======
 			$r = $db->q($sql, array($tableinfo, $valueinfo));
+>>>>>>> 941e866f7e65e9ae3d5a71bf0374e8cc90c7f61c
 
 			if (!$r->isValid()) {
 				echo $db->error();
 			}
 		}
 	}
+<<<<<<< HEAD
+
+	foreach($_POST['days'] as $day) {
+		$sql = "INSERT INTO volunteer_prefers (volunteer_id, day_id) VALUES ('%s', '%s');";
+		$inputs = array($volunteerID, $day);
+	
+		$r = $db->q($sql, $inputs);
+=======
 	
 	if(!empty($_POST['days']))
 	{
 		foreach($_POST['days'] as $day) {
 			$tableinfo = "volunteer_prefers (volunteer_id, day_id)";
 			$valueinfo = "$volunteerID, $day";
+>>>>>>> 941e866f7e65e9ae3d5a71bf0374e8cc90c7f61c
 		
 			$r = $db->q($sql, array($tableinfo, $valueinfo));
 			
