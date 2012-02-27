@@ -19,7 +19,7 @@ include('include/Database.inc.php');
    //$group_note = $_POST['group-notes'];
    if(empty($_POST['source']))
    {
-    $source = 7; // Default to "Others";
+    $source = 1; // Default to "Others";
    }
    else
 	$source = $_POST['source'];

@@ -51,7 +51,13 @@ function updateVolunteer($exists) {
 	$zip = $_REQUEST['zip'];
 	$priv_id = $_REQUEST['privilege_id'];
 	$notes =  $_REQUEST['note'];
-	$source_id = $_REQUEST['source_id']; // change to source_id
+    if(empty($_REQUEST['source_id']))
+    {
+	 $source_id = 1; // Default to "Others";
+    }
+    else
+	 $source_id = $_REQUEST['source_id'];
+	//$source_id = $_REQUEST['source_id']; // change to source_id
 	
 	if ($exists) { // volunteer exists so just update
 		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', phone='$phone', email='$email', status=$status, street='$street', city='$city', state='$state',zip='$zip', notes='$notes', source_id=$source_id where id=$id";						
