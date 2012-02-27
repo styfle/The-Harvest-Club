@@ -379,7 +379,7 @@ $avgHeight = $r->buildArray();
 			<td width="20"><input type="checkbox" name="tree_month6" id="tree_month6"  size="28"/></td>
 			<td width="100"><label for="tree_month6">June</label></td>			
 			<td width="20"><input type="checkbox" name="tree_month12" id="tree_month12"  size="28"/></td>
-			<td width="100"><label for="tree_month12">September</label></td>
+			<td width="100"><label for="tree_month12">December</label></td>
 		</tr>
 			
 		</table>	
