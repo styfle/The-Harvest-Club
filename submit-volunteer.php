@@ -17,7 +17,12 @@ include('include/Database.inc.php');
    //$group_age = $_POST['group-age'];
    //$group_availability = $_POST['group-avail'];
    //$group_note = $_POST['group-notes'];
-   $source = $_POST['source'];
+   if(empty($_POST['source']))
+   {
+    $source = 7; // Default to "Others";
+   }
+   else
+	$source = $_POST['source'];
    $comments = $_POST['comments'];
    $errorMessage = "";
    
@@ -77,27 +82,32 @@ include('include/Database.inc.php');
 	}
 
 	$volunteerID = mysql_insert_id();
-
-	foreach($_POST['roles'] as $role) {
-		$tableinfo = "volunteer_roles (volunteer_id, volunteer_type_id)";
-		$valueinfo = "$volunteerID, $role";
-
-		$r = $db->q($sql, array($tableinfo, $valueinfo));
-
-		if (!$r->isValid()) {
-			echo $db->error();
-		}
-	}
-
-	foreach($_POST['days'] as $day) {
-		$tableinfo = "volunteer_prefers (volunteer_id, day_id)";
-		$valueinfo = "$volunteerID, $day";
 	
-		$r = $db->q($sql, array($tableinfo, $valueinfo));
-		
-		if (!$r->isValid()) {
-			echo $db->error();
+	if(!empty($_POST['roles']))
+	{
+		foreach($_POST['roles'] as $role) {
+			$tableinfo = "volunteer_roles (volunteer_id, volunteer_type_id)";
+			$valueinfo = "$volunteerID, $role";
+
+			$r = $db->q($sql, array($tableinfo, $valueinfo));
+
+			if (!$r->isValid()) {
+				echo $db->error();
+			}
 		}
 	}
-
+	
+	if(!empty($_POST['days']))
+	{
+		foreach($_POST['days'] as $day) {
+			$tableinfo = "volunteer_prefers (volunteer_id, day_id)";
+			$valueinfo = "$volunteerID, $day";
+		
+			$r = $db->q($sql, array($tableinfo, $valueinfo));
+			
+			if (!$r->isValid()) {
+				echo $db->error();
+			}
+		}
+	}
 ?>

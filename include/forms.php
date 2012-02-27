@@ -62,9 +62,9 @@ $avgHeight = $r->buildArray();
 			<td><label for="volunteer4"><b>Last</b></label></td>
 		</tr>
 		<tr>
-			<td><input id="volunteer2" name="firstname" type="text" size="20"/></td>
+			<td><input id="volunteer2" name="firstname" type="text" size="20" required="required"/></td>
 			<td><input id="volunteer3" name="middlename" type="text" size="10"/></td>
-			<td><input id="volunteer4" name="lastname" type="text" size="15"/></td>
+			<td><input id="volunteer4" name="lastname" type="text" size="15" required="required"/></td>
 		</tr>
 		<tr>
 			<td colspan="3"><label for="volunteer5"><b>Organization</b></label></td>
@@ -75,8 +75,8 @@ $avgHeight = $r->buildArray();
 			<td colspan="2"><label for="volunteer7"><b>Email</b></label></td>
 		</tr>
 		<tr>
-			<td><input type="tel" name="phone" id="volunteer6" size="20" /></td>
-			<td colspan="2"><input type="text" name="email" id="volunteer7" size="28" /></td>
+			<td><input type="tel" name="phone" id="volunteer6" size="20" required="required"/></td>
+			<td colspan="2"><input type="text" name="email" id="volunteer7" size="28" required="required"/></td>
 		</tr>
 		<tr>
 			<td colspan="3"><label for="volunteer10"><b>Street</b></label></td>			
@@ -90,9 +90,9 @@ $avgHeight = $r->buildArray();
 			<td><label for="volunteer13"><b>Zip</b></label></td>
 		</tr>
 		<tr>			
-			<td><input type="text" name="city" id="volunteer11" size="20"/></td>
+			<td><input type="text" name="city" id="volunteer11" size="20" required="required"/></td>
 			<td><input type="text" name="state" id="volunteer12" size="10" maxlength="2"/></td>
-			<td><input type="text" name="zip" id="volunteer13" size="15"/></td>
+			<td><input type="text" name="zip" id="volunteer13" size="15" required="required"/></td>
 		</tr>
 		
 		<?php echo $empty_cell ?>

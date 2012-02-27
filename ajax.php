@@ -1,4 +1,5 @@
 <?php
+
 require_once('include/Database.inc.php');
 require_once('include/Mail.inc.php');
 require_once('include/auth.inc.php');
@@ -57,7 +58,7 @@ function updateVolunteer($exists) {
 		$r = $db->q($sql);
 		
 		for ($i=1; $i<6 ; $i++) {
-			if (isset($_GET["volunteerRole$i"])) { //it is checked
+			if (isset($_REQUEST["volunteerRole$i"])) { //it is checked
 				$sql = "Insert into volunteer_roles(volunteer_id, volunteer_type_id) Values($id,$i)";
 				$r = $db->q($sql);
 			} else { // it is unchecked
@@ -67,7 +68,7 @@ function updateVolunteer($exists) {
 		}
 			
 		for ($i=1; $i<8 ; $i++) {
-			if (isset($_GET["volunteerDay$i"])) { //it is checked	   
+			if (isset($_REQUEST["volunteerDay$i"])) { //it is checked	   
 				$sql = "Insert into volunteer_prefers(volunteer_id, day_id) Values($id,$i)";
 				$r = $db->q($sql);
 			} else { // it is unchecked			
@@ -97,11 +98,35 @@ function updateVolunteer($exists) {
 			$mail->send($subject, $message, $email); // use default from/replyto
 		}
 	
-	} else { // adding new volunteer
+	} 
+	else // adding new volunteer
+	{ 
 		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, status, street, city, state, zip, privilege_id, notes, source_id, signed_up) VALUES
 		('$firstName', '$middleName', '$lastName', '$organization', '$phone', '$email', '$status', '$street', '$city', '$state', '$zip', '$priv_id', '$notes', $source_id, CURDATE())";
 		$r = $db->q($sql);
 		getError($r);
+
+		$id = mysql_insert_id();
+		
+		for ($i=1; $i<6 ; $i++) {
+			if (isset($_REQUEST["volunteerRole$i"])) { //it is checked
+				$sql = "Insert into volunteer_roles(volunteer_id, volunteer_type_id) Values($id,$i)";
+				$r = $db->q($sql);
+			} else { // it is unchecked
+				$sql = "Delete From volunteer_roles Where volunteer_type_id=$i And volunteer_id=$id";					
+				$r = $db->q($sql);
+			}
+		}
+			
+		for ($i=1; $i<8 ; $i++) {
+			if (isset($_REQUEST["volunteerDay$i"])) { //it is checked	   
+				$sql = "Insert into volunteer_prefers(volunteer_id, day_id) Values($id,$i)";
+				$r = $db->q($sql);
+			} else { // it is unchecked			
+				$sql = "Delete From volunteer_prefers Where day_id=$i And volunteer_id=$id";					
+				$r = $db->q($sql);			
+			}
+		}
 	}
 }
 
@@ -168,7 +193,6 @@ function getTree_Months($sql){
 	}
 }
 
-
 function getError($r) {
 	global $data;
 	global $db;
@@ -214,7 +238,7 @@ function getTable($sql) {
 		if ($k == 'id' || $k == 'password' || contains($k, '_id')) {
 			$column['bSearchable'] = false;
 			$column['bVisible'] = false;
-		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip') {
+		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip' || $k == 'deleted') {
 			$column['bVisible'] = false; // hide but still searchable
 		} else if ($k == 'notes') {
 			$column['sClass'] = 'left'; // align left
@@ -363,7 +387,8 @@ switch ($cmd)
 	case 'get_volunteers':
 		$data['id'] = 1;
 		$data['title'] = 'Volunteers';
-		$sql = "SELECT v.*, p.name AS user_type FROM volunteers v LEFT JOIN privileges p ON v.privilege_id = p.id;";
+		$sql = "SELECT v.*, p.name AS user_type FROM volunteers v LEFT JOIN privileges p ON v.privilege_id = p.id
+				WHERE v.deleted = 0;";
 		getTable($sql);
 		break;
 	case 'get_growers':
@@ -556,7 +581,7 @@ switch ($cmd)
 		global $db;
 		global $data;
 		$id = $_REQUEST['id'];
-		$sql = "DELETE FROM volunteers
+		$sql = "UPDATE volunteers SET deleted = 1
 				WHERE id=$id";
 		$r = $db->q($sql);
 		getError($r);
@@ -591,7 +616,7 @@ switch ($cmd)
 	case 'get_donors':
 		$data['id'] = 6;
 		$data['title'] = 'Donations';
-		$sql = "SELECT id, donation as Donation, donor as Donor, value as Value, date(date) as Date FROM donations";
+		$sql = "SELECT * FROM donations";
 		getTable($sql);
 		break;
 		

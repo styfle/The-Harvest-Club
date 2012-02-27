@@ -123,7 +123,6 @@ INSERT INTO sources (name) VALUES
 	('Website/Search Engine'),
 	('Village Harvest')
 ;
-
 DROP TABLE IF EXISTS growers;
 CREATE TABLE growers (
 	id			INT AUTO_INCREMENT PRIMARY KEY,
@@ -143,6 +142,7 @@ CREATE TABLE growers (
   	pending TINYINT(1) DEFAULT 1, -- 1-Yes 0-No     
 	property_type_id INT NULL,
 	property_relationship_id INT NULL,
+	deleted TINYINT(1) DEFAULT 0, -- 1-Deleted, 0-Available
 	CONSTRAINT fk_property_type FOREIGN KEY (property_type_id) REFERENCES property_types(id) ON DELETE CASCADE,
 	CONSTRAINT fk_property_relationship FOREIGN KEY (property_relationship_id) REFERENCES property_relationships(id) ON DELETE CASCADE
 ) ENGINE=innodb;
@@ -308,6 +308,7 @@ CREATE TABLE volunteers (
 	signed_up DATE,
 	notes TEXT,
 	source_id INT DEFAULT 1,
+	deleted TINYINT(1) DEFAULT 0, -- 1-Deleted, 0-Available
 	CONSTRAINT fk_privilege_id FOREIGN KEY (privilege_id) REFERENCES privileges(id),
 	CONSTRAINT fk_source_id_volunteers FOREIGN KEY (source_id) REFERENCES sources(id)
 ) ENGINE=innodb;
@@ -420,6 +421,7 @@ CREATE TABLE donations (
 	donation nVARCHAR(255) NOT NULL,
 	donor nVARCHAR(255) DEFAULT "Anonymous",
 	value double,
+	deleted TINYINT(1) DEFAULT 0, -- 1-Deleted, 0-Available
 	date datetime
 ) ENGINE=innodb;
 
