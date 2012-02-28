@@ -199,6 +199,36 @@ function getTree_Months($sql){
 	}
 }
 
+function updateGrower($exist){
+	global $db;
+	global $data;
+	$id = $_REQUEST['id'];
+	$firstname = $_REQUEST['firstname'];
+	$middlename = $_REQUEST['middlename'];
+	$lastname = $_REQUEST['lastname'];
+	$phone = $_REQUEST['phone'];
+	$email = $_REQUEST['email'];
+	$street = $_REQUEST['street'];
+	$city = $_REQUEST['city'];
+	$state = $_REQUEST['state'];
+	$zip = $_REQUEST['zip'];
+	$tools = $_REQUEST['tools'];
+	$notes =  $_REQUEST['notes'];		
+	$property_type= $_REQUEST['property_type'];
+	$property_relationship = $_REQUEST['property_relationship'];		
+		
+	if($exist){
+		$sql = "Update growers Set first_name='".$firstname."', middle_name ='".$middlename."', last_name='".$lastname."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."',zip='".$zip."', tools='".$tools."', notes='".$notes."', property_type_id ='".$property_type."', property_relationship_id ='".$property_relationship."' where id=".$id;				
+		$r = $db->q($sql);	
+	}
+	else{
+		$sql = "INSERT INTO growers(first_name, middle_name, last_name, phone, email, preferred, street, state, zip, tools, notes, pending, property_type_id, property_relationship_id)
+				VALUES ('$firstname', '$middlename', '$lastname', '$phone', '$email', '$street', '$city', '$state', '$zip', '$tools', '$notes', 1, '$property_type', '$property_relationship')";				
+		$r = $db->q($sql);		
+		getError($r);
+	}
+}
+
 function getError($r) {
 	global $data;
 	global $db;
@@ -399,7 +429,7 @@ switch ($cmd)
 	case 'get_growers':
 		$data['id'] = 2;
 		$data['title'] = 'Growers';
-		$sql = "SELECT g.*, pt.name AS property_type, pr.name AS property_relationship
+		$sql = "SELECT g.id, g.first_name AS 'First Name', g.middle_name, g.last_name AS 'Last Name', g.phone AS 'Phone', g.email AS 'Email', g.preferred AS 'Preferred', g.street, g.city AS 'City', g.state, g.zip, g.tools AS tools_id, g.source_id, g.notes, g.pending AS pending_id, IF((g.pending=1),'Pending','Approved') AS Pending, g.property_type_id, g.property_relationship_id, pt.name AS property_type, pr.name AS property_relationship
 				FROM growers g, property_types pt, property_relationships pr
 				WHERE g.property_type_id = pt.id AND g.property_relationship_id = pr.id;";
 		getTable($sql);
@@ -543,26 +573,18 @@ switch ($cmd)
 		$sql = "SELECT d.id FROM volunteers v, volunteer_prefers p , days d Where v.id = p.volunteer_id And p.day_id = d.id And v.id=".$id;			
 		getVolunteer_Prefer($sql);
 		break;
-	case 'update_grower':
-		global $db;
-		global $data;
-		$id = $_REQUEST['id'];
-		$firstname = $_REQUEST['firstname'];
-		$middlename = $_REQUEST['middlename'];
-		$lastname = $_REQUEST['lastname'];
-		$phone = $_REQUEST['phone'];
-		$email = $_REQUEST['email'];
-		$street = $_REQUEST['street'];
-		$city = $_REQUEST['city'];
-		$state = $_REQUEST['state'];
-		$zip = $_REQUEST['zip'];
-		$tools = $_REQUEST['tools'];		
-		$source_id = $_REQUEST['source_id'];
-		$notes =  $_REQUEST['notes'];		
-		$property_type= $_REQUEST['property_type'];
-		$property_relationship = $_REQUEST['property_relationship'];		
-		$sql = "Update growers Set first_name='".$firstname."', middle_name ='".$middlename."', last_name='".$lastname."', phone='".$phone."', email='".$email."', street='".$street."', city='".$city."', state='".$state."',zip='".$zip."', tools='".$tools."', source_id='".$source_id."', notes='".$notes."', property_type_id ='".$property_type."', property_relationship_id ='".$property_relationship."' where id=".$id;				
+	case 'update_grower':		
+		updateGrower(true);
+		break;	
+	case 'add_grower':
+		updateGrower(false);
+		break;
+	case 'approve_grower':
+		$growerID = $_REQUEST['growerID'];
+		$sql = "UPDATE growers SET pending = 0
+				WHERE id=".$growerID;
 		$r = $db->q($sql);
+		getError($r);
 		break;
 	case 'update_tree':		
 		updateTree(true);

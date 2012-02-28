@@ -198,22 +198,34 @@ $avgHeight = $r->buildArray();
 	<!-- Grower form -->
 	<form id="grower" class="hidden">
 		<h3>Grower</h3>
-		<table>
+		<table>	
+		<div id="pending">
+			<div><b>This person's application is still pending for approval. Would you like to approve this application?</b></div>			
+			<div><input type="button" name="approve" id="approve" value="Approve" OnClick="approveGrower();"/></div>		
+		</div>
+		
+		<?php echo $empty_cell ?>
 		<tr>
 			<td colspan="3" class="hidden"><input id="grower1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="hidden"><input id="grower15" name="pending" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="grower15" name="pending_id" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td><label for="grower2" >First</label></td>
+			<td colspan="3" class="hidden"><input id="grower19" name="propertyType" type="text" size="2"/></td>
+		</tr>
+		<tr>
+			<td colspan="3" class="hidden"><input id="grower20" name="propertyRelationship" type="text" size="2"/></td>
+		</tr>
+		<tr>
+			<td><label for="grower2">First</label></td>
 			<td><label for="grower3">Middle</label></td>
 			<td><label for="grower4">Last</label></td>
 		</tr>
 		<tr>
-			<td><input id="grower2" name="firstname" type="text" size="12"/></td>
+			<td><input id="grower2" name="firstname" type="text" size="12" required="required"/></td>
 			<td><input id="grower3" name="middlename" type="text" size="4"/></td>
-			<td><input id="grower4" name="lastname" type="text" size="10"/></td>
+			<td><input id="grower4" name="lastname" type="text" size="10" required="required"/></td>
 		</tr>		
 		<tr>
 			<td><label for="grower5">Phone</label></td>
@@ -221,7 +233,7 @@ $avgHeight = $r->buildArray();
 		</tr>
 		<tr>
 			<td><input type="tel" name="phone" id="grower5" size="12" /></td>
-			<td colspan="2"><input type="text" name="email" id="grower6" size="17" /></td>
+			<td colspan="2"><input type="email" name="email" id="grower6" size="17" /></td>
 		</tr>
 		<tr>
 			<td colspan="3"><label for="grower7">Preference</label></td>			
@@ -234,7 +246,7 @@ $avgHeight = $r->buildArray();
 			<td colspan="3"><label for="grower8">Street</label></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="street" id="grower8" size="33"/></td>			
+			<td colspan="3"><input type="text" name="street" id="grower8" size="33" required="required"/></td>			
 		</tr>
 		<tr>
 			<td><label for="grower9">City</label></td>
@@ -242,9 +254,9 @@ $avgHeight = $r->buildArray();
 			<td><label for="grower11">Zip</label></td>
 		</tr>
 		<tr>			
-			<td><input type="text" name="city" id="grower9" size="12"/></td>
-			<td><input type="text" name="state" id="grower10" size="2"/></td>
-			<td><input type="text" name="zip" id="grower11" size="8"/></td>
+			<td><input type="text" name="city" id="grower9" size="12" required="required"/></td>
+			<td><input type="text" name="state" id="grower10" size="2" required="required"/></td>
+			<td><input type="text" name="zip" id="grower11" size="8" required="required"/></td>
 		</tr>
 		<tr>
 			<td colspan="3"><b>Sources</b></td>			
@@ -253,19 +265,19 @@ $avgHeight = $r->buildArray();
 			<td colspan="3"><?php echo options('grower13', 'source_id', $sources, true); ?></td>			
 		</tr>	
 		<tr>
-			<td colspan="3"><label for="grower16">Property Type</label></td>
+			<td colspan="3"><label for="grower17">Property Type</label></td>
 		</tr>
 		<tr>			
 			<td colspan="3">
-			<?php echo options('grower16', 'property_type', $property_types); ?>				
+			<?php echo options('grower17', 'property_type', $property_types); ?>				
 			</td >
 		</tr>
 		<tr>			
-			<td colspan="3"><label for="grower17">Property Relationship</label></td>
+			<td colspan="3"><label for="grower18">Property Relationship</label></td>
 		</tr>
 		<tr>			
 			<td colspan="3">
-				<?php echo options('grower17', 'property_relationship', $property_relationships); ?>
+				<?php echo options('grower18', 'property_relationship', $property_relationships); ?>
 			</td>
 		</tr>		
 		
@@ -327,7 +339,7 @@ $avgHeight = $r->buildArray();
 			<td colspan="2"><label for="tree8">Chemical</label></td>
 		</tr>
 		<tr>			
-			<td colspan="2"><input type="text" name="number" id="tree7" size="10"/></td>
+			<td colspan="2"><input type="text" name="number" id="tree7" size="10" required="required"/></td>
 			<td colspan="2">
 				<select id="tree8" name="chemicaled_id">
 					<option value="0">No</option>
