@@ -106,29 +106,8 @@ updateLastReq(); // loading page means user is active
 
 	// GLOBAL FUNCTIONS (probably move to separate file)
 	
-	function reloadTable()
+	function reloadTable(cmd)
 	{
-		var cmd; 
-		
-		switch (currentTable)
-		{
-			case 0:		//Notifications				
-			break;
-				
-			case 1:		//Volunteers Tab
-				cmd = "get_volunteers";
-			break;
-			
-			case 2:	
-			break;
-
-			case 3:
-			break;
-				
-			case 4:
-			break;
-		}		
-		
 		$.ajax( {
 			'dataType': 'json', 
 			'type': 'GET', 
@@ -272,9 +251,13 @@ updateLastReq(); // loading page means user is active
 						'success': function (data) {
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
-							for(var i = 2; i < 16; i++) {								
-								row[i]=$('#volunteer'+i).val();								
+							for(var i = 1; i < row.length; i++) {
+								if($('#volunteer'+i).val() == undefined)							
+									row[i]='';
+								else;									
+									row[i]=$('#volunteer'+i).val();								
 							}
+
 							dt.fnUpdate(row, aPos, 0);	//Update Table -- Independent from updating db!
 						},
 						'error': ajaxError
@@ -283,9 +266,12 @@ updateLastReq(); // loading page means user is active
 														
 					break;
 				
-				case 2:	
-					//Update DB
-					var para = $('#grower').serialize();					
+				case 2:
+					$('#grower19').val($('#grower17 option:selected').text());			
+					$('#grower20').val($('#grower18 option:selected').text());	
+							
+					//Update DB					
+					var para = $('#grower').serialize();
 					$.ajax({							
 						'type': 'GET',
 						'url': 'ajax.php?cmd=update_grower&'+para,
@@ -293,24 +279,30 @@ updateLastReq(); // loading page means user is active
 							// check data.status if actually successful
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
-							for(var i = 2; i < 17; i++) {
-								row[i]=$('#grower'+i).val();								
-							}
-							dt.fnUpdate(row, aPos, 0);	//Update Table -- Independent from updating db!
+							for(var i = 2; i < row.length; i++){
+								if($('#grower'+i).val() == undefined)							
+									row[i]='';
+								else
+									row[i]=$('#grower'+i).val();						
+							}	
+						if($('#grower15').val()==1)				
+							row[16]='Pending';
+						else
+							row[16]='Approved';							
+							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!							
 						},
 						'error': ajaxError
 					});
 					break;
 				case 3:
 					//Update text fields in table row -- 
-					$('#tree2').val($('#tree3 option:selected').text());	//Update Owner name		
-					$('#tree5').val($('#tree4 option:selected').text());	//Update Tree type
-					$('#tree11').val($('#tree10 option:selected').text());	//Update Height name															
-					if($('#tree8 option:selected').val()==1)				//Update Chemical option
-						$('#tree9').val('Yes');
-					else
-						$('#tree9').val('No');
-					
+							$('#tree2').val($('#tree3 option:selected').text());	//Update Owner name		
+							$('#tree5').val($('#tree4 option:selected').text());	//Update Tree type
+							$('#tree11').val($('#tree10 option:selected').text());	//Update Height name															
+							if($('#tree8 option:selected').val()==1)				//Update Chemical option
+								$('#tree9').val('Yes');
+							else
+								$('#tree9').val('No');
 					//Update DB
 					var para = $('#tree').serialize();
 					$.ajax({							
@@ -321,9 +313,12 @@ updateLastReq(); // loading page means user is active
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
 							for(var i = 1; i < row.length; i++){					//Update Other fields
-								row[i]=$('#tree'+i).val();
+								if($('#tree'+i).val() == undefined)							
+									row[i]='';
+								else
+									row[i]=$('#tree'+i).val();
 							}
-							dt.fnUpdate(row, aPos, 0);								//Update Table
+							dt.fnUpdate(row, aPos, 0);								//Update Table							
 						},
 						'error': ajaxError
 					});
@@ -340,7 +335,10 @@ updateLastReq(); // loading page means user is active
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
 							for(var i = 1; i < row.length; i++){
-								row[i]=$('#distribution'+i).val();								
+								if($('#distribution'+i).val() == undefined)							
+									row[i]='';
+								else
+									row[i]=$('#distribution'+i).val();								
 							}
 							dt.fnUpdate(row, aPos, 0);	//Update Table -- Independent from updating db!	
 						},
@@ -369,7 +367,10 @@ updateLastReq(); // loading page means user is active
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
 							for(var i = 1; i < row.length; i++){
-								row[i]=$('#donations'+i).val();								
+								if($('#donation'+i).val() == undefined)							
+									row[i]='';
+								else
+									row[i]=$('#donations'+i).val();								
 							}
 							dt.fnUpdate(row, aPos, 0);
 						},
@@ -402,25 +403,63 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=add_volunteer&'+para,
 						'success': function (data) {
+							if (!validResponse(data))
+								return false;
+							if (data.status != 200) {
+								setError('Information Cannot be Added');
+								return alert('Status '+ data.status + '\n' + data.message);
+							}
 							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
+							reloadTable("get_volunteers");									
 						},
 						'error': ajaxError
 					});
-					reloadTable();									
 					break;
 				
-				case 2:	
+				case 2:						
+					var required = $('#grower input[required="required"]');
+					for(var i=0; i<required.length; i++)
+					{
+						if (required[i].value == '')
+							return alert(required[i].name + ' is required!');
+					}
+					
+					var para = $('#grower').serialize();
+					$.ajax({							
+						'type': 'GET',
+						'url': 'ajax.php?cmd=add_grower&'+para,
+						'success': function (data) {
+							setInfo('Information Updated');
+							$('#edit-dialog').dialog('close');
+							reloadTable("get_growers");
+						},
+						'error': ajaxError
+					});
+					
 					break;
 				case 3:
+					var required = $('#tree input[required="required"]');
+					for(var i=0; i<required.length; i++)
+					{
+						if (required[i].value == '')
+							return alert(required[i].name + ' is required!');
+					}
+					
 					var para = $('#tree').serialize();
-					alert(para);		
 					$.ajax({							
 						'type': 'GET',
 						'url': 'ajax.php?cmd=add_tree&'+para,
 						'success': function (data) {
-							setInfo('Information Updated');
+							if (!validResponse(data))
+								return false;
+							if (data.status != 200) {
+								setError('Information Cannot be Added');
+								return alert('Status '+ data.status + '\n' + data.message);
+							}
+							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
+							reloadTable("get_trees");
 						},
 						'error': ajaxError
 					});
@@ -432,8 +471,15 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=add_distribution&'+para,
 						'success': function (data) {
-							setInfo('Information Updated');
+							if (!validResponse(data))
+								return false;
+							if (data.status != 200) {
+								setError('Information Cannot be Added');
+								return alert('Status '+ data.status + '\n' + data.message);
+							}
+							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
+							reloadTable("get_distribs");
 						},
 						'error': ajaxError
 					});
@@ -442,7 +488,10 @@ updateLastReq(); // loading page means user is active
 					
 				case 5:  // event
 					if (checkEventForm() != -1)
-					  createNewEvent();
+					{
+						createNewEvent();
+						reloadTable("get_events");									
+					}
 					break;
 					
 				case 6:
@@ -451,8 +500,15 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=add_donation&'+para,
 						'success': function (data) {
+							if (!validResponse(data))
+								return false;
+							if (data.status != 200) {
+								setError('Information Cannot be Added');
+								return alert('Status '+ data.status + '\n' + data.message);
+							}
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
+							reloadTable("get_donors");
 						},
 						'error': ajaxError
 					});
@@ -510,14 +566,16 @@ updateLastReq(); // loading page means user is active
 						case 'textarea':
 						case 'select-one':
 						case 'select-multiple':
-								$(this).val('');
-								break;
+							$(this).val('');
+							break;
 						case 'radio':
 						case 'checkbox':
 								this.checked = false;
+						case 'button': // Don't change value(name) for buttons								
+							break;
 						default:
-								$(this).val('');
-								break;
+							$(this).val('');
+							break;
 					}
 				});
 			}
@@ -531,6 +589,9 @@ updateLastReq(); // loading page means user is active
 				
 				case 2: // grower
 					switchForm('grower');
+					$('#pending').hide();
+					for (var i = 1; i < 21; i++)
+							$('#grower' + i).prop('disabled', false);
 				break;
 				
 				case 3: // tree
@@ -571,28 +632,8 @@ updateLastReq(); // loading page means user is active
 			icons: { primary: "ui-icon-trash" },
 			text: false
 		}).click(function()	{
-			//pop up confirmation window
 			var deleteList = [];
 
-/*
-			//if yes, then delete selected 
-			$('input[name=select-row]:checked').each(function(){
-				var row = $(this).parent().parent();
-				var data = dt.fnGetData(row[0]);
-				var id = data[1];
-				deleteList.push(id);
-				//TODO Ajax needs to be sent at the end
-				$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=remove_volunteer&id='+id,
-					'success': function (data) {
-						//alert('Information is Removed!');
-					},
-					'error': ajaxError
-				});
-				row.remove();
-			});
-*/
 			switch (currentTable)
 			{
 				case 1: //volunteer
@@ -601,25 +642,39 @@ updateLastReq(); // loading page means user is active
 					});
 					if(deleteList.length > 0)
 					{
+						//pop up confirmation window
 						var x = window.confirm("Are you sure you want to delete "+deleteList.length+" items");
 						if(x)
 						{
-							$(deleteList).each(function()
+							var deleted = 0;
+							$('input[name=select-row]:checked').each(function()
 							{
-								var row = $(this);
+								var row = $(this).parent().parent();
 								var data = dt.fnGetData(row[0]);
 								var id = data[1];
+								var firstname = data[2];
+								var lastname = data[4];
+								
 								$.ajax({							
 									'type': 'GET',
 									'url': 'ajax.php?cmd=remove_volunteer&id='+id,
 									'success': function (data) {
+										if (!validResponse(data))
+											return false;
+										if (data.status != 200) {
+											return alert('Information Cannot be Deleted: \n'+ firstname + ' ' + lastname + ' is either a Volunteer/Harvest Captain of an Event');
+										}
+										deleted++;
+										dt.fnDeleteRow(row[0]);
+										setInfo('Deleted ' + deleted + ' items');
+										//console.log(data);
 										//alert('Information is Removed!');
 									},
 									'error': ajaxError
 								});
-								row.remove();
+								//row.remove();
 							});
-							setInfo('Deleted ' + deleteList.length + ' items');
+
 						}
 					}
 				break;
@@ -879,9 +934,21 @@ updateLastReq(); // loading page means user is active
 				break;
 				
 				case 2: // grower
-					switchForm('grower');
+					switchForm('grower');					
+					
 					for (var i = 1; i < row.length; i++)
 						$('#grower' + i).val(row[i]);
+						
+					if(row[15]==0){
+						$('#pending').hide();
+						for (var i = 1; i < row.length; i++)
+							$('#grower' + i).prop('disabled', false);
+					}
+					else if(row[15]==1){
+						$('#pending').show();
+						for (var i = 1; i < row.length; i++)
+							$('#grower' + i).prop('disabled', true);
+					}
 				break;
 				
 				case 3: // tree
@@ -1015,6 +1082,24 @@ updateLastReq(); // loading page means user is active
 			pending = 1;
 			document.getElementById('get_growers').click();
 		}
+	}
+
+	function approveGrower(){
+		growerID = $('#grower1').val();	
+		$.ajax({							
+			'type': 'GET',
+			'url': 'ajax.php?cmd=approve_grower&growerID='+growerID,
+			'success': function (data) {
+				setInfo('Information Updated');
+				//$('#edit-dialog').dialog('close');
+				reloadTable("get_growers");
+				$('#grower15').val(0);
+				$('#pending').hide();
+				for (var i = 1; i < row.length; i++)
+					$('#grower' + i).prop('disabled', false);
+			},
+			'error': ajaxError
+		});			
 	}
 	</script>
 
