@@ -457,7 +457,6 @@ updateLastReq(); // loading page means user is active
 						},
 						'error': ajaxError
 					});
-					reloadTable();
 					break;
 					
 				case 4:
