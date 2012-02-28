@@ -244,7 +244,7 @@ function getTable($sql) {
 		if ($k == 'id' || $k == 'password' || contains($k, '_id')) {
 			$column['bSearchable'] = false;
 			$column['bVisible'] = false;
-		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip' || $k == 'deleted') {
+		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip') {
 			$column['bVisible'] = false; // hide but still searchable
 		} else if ($k == 'notes') {
 			$column['sClass'] = 'left'; // align left
@@ -393,8 +393,7 @@ switch ($cmd)
 	case 'get_volunteers':
 		$data['id'] = 1;
 		$data['title'] = 'Volunteers';
-		$sql = "SELECT v.*, p.name AS user_type FROM volunteers v LEFT JOIN privileges p ON v.privilege_id = p.id
-				WHERE v.deleted = 0;";
+		$sql = "SELECT v.*, p.name AS user_type FROM volunteers v LEFT JOIN privileges p ON v.privilege_id = p.id;";
 		getTable($sql);
 		break;
 	case 'get_growers':
@@ -587,7 +586,7 @@ switch ($cmd)
 		global $db;
 		global $data;
 		$id = $_REQUEST['id'];
-		$sql = "UPDATE volunteers SET deleted = 1
+		$sql = "DELETE FROM volunteers
 				WHERE id=$id";
 		$r = $db->q($sql);
 		getError($r);
@@ -622,7 +621,7 @@ switch ($cmd)
 	case 'get_donors':
 		$data['id'] = 6;
 		$data['title'] = 'Donations';
-		$sql = "SELECT id, donation, donor, value, date FROM donations WHERE deleted=0";
+		$sql = "SELECT id, donation, donor, value, date FROM donations";
 		getTable($sql);
 		break;
 		

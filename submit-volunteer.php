@@ -17,7 +17,7 @@ include('include/Database.inc.php');
    //$group_age = $_POST['group-age'];
    //$group_availability = $_POST['group-avail'];
    //$group_note = $_POST['group-notes'];
-   if(empty($_POST['source']))
+   if(!ISSET($_POST['source']))
    {
     $source = 1; // Default to "Others";
    }
@@ -69,29 +69,37 @@ include('include/Database.inc.php');
    }
 */
 
-	$sql = "INSERT INTO %s VALUES (%s);  ";
+	$r = $db->startTransaction();
+	if (!$r->isValid())
+	  die('Transaction could not start.');
 
-	$tableinfo = "volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source_id, signed_up)";
-	
-	$valueinfo = "'$firstname', '$middlename', '$lastname', '$organization', '$phone', '$email', '$street', '$city', '$state', '$zip', '$comments', $source, CURDATE()";
+    $sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source_id, signed_up)
+	VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',CURDATE()); ";
+	$inputs = array($firstname, $middlename, $lastname, $organization, $phone, $email, $street, $city, $state, $zip, $comments, $source);
 
-	$r = $db->q($sql, array($tableinfo, $valueinfo));
+	$r = $db->q($sql, $inputs);
+	echo($db->error());
+
 	if (!$r->isValid()) {
 		echo $db->error();
 	}
 
-	$volunteerID = mysql_insert_id();
+	$volunteerID = $db->getInsertId();
 	
 	if(!empty($_POST['roles']))
 	{
 		foreach($_POST['roles'] as $role) {
-			$tableinfo = "volunteer_roles (volunteer_id, volunteer_type_id)";
-			$valueinfo = "$volunteerID, $role";
+			$sql = "INSERT INTO volunteer_roles (volunteer_id, volunteer_type_id) VALUES ('%s', '%s');";
+			$inputs = array($volunteerID, $role);
 
-			$r = $db->q($sql, array($tableinfo, $valueinfo));
-
+			$r = $db->q($sql, $inputs);
 			if (!$r->isValid()) {
 				echo $db->error();
+				$r = $db->rollback();
+				if ($r->isValid())
+					echo 'Rollback succeeded!';
+				else
+					echo 'Rollback failed!';
 			}
 		}
 	}
@@ -99,14 +107,30 @@ include('include/Database.inc.php');
 	if(!empty($_POST['days']))
 	{
 		foreach($_POST['days'] as $day) {
-			$tableinfo = "volunteer_prefers (volunteer_id, day_id)";
-			$valueinfo = "$volunteerID, $day";
+			$sql = "INSERT INTO volunteer_prefers (volunteer_id, day_id) VALUES ('%s', '%s');";
+			$inputs = array($volunteerID, $day);
 		
-			$r = $db->q($sql, array($tableinfo, $valueinfo));
-			
+			$r = $db->q($sql, $inputs);			
 			if (!$r->isValid()) {
 				echo $db->error();
+				$r = $db->rollback();
+				if ($r->isValid())
+					echo 'Rollback succeeded!';
+				else
+					echo 'Rollback failed!';
 			}
 		}
+	}
+
+	$r = $db->commit();
+	if ($r->isValid())
+		echo "$firstname $lastname, Thank you for registering!";
+	else {
+		echo 'Failed to commit transaction. Attempting to rollback...';
+		$r = $db->rollback();
+		if ($r->isValid())
+			echo 'Rollback succeeded!';
+		else
+			echo 'Rollback failed!';
 	}
 ?>

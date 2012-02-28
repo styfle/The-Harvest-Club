@@ -16,7 +16,12 @@ include('include/Database.inc.php');
 	$property = $_POST['property'];
 	$relationship = $_POST['relationship'];
 	$tools = $_POST['tools'];
-	$source = $_POST['source'];
+    if(!ISSET($_POST['source']))
+    {
+     $source = 1; // Default to "Others";
+    }
+    else
+ 	 $source = $_POST['source'];
 	$notes = $_POST['notes'];
 	$trees = $_POST['trees'];
 
@@ -61,7 +66,7 @@ include('include/Database.inc.php');
 	if(empty($relationship)) {
 	  $errorMessage .= "<li>No Property Relationship!</li>";
 	}
-	if(count(trees)==0)
+	if(count($trees)==0)
 		$errorMessage .= '<li>No trees. Grower must register one or more trees!</li>';
 	if(!empty($errorMessage))
 	{
@@ -107,7 +112,6 @@ include('include/Database.inc.php');
 		if(empty($height)) {
 			$errorMessage .= "<li>No Tree Height!</li>";
 		}
-		$months = $tree['month'];
 		$chemical = $tree['chemical'];
 		if(empty($chemical)) {
 			$chemical = 0;
@@ -135,18 +139,21 @@ include('include/Database.inc.php');
 
 		$treeID= $db->getInsertId();
 
-		foreach($months as $month) {
-			$sql = "INSERT INTO month_harvests (tree_id, month_id) VALUES ('%s','%s');";
+		if(ISSET($tree['month'])) {
+			$months = $tree['month'];
+			foreach($months as $month) {
+				$sql = "INSERT INTO month_harvests (tree_id, month_id) VALUES ('%s','%s');";
 
-			$r = $db->q($sql, array($treeID, $month));
+				$r = $db->q($sql, array($treeID, $month));
 
-			if (!$r->isValid()) {
-				echo 'DB error while inserting harvest months: ' . $db->error() . '<br/>Attempting to rollback...';
-				$r = $db->rollback();
-				if ($r->isValid())
-					echo 'Rollback succeeded!';
-				else
-					echo 'Rollback failed!';
+				if (!$r->isValid()) {
+					echo 'DB error while inserting harvest months: ' . $db->error() . '<br/>Attempting to rollback...';
+					$r = $db->rollback();
+					if ($r->isValid())
+						echo 'Rollback succeeded!';
+					else
+						echo 'Rollback failed!';
+				}
 			}
 		}
 	}
@@ -155,7 +162,7 @@ include('include/Database.inc.php');
 	
 	$r = $db->commit();
 	if ($r->isValid())
-		echo "$first_name $last_name, Thank you for registering!";
+		echo "$firstname $lastname, Thank you for registering!";
 	else {
 		echo 'Failed to commit transaction. Attempting to rollback...';
 		$r = $db->rollback();

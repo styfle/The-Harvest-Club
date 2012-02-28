@@ -106,29 +106,8 @@ updateLastReq(); // loading page means user is active
 
 	// GLOBAL FUNCTIONS (probably move to separate file)
 	
-	function reloadTable()
+	function reloadTable(cmd)
 	{
-		var cmd; 
-		
-		switch (currentTable)
-		{
-			case 0:		//Notifications				
-			break;
-				
-			case 1:		//Volunteers Tab
-				cmd = "get_volunteers";
-			break;
-			
-			case 2:	
-			break;
-
-			case 3:
-			break;
-				
-			case 4:
-			break;
-		}		
-		
 		$.ajax( {
 			'dataType': 'json', 
 			'type': 'GET', 
@@ -273,6 +252,7 @@ updateLastReq(); // loading page means user is active
 							for(var i = 2; i < 16; i++) {								
 								row[i]=$('#volunteer'+i).val();								
 							}
+
 							dt.fnUpdate(row, aPos, 0);	//Update Table -- Independent from updating db!
 						},
 						'error': ajaxError
@@ -308,7 +288,6 @@ updateLastReq(); // loading page means user is active
 						$('#tree9').val('Yes');
 					else
 						$('#tree9').val('No');
-					
 					//Update DB
 					var para = $('#tree').serialize();
 					$.ajax({							
@@ -400,12 +379,19 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=add_volunteer&'+para,
 						'success': function (data) {
+							if (!validResponse(data))
+								return false;
+							if (data.status != 200) {
+								setError('Information Cannot be Added');
+								return alert('Status '+ data.status + '\n' + data.message);
+							}
 							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
+							reloadTable("get_volunteers");									
 						},
 						'error': ajaxError
 					});
-					reloadTable();									
+
 					break;
 				
 				case 2:	
@@ -417,7 +403,13 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=add_tree&'+para,
 						'success': function (data) {
-							setInfo('Information Updated');
+							if (!validResponse(data))
+								return false;
+							if (data.status != 200) {
+								setError('Information Cannot be Added');
+								return alert('Status '+ data.status + '\n' + data.message);
+							}
+							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
 						},
 						'error': ajaxError
@@ -430,7 +422,13 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=add_distribution&'+para,
 						'success': function (data) {
-							setInfo('Information Updated');
+							if (!validResponse(data))
+								return false;
+							if (data.status != 200) {
+								setError('Information Cannot be Added');
+								return alert('Status '+ data.status + '\n' + data.message);
+							}
+							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
 						},
 						'error': ajaxError
@@ -440,7 +438,10 @@ updateLastReq(); // loading page means user is active
 					
 				case 5:  // event
 					if (checkEventForm() != -1)
-					  createNewEvent();
+					{
+						createNewEvent();
+						reloadTable("get_events");									
+					}
 					break;
 					
 				case 6:
@@ -449,6 +450,12 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=add_donation&'+para,
 						'success': function (data) {
+							if (!validResponse(data))
+								return false;
+							if (data.status != 200) {
+								setError('Information Cannot be Added');
+								return alert('Status '+ data.status + '\n' + data.message);
+							}
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
 						},
@@ -569,28 +576,8 @@ updateLastReq(); // loading page means user is active
 			icons: { primary: "ui-icon-trash" },
 			text: false
 		}).click(function()	{
-			//pop up confirmation window
 			var deleteList = [];
 
-/*
-			//if yes, then delete selected 
-			$('input[name=select-row]:checked').each(function(){
-				var row = $(this).parent().parent();
-				var data = dt.fnGetData(row[0]);
-				var id = data[1];
-				deleteList.push(id);
-				//TODO Ajax needs to be sent at the end
-				$.ajax({							
-					'type': 'GET',
-					'url': 'ajax.php?cmd=remove_volunteer&id='+id,
-					'success': function (data) {
-						//alert('Information is Removed!');
-					},
-					'error': ajaxError
-				});
-				row.remove();
-			});
-*/
 			switch (currentTable)
 			{
 				case 1: //volunteer
@@ -599,25 +586,39 @@ updateLastReq(); // loading page means user is active
 					});
 					if(deleteList.length > 0)
 					{
+						//pop up confirmation window
 						var x = window.confirm("Are you sure you want to delete "+deleteList.length+" items");
 						if(x)
 						{
-							$(deleteList).each(function()
+							var deleted = 0;
+							$('input[name=select-row]:checked').each(function()
 							{
-								var row = $(this);
+								var row = $(this).parent().parent();
 								var data = dt.fnGetData(row[0]);
 								var id = data[1];
+								var firstname = data[2];
+								var lastname = data[4];
+								
 								$.ajax({							
 									'type': 'GET',
 									'url': 'ajax.php?cmd=remove_volunteer&id='+id,
 									'success': function (data) {
+										if (!validResponse(data))
+											return false;
+										if (data.status != 200) {
+											return alert('Information Cannot be Deleted: \n'+ firstname + ' ' + lastname + ' is either a Volunteer/Harvest Captain of an Event');
+										}
+										deleted++;
+										dt.fnDeleteRow(row[0]);
+										setInfo('Deleted ' + deleted + ' items');
+										//console.log(data);
 										//alert('Information is Removed!');
 									},
 									'error': ajaxError
 								});
-								row.remove();
+								//row.remove();
 							});
-							setInfo('Deleted ' + deleteList.length + ' items');
+
 						}
 					}
 				break;
