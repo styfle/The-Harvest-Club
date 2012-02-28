@@ -266,8 +266,8 @@ updateLastReq(); // loading page means user is active
 				
 				case 2:
 					$('#grower19').val($('#grower17 option:selected').text());			
-					$('#grower20').val($('#grower18 option:selected').text());							
-					
+					$('#grower20').val($('#grower18 option:selected').text());	
+							
 					//Update DB					
 					var para = $('#grower').serialize();
 					$.ajax({							
@@ -282,7 +282,11 @@ updateLastReq(); // loading page means user is active
 									row[i]='';
 								else
 									row[i]=$('#grower'+i).val();						
-							}					
+							}	
+						if($('#grower15').val()==1)				
+							row[16]='Pending';
+						else
+							row[16]='Approved';							
 							dt.fnUpdate( row, aPos, 0 );	//Update Table -- Independent from updating db!							
 						},
 						'error': ajaxError
