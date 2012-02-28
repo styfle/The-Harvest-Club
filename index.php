@@ -55,7 +55,7 @@ updateLastReq(); // loading page means user is active
 <body id="dt_example">
 <div id="container">
 	<header>
-		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Home<span></h1>
+		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Home<span></h1> <!-- remove CPanel? -->
 		<div id="quote">"The harvest is plentiful but the workers are few"</div>
 
 		<div id="status" class="invisible">Welcome!</div><!-- alert user -->
@@ -240,6 +240,8 @@ updateLastReq(); // loading page means user is active
 	var currentTable = 0; // global id of current data table
 	var forms = ['volunteer', 'grower', 'tree', 'distribution'];
 	var growerID = 0;
+	var pending = 0;
+	var privilegeID = 0;
 	//----- These are the variables for event
 	var loadGrower=0;
 	var loadCaptain = 0;
@@ -833,6 +835,10 @@ updateLastReq(); // loading page means user is active
 			aPos = dt.fnGetPosition( this );
 			switch (currentTable)
 			{
+				case 0: //notification
+					
+				break;
+
 				case 1: //volunteer
 				switchForm('volunteer');
 				for (var i = 0; i < row.length; i++)
@@ -998,7 +1004,18 @@ updateLastReq(); // loading page means user is active
 		growerID = $('#grower1').val();					//get ID of grower whose trees are to be shown
 		$('#edit-dialog').dialog('close');				//Close pop-up
 		document.getElementById('get_trees').click();	//switch to Trees Tab	
-	}	
+	}
+
+	function viewNotifications(table) {
+		if (table == 'volunteers') {
+			privilege_id = 1;
+			document.getElementById('get_volunteers').click();
+		}
+		if (table == 'growers') {
+			pending = 1;
+			document.getElementById('get_growers').click();
+		}
+	}
 	</script>
 
 	<!-- Prompt IE 6 users to install Chrome Frame. -->

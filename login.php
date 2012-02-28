@@ -21,14 +21,18 @@ if (isset($_REQUEST['email']) && isset($_REQUEST['password'])) {
 	if (!$r->isValid()) {
 		$m = 'DB error: ' + $db->error();
 	} else {
-		$_SESSION = $r->buildArray();
-		$_SESSION = $_SESSION[0];
-		if (!isset($_SESSION['id']))
+		if (!$r->hasRows())
 			$m = 'Incorrect email/password combination!';
-		else if (!$_SESSION['can_login'])
-			$m = 'You do not have permission to login!';
+		else {
+			$_SESSION = $r->buildArray();
+			$_SESSION = $_SESSION[0];
+			if (!isset($_SESSION['id']))
+				$m = 'Incorrect email/password combination!';
+			else if (!$_SESSION['can_login'])
+				$m = 'You do not have permission to login!';
 		
-		$_SESSION['time'] = time();
+			$_SESSION['time'] = time();
+		}
 	}
 }
 

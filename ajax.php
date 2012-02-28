@@ -388,7 +388,8 @@ switch ($cmd)
 	case 'get_notifications':
 		$data['id'] = 0;
 		$data['title'] = 'Notifications';
-		$data['content'] = '';
+		$sql = "SELECT 'Pending volunteers' AS 'Table', count(*) AS 'Updates' FROM volunteers WHERE privilege_id=1 UNION SELECT 'Pending growers' AS 'Table', count(*) AS 'Updates' FROM growers WHERE pending=1";
+		getTable($sql);
 		break;
 	case 'get_volunteers':
 		$data['id'] = 1;
