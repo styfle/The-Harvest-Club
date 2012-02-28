@@ -154,6 +154,30 @@ updateLastReq(); // loading page means user is active
 					}						
 					growerID = 0;										//Reset growerID
 				}
+
+				if(currentTable == 1) {									//If current tab is Volunteers
+					$('#edit-dialog').dialog('close');
+					if(privilegeID == 1) {
+						$('#dt tbody tr').each(function() {
+							tempId = dt.fnGetData(this)[14];			//Get privilegeID of current row
+							if(tempId != privilegeID)
+								dt.fnDeleteRow(this);
+						});
+					}
+					privilegeID = 0;	
+				}
+
+				if(currentTable == 2) {									//If current tab is Growers
+					$('#edit-dialog').dialog('close');
+					if(pending == 1) {
+						$('#dt tbody tr').each(function() {
+							tempId = dt.fnGetData(this)[15];				//Get pending of current row
+							if(tempId != pending)
+								dt.fnDeleteRow(this);
+						});
+					}
+					pending = 0;
+				}
 			},
 			'error': ajaxError
 		});
@@ -863,6 +887,31 @@ updateLastReq(); // loading page means user is active
 						}						
 						growerID = 0;										//Reset growerID
 					}
+
+					if(currentTable == 1) {
+						$('#edit-dialog').dialog('close');
+						if(privilegeID == 1) {
+							$('#dt tbody tr').each(function() {
+								tempId = dt.fnGetData(this)[14];
+								if(tempId != privilegeID)
+									dt.fnDeleteRow(this);
+							});
+						}
+						privilegeID = 0;
+					}
+
+					if(currentTable == 2) {
+						$('#edit-dialog').dialog('close');
+						if(pending == 1) {
+							$('#dt tbody tr').each(function() {
+								tempId = dt.fnGetData(this)[15];
+								if(tempId != pending)
+									dt.fnDeleteRow(this);
+							});
+						}
+						pending = 0;
+					}
+
 				},
 				'error': ajaxError
 			});
@@ -891,7 +940,8 @@ updateLastReq(); // loading page means user is active
 			switch (currentTable)
 			{
 				case 0: //notification
-					
+					$('#edit-dialog').dialog('close');
+					viewNotifications(row[1]);
 				break;
 
 				case 1: //volunteer
@@ -1073,15 +1123,22 @@ updateLastReq(); // loading page means user is active
 		document.getElementById('get_trees').click();	//switch to Trees Tab	
 	}
 
-	function viewNotifications(table) {
-		if (table == 'volunteers') {
-			privilege_id = 1;
+	function viewNotifications(row) {
+		if (row == 'Pending volunteers') {
+			privilegeID = 1;
 			document.getElementById('get_volunteers').click();
+			$('#edit-dialog').dialog('close');
 		}
-		if (table == 'growers') {
+		if (row == 'Pending growers') {
 			pending = 1;
+			$('#edit-dialog').dialog('close');
 			document.getElementById('get_growers').click();
 		}
+		//if (row == 'Pending events') {
+			//get ID of currently logged in harvest captain
+			//display events with missing info where harvest captain == currently logged in person
+			//document.getElementById('get_events').click();
+		//}
 	}
 
 	function approveGrower(){
