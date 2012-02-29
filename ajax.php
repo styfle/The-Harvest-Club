@@ -208,6 +208,7 @@ function updateGrower($exist){
 	$lastname = $_REQUEST['lastname'];
 	$phone = $_REQUEST['phone'];
 	$email = $_REQUEST['email'];
+	$preferred = $_REQUEST['preferred'];
 	$street = $_REQUEST['street'];
 	$city = $_REQUEST['city'];
 	$state = $_REQUEST['state'];
@@ -222,8 +223,8 @@ function updateGrower($exist){
 		$r = $db->q($sql);	
 	}
 	else{
-		$sql = "INSERT INTO growers(first_name, middle_name, last_name, phone, email, preferred, street, state, zip, tools, notes, pending, property_type_id, property_relationship_id)
-				VALUES ('$firstname', '$middlename', '$lastname', '$phone', '$email', '$street', '$city', '$state', '$zip', '$tools', '$notes', 1, '$property_type', '$property_relationship')";				
+		$sql = "INSERT INTO growers(first_name, middle_name, last_name, phone, email, preferred, street, city, state, zip, tools, notes, pending, property_type_id, property_relationship_id)
+				VALUES ('$firstname', '$middlename', '$lastname', '$phone', '$email', '$preferred', '$street', '$city', '$state', '$zip', '$tools', '$notes', 1, '$property_type', '$property_relationship')";				
 		$r = $db->q($sql);		
 		getError($r);
 	}
@@ -274,7 +275,7 @@ function getTable($sql) {
 		if ($k == 'id' || $k == 'password' || contains($k, '_id')) {
 			$column['bSearchable'] = false;
 			$column['bVisible'] = false;
-		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip') {
+		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip' || contains($k, '_flag')) {
 			$column['bVisible'] = false; // hide but still searchable
 		} else if ($k == 'notes') {
 			$column['sClass'] = 'left'; // align left
@@ -438,7 +439,11 @@ switch ($cmd)
 	case 'get_trees':
 		$data['id'] = 3;
 		$data['title'] = 'Trees';
-		$sql = "SELECT gt.id AS tree_id, Concat(g.first_name,' ', g.last_name) AS Owner, g.id AS grower_id , tt.id AS 'tree_type_id', tt.name AS 'Tree type', gt.varietal AS Varietal, gt.number AS Number, gt.chemicaled AS Chemicaled_id, IF((gt.chemicaled=0),'No','Yes') AS Chemicaled, th.id AS avgHeight_id, th.name AS Height
+		
+		$sql = "SELECT gt.id AS tree_id, Concat(g.first_name,' ', g.last_name) AS Owner, g.id AS grower_id , tt.id AS 'tree_type_id', tt.name AS 'Tree type', gt.varietal AS Varietal, gt.number AS Number, gt.chemicaled AS Chemicaled_id, IF((gt.chemicaled=0),'No','Yes') AS Chemicaled, th.id AS avgHeight_id, th.name AS Height, 
+					(	SELECT group_concat(m.name)
+						FROM	month_harvests mh, months m
+						WHERE mh.tree_id = gt.id AND mh.month_id = m.id) month_flag
 				FROM grower_trees gt, tree_types tt, growers g, tree_heights th
 				WHERE g.id = gt.grower_id AND gt.tree_type=tt.id AND gt.avgHeight_id = th.id;";
 		getTable($sql);
