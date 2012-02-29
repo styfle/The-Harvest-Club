@@ -83,8 +83,9 @@ function updateVolunteer($exists) {
 		$source_id = $_REQUEST['source_id'];
 	
 	if ($exists) { // volunteer exists so just update
-		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', phone='$phone', email='$email', status=$status, street='$street', city='$city', state='$state',zip='$zip', notes='$notes', source_id=$source_id where id=$id";						
+		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', organization='$organization', phone='$phone', email='$email', status=$status, street='$street', city='$city', state='$state',zip='$zip', notes='$notes', where id=$id";						
 		$r = $db->q($sql);
+		getError($r);
 		
 		for ($i=1; $i<6 ; $i++) {
 			if (isset($_REQUEST["volunteerRole$i"])) { //it is checked

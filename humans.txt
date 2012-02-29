@@ -10,7 +10,7 @@
   Du The Du
   
 /* LOCATION */
-  UC, Ivine
+  UC, Irvine
 
 /* SITE */
   Standards: HTML5, CSS3

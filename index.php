@@ -35,8 +35,7 @@ updateLastReq(); // loading page means user is active
 	<!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
 	<link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 
-	<link rel="stylesheet" href="css/style.css"> <!-- css reset -->
-	<link rel="stylesheet" href="css/demo_page.css">
+	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/demo_table_jui.css">
 	<link rel="stylesheet" href="css/themes/smoothness/jquery-ui-1.8.4.custom.css">
 	
@@ -52,13 +51,22 @@ updateLastReq(); // loading page means user is active
 
 </head>
 
-<body id="dt_example">
+<body>
 <div id="container">
 	<header>
-		<h1>The Harvest Club - CPanel <span id="page_title" style="float:right">Home<span></h1> <!-- remove CPanel? -->
+		<h1>
+			The Harvest Club - <span id="page_title">Loading...</span>
+			<span id="me" style="float:right; font-size:10px; color:#333; text-shadow:none;">
+				<a href="logout">Logout</a> as
+				<?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>
+			</span>
+		</h1>
 		<div id="quote">"The harvest is plentiful but the workers are few"</div>
 
-		<div id="status" class="invisible">Welcome!</div><!-- alert user -->
+		<div id="status" class="invisible">
+			<span id="status-icon" class="ui-icon ui-icon-info" style="float:left; margin-right:.3em;"></span>
+			<span id="status-text">Welcome to your new CPanel!</span>
+		</div><!-- end status -->
 
 		<div class="toolbar">
 			<span id="toolbar" style="float: right" class="ui-widget-header ui-corner-all">
@@ -95,7 +103,6 @@ updateLastReq(); // loading page means user is active
 		<?php 
 			date_default_timezone_set('America/Los_Angeles');
 			echo date('Y');
-			echo '<br/>Logged in as ' . $_SESSION['first_name'] . ' ' . $_SESSION['last_name'];
 		?>
 	</footer>
 	
@@ -186,19 +193,31 @@ updateLastReq(); // loading page means user is active
 	}
 
 	function setInfo(message) {
+		$('#status-text').text(message);
+
 		$('#status')
-			.text(message)
 			.removeClass() // remove all classes
-			.addClass('ui-state-highlight');
+			.addClass('ui-state-highlight ui-corner-all');
+
+
+		$('#status-icon')
+			.removeClass() // remove all classes
+			.addClass('ui-icon ui-icon-info');
 
 		setTimeout(hideStatus, 5000); // hide after 5 sec
 	}
 
 	function setError(message) {
+		$('#status-text').text(message);
+
 		$('#status')
-			.text(message)
 			.removeClass() // remove all classes
-			.addClass('ui-state-error');
+			.addClass('ui-state-error ui-corner-all');
+
+
+		$('#status-icon')
+			.removeClass() // remove all classes
+			.addClass('ui-icon ui-icon-alert');
 
 		setTimeout(hideStatus, 5000); // hide after 5 sec
 	}
@@ -638,7 +657,6 @@ updateLastReq(); // loading page means user is active
 					for (var i = 0; i < 6; i++)
 						$('#donations'+i).val('');
 					switchForm('donation');
-					//$("#donations5").datepicker({dateFormat: 'yy-mm-dd'});
 					$('#donations5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
 				break;
 			}			
@@ -837,14 +855,14 @@ updateLastReq(); // loading page means user is active
 		}).click(function() {
 			var emailList = [];
 			var iEmail = -1;
-			$('input[name=select-row]:checked').each(function(){
-				var cols = dt.fnSettings().aoColumns;
-				for (var i=0; i<cols.length; i++) {
-					if (cols[i].sTitle == "email") {
-						iEmail = i;
-						break;
-					}
+			var cols = dt.fnSettings().aoColumns;
+			for (var i=0; i<cols.length; i++) {
+				if (cols[i].sTitle.toLowerCase() == 'email') {
+					iEmail = i;
+					break;
 				}
+			}
+			$('input[name=select-row]:checked').each(function(){
 				if (iEmail == -1)
 					return false;
 				var row = $(this).parent().parent();
@@ -870,7 +888,10 @@ updateLastReq(); // loading page means user is active
 		
 		$("#export-button").button({
 			label: "Export Selected",
-			icons: { primary: "ui-icon-disk" },
+			icons: {
+				//primary: "ui-icon-disk",
+				primary: "ui-icon-arrowthickstop-1-s"
+			},
 			text: false
 		});
 	});
@@ -1131,11 +1152,10 @@ updateLastReq(); // loading page means user is active
 				break;
 				
 				case 6: // donation
-					//$("#donations5").datepicker({dateFormat: 'yy-mm-dd'});
-					$('#donations5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
 					for (var i = 1; i < row.length; i++)
                     	$('#donations' + i).val(row[i]);
 					switchForm('donation');
+					$('#donations5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
 				break;	
 
 
@@ -1179,7 +1199,10 @@ updateLastReq(); // loading page means user is active
 			e.stopPropagation();
 		}); // on.click() checkbox all
 
+		// the last thing we do is load the home page (get_notifcations)
+		document.getElementById('get_notifications').click();
 	}); // document.ready()
+
 	function viewTrees(){
 		growerID = $('#grower1').val();					//get ID of grower whose trees are to be shown
 		$('#edit-dialog').dialog('close');				//Close pop-up
