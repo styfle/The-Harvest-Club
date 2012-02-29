@@ -115,7 +115,7 @@ include('include/autoresponse.inc.php');;
 	$r = $db->commit();
 	if ($r->isValid()) {
 		$sent = $mail-send('Registration Confirmed', volunteerResponse($firstname, $lastname), $email);
-		echo "$first_name $last_name, Thank you for registering!";
+		echo "$firstname $lastname, Thank you for registering!";
 		if ($sent)
 			echo "<br/>An email has been sent to: $email";
 	} else {
