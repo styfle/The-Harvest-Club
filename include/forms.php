@@ -239,7 +239,7 @@ $avgHeight = $r->buildArray();
 			<td colspan="3"><label for="grower7">Preference</label></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="preference" id="grower7" size="33"/></td>			
+			<td colspan="3"><input type="text" name="preferred" id="grower7" size="33"/></td>			
 		</tr>
 		
 		<tr>
