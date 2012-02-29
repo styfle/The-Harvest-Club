@@ -48,7 +48,7 @@ updateLastReq(); // loading page means user is active
 	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
 	<script type="text/javascript" src="js/event.js"></script>
-
+	<script type="text/javascript" src="js/TableTools.nightly.min.js"></script>
 </head>
 
 <body>

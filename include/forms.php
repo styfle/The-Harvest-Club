@@ -57,6 +57,9 @@ $avgHeight = $r->buildArray();
 			<td colspan="3" class="hidden"><input id="volunteer15" name="signedup" type="text" size="2"/></td>
 		</tr>
 		<tr>
+			<td colspan="3" class="hidden"><input id="volunteer18" name="user_type" type="text" size="2"/></td>
+		</tr>
+		<tr>
 			<td><label for="volunteer2"><b>First</b></label></td>
 			<td><label for="volunteer3"><b>Middle</b></label></td>
 			<td><label for="volunteer4"><b>Last</b></label></td>
