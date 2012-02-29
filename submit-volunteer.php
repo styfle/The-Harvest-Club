@@ -1,79 +1,69 @@
 <?php
 
 include('include/Database.inc.php');
+include('include/Mail.inc.php');
+include('include/autoresponse.inc.php');;
 
-   $firstname = $_POST['firstname'];
-   $middlename = $_POST['middlename'];
-   $lastname = $_POST['lastname'];
-   $organization = $_POST['organization'];
-   $email = $_POST['email'];
-   $phone = $_POST['phone'];
-   $street = $_POST['street'];
-   $street2 = $_POST['street2'];
-   $city = $_POST['city'];
-   $state = $_POST['state'];
-   $zip = $_POST['zip'];
-   //$group_number = $_POST['group-number'];
-   //$group_age = $_POST['group-age'];
-   //$group_availability = $_POST['group-avail'];
-   //$group_note = $_POST['group-notes'];
-   if(!ISSET($_POST['source']))
-   {
-    $source = 1; // Default to "Others";
-   }
-   else
-	$source = $_POST['source'];
-   $comments = $_POST['comments'];
-   $errorMessage = "";
-   
-   
-   if(empty($firstname)) {
-      $errorMessage .= "<li>No First Name!</li>";
-   }
-   if(empty($lastname)) {
-      $errorMessage .= "<li>No Last Name!</li>";
-   }
-   if(empty($email)) {
-      $errorMessage .= "<li>No Email!</li>";
-   }
-   if(empty($phone)) {
-      $errorMessage .= "<li>No Phone!</li>";
-   }
-   if(!is_numeric($phone)) {
-	   $errorMessage .= "<li>Phone Number is Non-Numeric!</li>";
-   }
-   if(empty($city)) {
-      $errorMessage .= "<li>No City!</li>";
-   }
-   if(empty($state)) {
-      $errorMessage .= "<li>No State!</li>";
-   }
-   if(empty($zip)) {
-      $errorMessage .= "<li>No Zip!</li>";
-   }
-   if(!is_numeric($zip)) {
-	   $errorMessage .= "<li>Zip is Non-Numeric!</li>";
-   }
-   if(!empty($errorMessage))
-   {
+	$firstname = $_POST['firstname'];
+	$middlename = $_POST['middlename'];
+	$lastname = $_POST['lastname'];
+	$organization = $_POST['organization'];
+	$email = $_POST['email'];
+	$phone = $_POST['phone'];
+	$street = $_POST['street'];
+	$street2 = $_POST['street2'];
+	$city = $_POST['city'];
+	$state = $_POST['state'];
+	$zip = $_POST['zip'];
+	//$group_number = $_POST['group-number'];
+	//$group_age = $_POST['group-age'];
+	//$group_availability = $_POST['group-avail'];
+	//$group_note = $_POST['group-notes'];
+	if(!ISSET($_POST['source']))
+		$source = 1; // Default to "Others"
+	else
+		$source = $_POST['source'];
+	$comments = $_POST['comments'];
+	$errorMessage = "";
+	
+	
+	if(empty($firstname)) {
+		$errorMessage .= "<li>No First Name!</li>";
+	}
+	if(empty($lastname)) {
+		$errorMessage .= "<li>No Last Name!</li>";
+	}
+	if(empty($email)) {
+		$errorMessage .= "<li>No Email!</li>";
+	}
+	if(empty($phone)) {
+		$errorMessage .= "<li>No Phone!</li>";
+	}
+	if(!is_numeric($phone)) {
+		$errorMessage .= "<li>Phone Number is Non-Numeric!</li>";
+	}
+	if(empty($city)) {
+		$errorMessage .= "<li>No City!</li>";
+	}
+	if(empty($state)) {
+		$errorMessage .= "<li>No State!</li>";
+	}
+	if(empty($zip)) {
+		$errorMessage .= "<li>No Zip!</li>";
+	}
+	if(!is_numeric($zip)) {
+		$errorMessage .= "<li>Zip is Non-Numeric!</li>";
+	}
+	if(!empty($errorMessage)) {
 	  die($errorMessage);
-   }
+	}
 
-/*
-   $sql = "INSERT INTO volunteers (first_name, last_name, phone, email, active, street, city, state, zip, privilege_id) VALUES 
-   ('$firstname', '$lastname', '$phone', '$email', '1', '$street', '$city', '$state', '$zip', '1')";
-   
-   if(!mysql_query($sql))
-   {
-		die('Could not insert your information: ' .mysql_error());
-   }
-*/
 
 	$r = $db->startTransaction();
 	if (!$r->isValid())
 	  die('Transaction could not start.');
 
-    $sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source_id, signed_up)
+	 $sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, street, city, state, zip, notes, source_id, signed_up)
 	VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',CURDATE()); ";
 	$inputs = array($firstname, $middlename, $lastname, $organization, $phone, $email, $street, $city, $state, $zip, $comments, $source);
 
@@ -123,9 +113,12 @@ include('include/Database.inc.php');
 	}
 
 	$r = $db->commit();
-	if ($r->isValid())
-		echo "$firstname $lastname, Thank you for registering!";
-	else {
+	if ($r->isValid()) {
+		$sent = $mail-send('Registration Confirmed', volunteerResponse($firstname, $lastname), $email);
+		echo "$first_name $last_name, Thank you for registering!";
+		if ($sent)
+			echo "<br/>An email has been sent to: $email";
+	} else {
 		echo 'Failed to commit transaction. Attempting to rollback...';
 		$r = $db->rollback();
 		if ($r->isValid())
@@ -133,4 +126,5 @@ include('include/Database.inc.php');
 		else
 			echo 'Rollback failed!';
 	}
+
 ?>
