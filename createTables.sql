@@ -273,7 +273,6 @@ INSERT INTO privileges (name, can_login, view_volunteer, view_grower, send_email
 	-- Executive
 ;
 
--- TODO: this copies permissions from harvest captain to admin, but we still need to update new perms
 INSERT INTO privileges
 (name, can_login, view_volunteer, view_grower, send_email, recv_email, exp_grower, exp_volunteer, view_event, edit_event, view_distrib, edit_distrib)
 	(SELECT 'Admin', can_login, view_volunteer, view_grower, send_email, recv_email, exp_grower, exp_volunteer, view_event, edit_event, view_distrib, edit_distrib
@@ -312,8 +311,12 @@ CREATE TABLE volunteers (
 
 -- start temp insert
 INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, status, street, city, state, zip, privilege_id, signed_up, notes) VALUES
-('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', SHA2('password', 256), 1, '456 Fake St', 'Irvine', 'CA', '91234', 4,'2010-05-01', 'Fearless mascot'),
-('Johnny','', 'Rocket', '(949) 554-7890', 'johnny@uci.edu', SHA2('password', 256), 1, '33 Rocket St', 'Irvine', 'CA', '91234', 3,'2012-02-02', 'Blasting off');
+('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', SHA2('password', 256), 1, '456 Fake St', 'Irvine', 'CA', '91234', 5,'2010-05-01', 'Fearless mascot'),
+('Joanne','', 'Lolcatz', '(949) 555-3418', 'joanne@uci.edu', SHA2('password', 256), 1, '1 Harvest Cir', 'Irvine', 'CA', '91234', 5,'2012-03-01', 'Executive Power'),
+('Gillian','', 'Pwn', '(555) 555-1090', 'gillian@uci.edu', SHA2('password', 256), 1, '2 Harvest Cir', 'Irvine', 'CA', '91234', 4,'2012-03-01', 'Administrative skillz'),
+('Captain','Jack', 'Sparrow', '(949) 555-1337', 'captain@uci.edu', SHA2('password', 256), 1, '4 Black Pearl Rd', 'Pacific Ocean', 'CA', '99999', 3,'2012-03-01', 'Cursed'),
+('Victor','', 'Van', '(949) 555-9168', 'victor@uci.edu', SHA2('password', 256), 1, '2121 Ball Rd', 'Anaheim', 'CA', '92806', 2,'2012-03-01', 'Donut owner'),
+('Peter','', 'Pending', '(949) 555-0001', 'peter@uci.edu', SHA2('password', 256), 1, '6 Blue Nowhere', 'San Clemente', 'CA', '96539', 1,'2012-03-01', 'I am waiting...');
 -- end temp insert
 
 -- A volunteer can have many rolls

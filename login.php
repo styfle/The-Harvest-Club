@@ -25,7 +25,7 @@ if (isset($_REQUEST['email']) && isset($_REQUEST['password'])) {
 			$m = 'Incorrect email/password combination!';
 		else {
 			$_SESSION = $r->buildArray();
-			$_SESSION = $_SESSION[0];
+			$_SESSION = array_key_exists(0, $_SESSION) ? $_SESSION[0] : null;
 			if (!isset($_SESSION['id']))
 				$m = 'Incorrect email/password combination!';
 			else if (!$_SESSION['can_login'])

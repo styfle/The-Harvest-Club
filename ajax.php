@@ -8,7 +8,7 @@ header('Content-type: application/json');
 
 if (!isLoggedIn(false)) { // if we're not logged in, tell user
 	echo json_encode(array(
-		'status'=>401,
+		'status'=>401, // unauthorized
 		'message'=>'Unauthorized. Please login to complete your request.'
 		)
 	);
@@ -17,17 +17,43 @@ if (!isLoggedIn(false)) { // if we're not logged in, tell user
 
 if (isExpired()) { // if session expired, tell user
 	echo json_encode(array(
-		'status'=>401,
+		'status'=>401, // unauthorized
 		'message'=>'Session expired. Please login to complete your request.'
 		)
 	);
 	exit();
 }
 
-
-$cmd = $_REQUEST['cmd'];
+$cmd = $_REQUEST['cmd']; // get command to perform
 $data = array('status'=>200); // default to OK
-// See http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+
+// try to get current user permissions
+$r = $db->q("SELECT p.*
+		FROM volunteers v
+		LEFT JOIN privileges p
+		ON v.privilege_id = p.id
+		WHERE v.id=".$_SESSION['id']
+);
+
+if (!$r->isValid()) {
+	echo json_encode(array(
+		'status'=>500, //  db error
+		'message'=>'An error occurred while checking your privileges.\nI cannot allow you to proceed.'
+		)
+	);
+	exit();
+}
+
+// global containing all this user's privileges
+$PRIV = $r->buildArray();
+$PRIV = array_key_exists(0, $PRIV) ? $PRIV[0] : null;
+
+function forbidden() {
+	global $data;
+	$data['status'] = 403; // forbidden
+	$data['message']='Whoa buddy! You do not have permisson to perform this operation.';
+	return $data;
+}
 
 function contains($haystack, $needle) {
 	return stripos($haystack, $needle) !== false;
@@ -51,13 +77,10 @@ function updateVolunteer($exists) {
 	$zip = $_REQUEST['zip'];
 	$priv_id = $_REQUEST['privilege_id'];
 	$notes =  $_REQUEST['note'];
-    if(empty($_REQUEST['source_id']))
-    {
-	 $source_id = 1; // Default to "Others";
-    }
+    if(!isset($_REQUEST['source_id']))
+		$source_id = 1; // Default to "Others";
     else
-	 $source_id = $_REQUEST['source_id'];
-	//$source_id = $_REQUEST['source_id']; // change to source_id
+		$source_id = $_REQUEST['source_id'];
 	
 	if ($exists) { // volunteer exists so just update
 		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', phone='$phone', email='$email', status=$status, street='$street', city='$city', state='$state',zip='$zip', notes='$notes', source_id=$source_id where id=$id";						
@@ -328,8 +351,6 @@ function getVolunteer_Roles($sql) {
 	// get result as giant array
 	$a = $r->buildArray();
 	
-	
-	
 	foreach ($a as $v) {
 		// add a checkbox to each row (might need unique names)
 		$record = array();
@@ -351,8 +372,6 @@ function getVolunteer_Prefer($sql) {
 	
 	// get result as giant array
 	$a = $r->buildArray();
-	
-	
 	
 	foreach ($a as $v) {
 		// add a checkbox to each row (might need unique names)
@@ -376,8 +395,6 @@ function getName($sql) {
 	
 	// get result as giant array
 	$a = $r->buildArray();
-	
-	
 	
 	foreach ($a as $v) {
 		// add a checkbox to each row (might need unique names)
@@ -404,31 +421,40 @@ function generatePassword($length=8) {
 		$char = substr($possible, mt_rand(0, $maxlength-1), 1);		
 		// have we already used this character in $password?
 		if (!strstr($password, $char)) { 
-		// no, so it's OK to add it onto the end of whatever we've already got...
-		$password .= $char;
-	  }
+			// no, so it's OK to add it onto the end of whatever we've already got...
+			$password .= $char;
+		}
 	}
 	
 	return $password;
-  }
+}
 
 
 
 switch ($cmd)
 {
 	case 'get_notifications':
+		// no privs needed, just check user type
 		$data['id'] = 0;
 		$data['title'] = 'Notifications';
 		$sql = "SELECT 'Pending volunteers' AS 'Table', count(*) AS 'Updates' FROM volunteers WHERE privilege_id=1 UNION SELECT 'Pending growers' AS 'Table', count(*) AS 'Updates' FROM growers WHERE pending=1";
 		getTable($sql);
 		break;
 	case 'get_volunteers':
+		if (!$PRIV['view_volunteer']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 1;
 		$data['title'] = 'Volunteers';
 		$sql = "SELECT v.*, p.name AS user_type FROM volunteers v LEFT JOIN privileges p ON v.privilege_id = p.id;";
 		getTable($sql);
 		break;
 	case 'get_growers':
+		if (!$PRIV['view_grower']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 2;
 		$data['title'] = 'Growers';
 		$sql = "SELECT g.id, g.first_name AS 'First Name', g.middle_name, g.last_name AS 'Last Name', g.phone AS 'Phone', g.email AS 'Email', g.preferred AS 'Preferred', g.street, g.city AS 'City', g.state, g.zip, g.tools AS tools_id, g.source_id, g.notes, g.pending AS pending_id, IF((g.pending=1),'Pending','Approved') AS Pending, g.property_type_id, g.property_relationship_id, pt.name AS property_type, pr.name AS property_relationship
@@ -436,7 +462,11 @@ switch ($cmd)
 				WHERE g.property_type_id = pt.id AND g.property_relationship_id = pr.id;";
 		getTable($sql);
 		break;
-	case 'get_trees':
+	case 'get_trees': // same priv as grower
+		if (!$PRIV['view_grower']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 3;
 		$data['title'] = 'Trees';
 		
@@ -449,18 +479,30 @@ switch ($cmd)
 		getTable($sql);
 		break;
 	case 'get_distribs':
+		if (!$PRIV['view_distrib']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 4;
 		$data['title'] = 'Distributions';
 		$sql = "SELECT * FROM distributions d;";
 		getTable($sql);
 		break;
 	case 'get_distribution_times':
+		if (!$PRIV['view_distrib']) {
+			forbidden();
+			break;
+		}
 		$id = $_REQUEST['id'];
 		$data['title'] = 'Hours';
 		$sql = "SELECT h.* FROM distributions d, distribution_hours h WHERE h.distribution_id = d.id AND d.id=$id";				
 		getDistribution_Hours($sql);
 		break;
 	case 'update_distribution':
+		if (!$PRIV['edit_distrib']) {
+			forbidden();
+			break;
+		}
 		global $db;
 		global $data;
 		$id = $_REQUEST['id'];
@@ -501,6 +543,10 @@ switch ($cmd)
 		break;
 	
 	case 'add_distribution':
+		if (!$PRIV['edit_distrib']) {
+			forbidden();
+			break;
+		}
 		global $db;
 		global $data;
 	
@@ -557,6 +603,10 @@ switch ($cmd)
 		break;
 		
 	case 'remove_distribution':
+		if (!$PRIV['del_distrib']) {
+			forbidden();
+			break;
+		}
 		global $db;
 		global $data;
 		$id = $_REQUEST['id'];
@@ -567,6 +617,10 @@ switch ($cmd)
 		getError($r);
 		break;
 	case 'get_volunteer_role':
+		if (!$PRIV['view_volunteer']) {
+			forbidden();
+			break;
+		}
 		$id = $_REQUEST['id'];
 		$data['title'] = 'Roles';
 		$sql = "SELECT t.id FROM volunteers v, volunteer_roles r , volunteer_types t Where v.id = r.volunteer_id And r.volunteer_type_id = t.id And v.id=".$id;			
@@ -574,18 +628,34 @@ switch ($cmd)
 		break;
 		
 	case 'get_volunteer_prefer':
+		if (!$PRIV['view_volunteer']) {
+			forbidden();
+			break;
+		}
 		$id = $_REQUEST['id'];
 		$data['title'] = 'Prefer';
 		$sql = "SELECT d.id FROM volunteers v, volunteer_prefers p , days d Where v.id = p.volunteer_id And p.day_id = d.id And v.id=".$id;			
 		getVolunteer_Prefer($sql);
 		break;
 	case 'update_grower':		
+		if (!$PRIV['edit_grower']) {
+			forbidden();
+			break;
+		}
 		updateGrower(true);
 		break;	
 	case 'add_grower':
+		if (!$PRIV['edit_grower']) {
+			forbidden();
+			break;
+		}
 		updateGrower(false);
 		break;
 	case 'approve_grower':
+		if (!$PRIV['edit_grower']) { //TODO find out if this needs a separate priv
+			forbidden();
+			break;
+		}
 		$growerID = $_REQUEST['growerID'];
 		$sql = "UPDATE growers SET pending = 0
 				WHERE id=".$growerID;
@@ -593,24 +663,48 @@ switch ($cmd)
 		getError($r);
 		break;
 	case 'update_tree':		
+		if (!$PRIV['edit_grower']) {
+			forbidden();
+			break;
+		}
 		updateTree(true);
 		break;	
 	case 'add_tree':
+		if (!$PRIV['edit_grower']) {
+			forbidden();
+			break;
+		}
 		updateTree(false);
 		break;
 	case 'get_tree_month':
+		if (!$PRIV['view_grower']) {
+			forbidden();
+			break;
+		}
 		$id = $_REQUEST['id'];
 		$data['title'] = 'Months';
 		$sql = "SELECT month_id FROM month_harvests mh Where mh.tree_id=".$id;				
 		getTree_Months($sql);		
 		break;
 	case 'update_volunteer':
+		if (!$PRIV['edit_volunteer']) {
+			forbidden();
+			break;
+		}
 		updateVolunteer(true);
 		break;
 	case 'add_volunteer':
+		if (!$PRIV['edit_volunteer']) {
+			forbidden();
+			break;
+		}
 		updateVolunteer(false);
 		break;
 	case 'remove_volunteer':
+		if (!$PRIV['del_volunteer']) {
+			forbidden();
+			break;
+		}
 		global $db;
 		global $data;
 		$id = $_REQUEST['id'];
@@ -620,6 +714,10 @@ switch ($cmd)
 		getError($r);
 		break;
 	case 'remove_grower':
+		if (!$PRIV['del_grower']) {
+			forbidden();
+			break;
+		}
 		global $db;
 		global $data;
 		$id = $_REQUEST['id'];	
@@ -629,6 +727,10 @@ switch ($cmd)
 		getError($r);
 		break;
 	case 'remove_tree':
+		if (!$PRIV['del_grower']) {
+			forbidden();
+			break;
+		}
 		global $db;
 		global $data;
 		$id = $_REQUEST['id'];
@@ -638,6 +740,10 @@ switch ($cmd)
 		getError($r);
 		break;
 	case 'send_email':
+		if (!$PRIV['send_email']) {
+			forbidden();
+			break;
+		}
 		global $data;
 		global $mail;
 		global $db;
@@ -660,11 +766,15 @@ switch ($cmd)
 			$sent = $mail->sendBulk($subject, $message, $bcc); // maybe use $my_email for replyto
 			if (!$sent) {
 				$data['status'] = 500;
-				$data['message'] = 'Mail could not be sent';
+				$data['message'] = 'Mail could not be sent!';
 			}
 		}
 		break;
 	case 'get_donors':
+		if (!$PRIV['view_donor']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 6;
 		$data['title'] = 'Donations';
 		$sql = "SELECT id, donation, donor, value, date FROM donations";
@@ -674,6 +784,10 @@ switch ($cmd)
 	///////These are for event
 	
 	case 'get_events':
+		if (!$PRIV['view_event']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 5;
 		$data['title'] = 'Events';		
 		$sql = "SELECT id, name as 'Event Name', grower_id, captain_id, date(date) as Date FROM events ;";
@@ -681,6 +795,10 @@ switch ($cmd)
 		break;
 		
 	case 'get_grower_name':
+		if (!$PRIV['view_event']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 10;
 		$data['title'] = 'Grower-Name';
 		$sql = "SELECT id, Concat(first_name,' ',middle_name,' ',last_name) FROM growers ;";
@@ -688,6 +806,10 @@ switch ($cmd)
 		break;	
 		
 	case 'get_volunteer_name':
+		if (!$PRIV['view_event']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 11;
 		$data['title'] = 'Volunteer-Name';
 		$sql = "SELECT id, Concat(first_name,' ',middle_name,' ',last_name) FROM volunteers ;";
@@ -696,6 +818,10 @@ switch ($cmd)
 	
 		
 	case 'get_tree_name':
+		if (!$PRIV['view_event']) {
+			forbidden();
+			break;
+		}
 		$id = $_REQUEST['grower_id'];
 		$data['id'] = 12;
 		$data['title'] = 'Tree-Name';
@@ -704,6 +830,10 @@ switch ($cmd)
 		break;
 		
 	case 'get_event_tree':
+		if (!$PRIV['view_event']) {
+			forbidden();
+			break;
+		}
 		$grower_id = $_REQUEST['id'];
 		$event_id = $_REQUEST['event_id'];
 		$data['id'] = 13;
@@ -713,6 +843,10 @@ switch ($cmd)
 		break;
 	
 	case 'get_event_volunteer_name':
+		if (!$PRIV['view_event']) {
+			forbidden();
+			break;
+		}
 		$event_id = $_REQUEST['event_id'];
 		$data['id'] = 14;
 		$data['title'] = 'Volunteer-Name';
@@ -721,6 +855,10 @@ switch ($cmd)
 		break;
 		
 	case 'get_distribution_name':
+		if (!$PRIV['view_event']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 15;
 		$data['title'] = 'Distribution-Name';
 		$sql = "SELECT id, name FROM distributions ;";
@@ -728,6 +866,10 @@ switch ($cmd)
 		break;
 		
 	case 'get_driver':
+		if (!$PRIV['view_event']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 16;
 		$data['title'] = 'Driver-Name';
 		$id = $_REQUEST['id'];
@@ -736,6 +878,10 @@ switch ($cmd)
 		break;
 		
 	case 'update_event':
+		if (!$PRIV['edit_event']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 16;
 		$data['title'] = 'Update Event';
 		$rawData = $_POST;
@@ -813,6 +959,10 @@ switch ($cmd)
 	
 
 	case 'create_event':
+		if (!$PRIV['edit_event']) {
+			forbidden();
+			break;
+		}
 		$data['id'] = 17;
 		$data['title'] = 'Create Event';
 		$rawData = $_POST;		
@@ -895,6 +1045,10 @@ switch ($cmd)
 		break;
 		
 	case 'remove_event':
+		if (!$PRIV['del_event']) {
+			forbidden();
+			break;
+		}
 		$event_id = $_REQUEST['id'];
 		$hostname =  MYSQL_SERVER;
 		$dbname =  MYSQL_DB;
@@ -930,6 +1084,10 @@ switch ($cmd)
 		}
 		break;
 	case 'update_donation':
+		if (!$PRIV['edit_donor']) {
+			forbidden();
+			break;
+		}
 		global $db;
 		global $data;
 		$id = $_REQUEST['id'];
@@ -942,6 +1100,10 @@ switch ($cmd)
 		break;
 		
 	case 'add_donation':
+		if (!$PRIV['edit_donor']) {
+			forbidden();
+			break;
+		}
 		global $db;
 		global $data;
 		$id = $_REQUEST['id'];
@@ -954,6 +1116,10 @@ switch ($cmd)
 		break;
 		
 	case 'remove_donation':
+		if (!$PRIV['del_donor']) {
+			forbidden();
+			break;
+		}
 		global $db;
 		global $data;
 		$id = $_REQUEST['id'];
@@ -962,10 +1128,12 @@ switch ($cmd)
 		$r = $db->q($sql);
 		getError($r);
 		break;
+
 	default:
 		$data['status'] = 404; // Not found
 		$data['message'] = "Unknown ajax command: $cmd";
 }
+
 echo json_encode($data);
 
 ?>
