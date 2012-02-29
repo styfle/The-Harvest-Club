@@ -141,8 +141,8 @@ CREATE TABLE growers (
   	pending TINYINT(1) DEFAULT 1, -- 1-Yes 0-No     
 	property_type_id INT NULL,
 	property_relationship_id INT NULL,
-	CONSTRAINT fk_property_type FOREIGN KEY (property_type_id) REFERENCES property_types(id) ON DELETE CASCADE,
-	CONSTRAINT fk_property_relationship FOREIGN KEY (property_relationship_id) REFERENCES property_relationships(id) ON DELETE CASCADE
+	CONSTRAINT fk_property_type FOREIGN KEY (property_type_id) REFERENCES property_types(id),
+	CONSTRAINT fk_property_relationship FOREIGN KEY (property_relationship_id) REFERENCES property_relationships(id)
 ) ENGINE=innodb;
 
 -- start temp insert (for debugging front end)
@@ -163,9 +163,9 @@ CREATE TABLE grower_trees (
 	number INT,
 	avgHeight_id INT, 
 	chemicaled TINYINT(1), -- 1 Yes -- 0 No	   
-	CONSTRAINT fk_grower_trees_grower FOREIGN KEY (grower_id) REFERENCES growers(id),
-	CONSTRAINT fk_grower_trees_tree FOREIGN KEY (tree_type) REFERENCES tree_types(id),
-	CONSTRAINT fk_grower_trees_height FOREIGN KEY (avgHeight_id) REFERENCES tree_heights(id)
+	CONSTRAINT fk_grower_trees_grower FOREIGN KEY (grower_id) REFERENCES growers(id) ON DELETE CASCADE,
+	CONSTRAINT fk_grower_trees_tree FOREIGN KEY (tree_type) REFERENCES tree_types(id) ON DELETE CASCADE,
+	CONSTRAINT fk_grower_trees_height FOREIGN KEY (avgHeight_id) REFERENCES tree_heights(id) ON DELETE CASCADE
 ) ENGINE=innodb;
 
 DROP TABLE IF EXISTS month_harvests;
@@ -173,8 +173,8 @@ CREATE TABLE month_harvests (
 	tree_id INT,
 	month_id INT,
 	CONSTRAINT pk_month_harvests_month_harvest PRIMARY KEY (tree_id, month_id),
-	CONSTRAINT fk_month_harvests_tree_type_id FOREIGN KEY (tree_id) REFERENCES grower_trees(id),
-	CONSTRAINT fk_month_harvests_month_id FOREIGN KEY (month_id) REFERENCES months(id)
+	CONSTRAINT fk_month_harvests_tree_type_id FOREIGN KEY (tree_id) REFERENCES grower_trees(id) ON DELETE CASCADE,
+	CONSTRAINT fk_month_harvests_month_id FOREIGN KEY (month_id) REFERENCES months(id) ON DELETE CASCADE
 ) ENGINE=innodb;
 
 -- start temp insert

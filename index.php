@@ -702,6 +702,73 @@ updateLastReq(); // loading page means user is active
 				break;
 				
 				case 2: // grower
+					$('input[name=select-row]:checked').each(function(){
+						deleteList.push($(this).parent().parent());
+					});
+					if(deleteList.length > 0)
+					{
+						//pop up confirmation window
+						var x = window.confirm("Are you sure you want to delete "+deleteList.length+" items");
+						if(x){
+							var deleted = 0;
+							$('input[name=select-row]:checked').each(function(){
+								var row = $(this).parent().parent();
+								var data = dt.fnGetData(row[0]);
+								var id = data[1];
+								var firstname = data[2];
+								var lastname = data[4];
+								//TODO Ajax needs to be sent at the end
+								$.ajax({							
+									'type': 'GET',
+									'url': 'ajax.php?cmd=remove_grower&id='+id,
+									'success': function (data) {
+										if (!validResponse(data))
+											return false;										
+										if (data.status != 200) {											
+											return alert('Information Cannot be Deleted: \n'+ firstname + ' ' + lastname + ' is a grower of an Event');
+										}
+										deleted++;
+										dt.fnDeleteRow(row[0]);
+										setInfo('Deleted ' + deleted + ' items');										
+									},
+									'error': ajaxError
+								});
+							});	
+						}
+					}						
+				break;
+				
+				case 3: // tree
+					$('input[name=select-row]:checked').each(function(){
+						deleteList.push($(this).parent().parent());
+					});
+					if(deleteList.length > 0){
+						//pop up confirmation window
+						var x = window.confirm("Are you sure you want to delete "+deleteList.length+" items");
+						if(x){
+							var deleted = 0;
+							$('input[name=select-row]:checked').each(function(){
+								var row = $(this).parent().parent();
+								var data = dt.fnGetData(row[0]);
+								var id = data[1];
+								deleteList.push(id);						
+							//TODO Ajax needs to be sent at the end
+								$.ajax({							
+									'type': 'GET',
+									'url': 'ajax.php?cmd=remove_tree&id='+id,
+									'success': function (data) {								
+										if (!validResponse(data))
+											return false;									
+										deleted++;
+										dt.fnDeleteRow(row[0]);
+										setInfo('Deleted ' + deleted + ' items');
+										console.log(data);
+									},
+									'error': ajaxError
+								});
+							});
+						}
+					}					
 				break;
 				
 				case 4: // distribution

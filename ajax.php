@@ -619,6 +619,24 @@ switch ($cmd)
 		$r = $db->q($sql);
 		getError($r);
 		break;
+	case 'remove_grower':
+		global $db;
+		global $data;
+		$id = $_REQUEST['id'];	
+		$sql = "DELETE FROM growers
+				WHERE id=$id";		
+		$r = $db->q($sql);				
+		getError($r);
+		break;
+	case 'remove_tree':
+		global $db;
+		global $data;
+		$id = $_REQUEST['id'];
+		$sql = "DELETE FROM grower_trees
+				WHERE id=$id";
+		$r = $db->q($sql);
+		getError($r);
+		break;
 	case 'send_email':
 		global $data;
 		global $mail;
