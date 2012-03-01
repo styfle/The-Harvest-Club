@@ -273,9 +273,10 @@ a {
 	text-decoration: none;
 }
 
-a:hover {
-	text-decoration: underline;
-}
+a:link {color: #0063DC;}
+a:visited {color: #0063DC;}
+a:hover {text-decoration: underline;}
+a:active {color: #0063FC;}
 
 ul {
 	color: #4E6CA3;
@@ -313,7 +314,17 @@ ul {
 	padding: 1px;
 }
 
+#status-icon {
+	float:left;
+	margin-right:.3em;
+}
 
+#me {
+	float:right;
+	font-size:10px;
+	color:#333;
+	text-shadow:none;
+}
 
 
 

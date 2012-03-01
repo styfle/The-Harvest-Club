@@ -1,8 +1,9 @@
 <?php
 require_once('include/auth.inc.php');
+require_once('include/Database.inc.php');
 
 if (!isLoggedIn()) { // if we're not logged in
-	header('Location: logout.php'); // redirect to login page
+	header('Location: login.php'); // redirect to login page
 	exit();
 }
 
@@ -12,6 +13,25 @@ if (isExpired()) { // if session expired
 }
 
 updateLastReq(); // loading page means user is active
+
+// try to get current user permissions
+$r = $db->q("SELECT p.*
+		FROM volunteers v
+		LEFT JOIN privileges p
+		ON v.privilege_id = p.id
+		WHERE v.id=$_SESSION[id]"
+);
+
+if (!$r->isValid())
+	die('An error occurred while checking your privileges.\nI cannot allow you to proceed.');
+
+// global containing all this user's privileges
+$PRIV = $r->buildArray();
+$PRIV = array_key_exists(0, $PRIV) ? $PRIV[0] : null;
+
+if (!$PRIV)
+	die('An error occurred while checking your privileges.\nI cannot allow you to proceed.');
+
 ?>
 <!doctype html>
 <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
@@ -26,7 +46,7 @@ updateLastReq(); // loading page means user is active
 	<!-- Use the .htaccess and remove these lines to avoid edge case issues. h5bp.com/b/378 -->
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title>The Harvest Club - CPanel</title>
+	<title><?php echo PAGE_TITLE; ?></title>
 	<meta name="description" content="">
 
 	<!-- Mobile viewport optimized: h5bp.com/viewport -->
@@ -47,16 +67,14 @@ updateLastReq(); // loading page means user is active
 	<script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
 	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
-	<script type="text/javascript" src="js/event.js"></script>
-	<script type="text/javascript" src="js/TableTools.nightly.min.js"></script>
 </head>
 
 <body>
 <div id="container">
 	<header>
 		<h1>
-			The Harvest Club - <span id="page_title">Loading...</span>
-			<span id="me" style="float:right; font-size:10px; color:#333; text-shadow:none;">
+			<?php echo PAGE_TITLE; ?> - <span id="page_title">Loading...</span>
+			<span id="me">
 				<a href="logout">Logout</a> as
 				<?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>
 			</span>
@@ -64,12 +82,12 @@ updateLastReq(); // loading page means user is active
 		<div id="quote">"The harvest is plentiful but the workers are few"</div>
 
 		<div id="status" class="invisible">
-			<span id="status-icon" class="ui-icon ui-icon-info" style="float:left; margin-right:.3em;"></span>
+			<span id="status-icon" class="ui-icon ui-icon-info"></span>
 			<span id="status-text">Welcome to your new CPanel!</span>
 		</div><!-- end status -->
 
 		<div class="toolbar">
-			<span id="toolbar" style="float: right" class="ui-widget-header ui-corner-all">
+			<span id="toolbar" class="css_right ui-widget-header ui-corner-all">
 				<button id="add-button">Add</button>
 				<button id="remove-button">Remove</button>
 				<button id="email-button">Email</button>
@@ -78,14 +96,21 @@ updateLastReq(); // loading page means user is active
 		</div><!-- End toolbar -->
 
 		<form>
-			<div id="nav" style="float: left"> 
+			<div id="nav" class="css_left"> 
 				<input type="radio" id="get_notifications" name="radio" checked="checked" /><label for="get_notifications">Home</label>
+				<?php if ($PRIV['view_volunteer']) { ?>
 				<input type="radio" id="get_volunteers" name="radio" /><label for="get_volunteers">Volunteers</label>
+				<?php } if ($PRIV['view_grower']) { ?>
 				<input type="radio" id="get_growers" name="radio" /><label for="get_growers">Growers</label>
+				<?php } if ($PRIV['view_grower']) { ?>
 				<input type="radio" id="get_trees" name="radio" /><label for="get_trees">Trees</label>
+				<?php } if ($PRIV['view_distrib']) { ?>
 				<input type="radio" id="get_distribs" name="radio" /><label for="get_distribs">Distribution Sites</label>
+				<?php } if ($PRIV['view_event']) { ?>
 				<input type="radio" id="get_events" name="radio" /><label for="get_events">Events</label>
+				<?php } if ($PRIV['view_donor']) { ?>
 				<input type="radio" id="get_donors" name="radio" /><label for="get_donors">Donors</label>
+				<?php } ?>
 			</div>
 		</form>
 	</header>
@@ -109,7 +134,13 @@ updateLastReq(); // loading page means user is active
 	
 	
 	
+	<script type="text/javascript" src="js/event.js"></script>
 	<script type="text/javascript" charset="utf-8">
+
+	// PRIVILEGES (astheic only)
+	var priv = <?php echo json_encode($PRIV); ?>;
+	for (var o in priv)
+		priv[o] = (priv[o] === '1'); // conver to bools
 
 	// GLOBAL FUNCTIONS (probably move to separate file)
 	
@@ -120,10 +151,8 @@ updateLastReq(); // loading page means user is active
 			'type': 'GET', 
 			'url': 'ajax.php?cmd=' + cmd, 
 			'success': function (data) {
-				if (!data || !data.status)
-					return alert('Error: Corrupt data returned from server!');
-				if (data.status != 200)
-					return alert('Status '+ data.status + '\n' + data.message);
+				if (!validResponse(data))
+					return false;
 				if (!data.datatable || !data.datatable.aoColumns || !data.datatable.aaData)
 					return alert('There is no column and row data!');
 				
@@ -238,12 +267,17 @@ updateLastReq(); // loading page means user is active
 	// check ajax response for our standard format
 	function validResponse(data) {
 		if (!data || !data.status) { // bad data
+			setError('Error: Corrupt data returned from server!');
 			alert('Error: Corrupt data returned from server!');
 			return false;
 		}
-		if (data.status == 401) { // unauthorized
-			alert(data.message);
-			window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1 ) + 'logout.php';
+		if (data.status != 200) { // not ok so display server message
+			setError(data.message);
+			alert('Status '+ data.status + '\n' + data.message);
+
+			if (data.status == 401) // unauthorized
+				window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) + 'logout.php';
+
 			return false;
 		}
 		return true;
@@ -251,7 +285,7 @@ updateLastReq(); // loading page means user is active
 
 	// Generic Ajax Error
 	function ajaxError(e) {
-		alert('Ajax Error!\n' + e.responseText);
+		alert('Ajax error (internet issue) occurred.\n' + e.responseText);
 	}
 
 	// GLOBAL VARIABLES
@@ -290,6 +324,8 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=update_volunteer&'+para,
 						'success': function (data) {
+							if (!validResponse(data))
+								return false;
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
 							for(var i = 1; i < row.length; i++) {
@@ -317,7 +353,8 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=update_grower&'+para,
 						'success': function (data) {
-							// check data.status if actually successful
+							if (!validResponse(data))
+								return false;
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
 							for(var i = 2; i < row.length; i++){
@@ -350,7 +387,8 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=update_tree&'+para,
 						'success': function (data) {
-							// check data.status if actually successful
+							if (!validResponse(data))
+								return false;
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
 							for(var i = 1; i < row.length; i++){					//Update Other fields
@@ -373,6 +411,8 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=update_distribution&'+para,
 						'success': function (data) {
+							if (!validResponse(data))
+								return false;
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
 							for(var i = 1; i < row.length; i++){
@@ -405,6 +445,8 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=update_donation&'+para,
 						'success': function (data) {
+							if (!validResponse(data))
+								return false;
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
 							for(var i = 1; i < row.length; i++){
@@ -446,10 +488,6 @@ updateLastReq(); // loading page means user is active
 						'success': function (data) {
 							if (!validResponse(data))
 								return false;
-							if (data.status != 200) {
-								setError('Information Cannot be Added');
-								return alert('Status '+ data.status + '\n' + data.message);
-							}
 							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
 							reloadTable("get_volunteers");									
@@ -471,9 +509,11 @@ updateLastReq(); // loading page means user is active
 						'type': 'GET',
 						'url': 'ajax.php?cmd=add_grower&'+para,
 						'success': function (data) {
-							setInfo('Information Updated');
+							if (!validResponse(data))
+								return false;
+							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
-							reloadTable("get_growers");
+							reloadTable("get_volunteers");									
 						},
 						'error': ajaxError
 					});
@@ -494,10 +534,6 @@ updateLastReq(); // loading page means user is active
 						'success': function (data) {
 							if (!validResponse(data))
 								return false;
-							if (data.status != 200) {
-								setError('Information Cannot be Added');
-								return alert('Status '+ data.status + '\n' + data.message);
-							}
 							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
 							reloadTable("get_trees");
@@ -514,10 +550,6 @@ updateLastReq(); // loading page means user is active
 						'success': function (data) {
 							if (!validResponse(data))
 								return false;
-							if (data.status != 200) {
-								setError('Information Cannot be Added');
-								return alert('Status '+ data.status + '\n' + data.message);
-							}
 							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
 							reloadTable("get_distribs");
@@ -543,10 +575,6 @@ updateLastReq(); // loading page means user is active
 						'success': function (data) {
 							if (!validResponse(data))
 								return false;
-							if (data.status != 200) {
-								setError('Information Cannot be Added');
-								return alert('Status '+ data.status + '\n' + data.message);
-							}
 							setInfo('Information Updated');
 							$('#edit-dialog').dialog('close');
 							reloadTable("get_donors");
@@ -569,10 +597,6 @@ updateLastReq(); // loading page means user is active
 				'success': function (data) {
 					if (!validResponse(data))
 						return false;
-					if (data.status != 200) {
-						setError('Email not sent. Maybe the mailserver is overloaded?');
-						return alert('Status '+ data.status + '\n' + data.message);
-					}
 					var bcc = $('#email [name=bcc]')[0];
 					setInfo('Email sent to ' + bcc.value.split(',').length + ' user(s).');
 					$('#edit-dialog').dialog('close');
@@ -624,6 +648,9 @@ updateLastReq(); // loading page means user is active
 			//Display the form you want, hide everything else
 			switch (currentTable)
 			{
+				case 0: // notifications
+					setError('Sorry but there is no reason to add a record to this table. It is strictly informational.');
+					return;
 				case 1: //volunteer
 					switchForm('volunteer');
 				break;
@@ -676,6 +703,9 @@ updateLastReq(); // loading page means user is active
 
 			switch (currentTable)
 			{
+				case 0: // notifications
+					setError('Sorry but there is no reason to remove a record to this table. It is strictly informational.');
+					return;
 				case 1: //volunteer
 					$('input[name=select-row]:checked').each(function(){
 						deleteList.push($(this).parent().parent());
@@ -701,9 +731,6 @@ updateLastReq(); // loading page means user is active
 									'success': function (data) {
 										if (!validResponse(data))
 											return false;
-										if (data.status != 200) {
-											return alert('Information Cannot be Deleted: \n'+ firstname + ' ' + lastname + ' is either a Volunteer/Harvest Captain of an Event');
-										}
 										deleted++;
 										dt.fnDeleteRow(row[0]);
 										setInfo('Deleted ' + deleted + ' items');
@@ -742,9 +769,6 @@ updateLastReq(); // loading page means user is active
 									'success': function (data) {
 										if (!validResponse(data))
 											return false;										
-										if (data.status != 200) {											
-											return alert('Information Cannot be Deleted: \n'+ firstname + ' ' + lastname + ' is a grower of an Event');
-										}
 										deleted++;
 										dt.fnDeleteRow(row[0]);
 										setInfo('Deleted ' + deleted + ' items');										
@@ -871,7 +895,7 @@ updateLastReq(); // loading page means user is active
 				emailList.push(emailAddr);
 			}); // :checked end
 			if (iEmail == -1) {
-				setInfo('There is no email address in this table. How do you expect to send email?');
+				setError('There is no email address in this table. How do you expect to send email?');
 				return false;
 			}
 			if (emailList.length == 0) {
@@ -893,7 +917,10 @@ updateLastReq(); // loading page means user is active
 				primary: "ui-icon-arrowthickstop-1-s"
 			},
 			text: false
-		});
+		}).click(function() {
+			setError('Export unavailable at this time.');
+			return false;
+		}); // .click() export end
 	});
 	
 	$(document).ready(function() {
@@ -935,8 +962,6 @@ updateLastReq(); // loading page means user is active
 				'success': function (data) {
 					if (!validResponse(data))
 						return false;
-					if (data.status != 200)
-						return alert('Status '+ data.status + '\n' + data.message);
 					if (!data.datatable || !data.datatable.aoColumns || !data.datatable.aaData)
 						return alert('There is no column and row data!');
 					
@@ -1037,6 +1062,8 @@ updateLastReq(); // loading page means user is active
                         'type': 'GET',
                         'url': 'ajax.php?cmd=get_volunteer_role&id='+row[1],
                         'success': function (data) {
+							if (!validResponse(data))
+								return false;
 							for ( var i=1; i< 5; ++i )   // clear data
 							  $('#volunteerRole'+i).prop("checked", false);
 							
@@ -1053,6 +1080,8 @@ updateLastReq(); // loading page means user is active
                         'type': 'GET',
                         'url': 'ajax.php?cmd=get_volunteer_prefer&id='+row[1],
                         'success': function (data) {
+							if (!validResponse(data))
+								return false;
 							for ( var i=1; i< 8; ++i )   // clear data
 							  $('#volunteerDay'+i).prop("checked", false);
 							
@@ -1093,6 +1122,8 @@ updateLastReq(); // loading page means user is active
                         'type': 'GET',
                         'url': 'ajax.php?cmd=get_tree_month&id='+row[1],
                         'success': function (data) {
+							if (!validResponse(data))
+								return false;
 							for ( var i=1; i< 13; ++i )   // clear data
 							  $('#tree_month'+i).prop("checked", false);
 							
@@ -1117,6 +1148,8 @@ updateLastReq(); // loading page means user is active
                         'type': 'GET',
                         'url': 'ajax.php?cmd=get_distribution_times&id='+row[1],
                         'success': function (data) {
+							if (!validResponse(data))
+								return false;
 							for (var i=0; i< 8; ++i)   // clear data
 							{
 								$('#distributionHour' +i+'-OpenHour').val('');
@@ -1231,6 +1264,8 @@ updateLastReq(); // loading page means user is active
 			'type': 'GET',
 			'url': 'ajax.php?cmd=approve_grower&growerID='+growerID,
 			'success': function (data) {
+				if (!validResponse(data))
+					return false;
 				setInfo('Information Updated');
 				//$('#edit-dialog').dialog('close');
 				reloadTable("get_growers");

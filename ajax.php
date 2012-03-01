@@ -24,6 +24,8 @@ if (isExpired()) { // if session expired, tell user
 	exit();
 }
 
+updateLastReq(); // ajax req means user is active
+
 $cmd = $_REQUEST['cmd']; // get command to perform
 $data = array('status'=>200); // default to OK
 
@@ -32,7 +34,7 @@ $r = $db->q("SELECT p.*
 		FROM volunteers v
 		LEFT JOIN privileges p
 		ON v.privilege_id = p.id
-		WHERE v.id=".$_SESSION['id']
+		WHERE v.id=$_SESSION[id]"
 );
 
 if (!$r->isValid()) {
@@ -747,28 +749,14 @@ switch ($cmd)
 		}
 		global $data;
 		global $mail;
-		global $db;
-		// check if user can send email
-		$sql = "SELECT send_email,email FROM volunteers v
-				LEFT JOIN privileges p ON v.privilege_id = p.id
-				WHERE v.id=1"; // TODO user auth needed here
-		$r = $db->q($sql);
-		//getError($r);
-		$a = $r->buildArray();
-		$can_send = $a[0];
-		$my_email = $a[1];
-		if (!$can_send) { // not allowed to send email
-			$data['status'] = 403; // forbidden
-			$data['message'] = 'You are not allowed to send email!';
-		} else {
-			$bcc = $_REQUEST['bcc'];
-			$subject = $_REQUEST['subject'];
-			$message = $_REQUEST['message'];
-			$sent = $mail->sendBulk($subject, $message, $bcc); // maybe use $my_email for replyto
-			if (!$sent) {
-				$data['status'] = 500;
-				$data['message'] = 'Mail could not be sent!';
-			}
+		$my_email = $_SESSION['email'];
+		$bcc = $_REQUEST['bcc'];
+		$subject = $_REQUEST['subject'];
+		$message = $_REQUEST['message'];
+		$sent = $mail->sendBulk($subject, $message, $bcc); // maybe use $my_email for replyto
+		if (!$sent) {
+			$data['status'] = 500;
+			$data['message'] = 'Oh boy. Mail could not be sent! Maybe the server is overloaded?';
 		}
 		break;
 	case 'get_donors':
