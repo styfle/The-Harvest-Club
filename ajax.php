@@ -37,18 +37,20 @@ $r = $db->q("SELECT p.*
 		WHERE v.id=$_SESSION[id]"
 );
 
-if (!$r->isValid()) {
-	echo json_encode(array(
+$priv_error = json_encode(array(
 		'status'=>500, //  db error
 		'message'=>'An error occurred while checking your privileges.\nI cannot allow you to proceed.'
-		)
-	);
-	exit();
-}
+	)
+);
+if (!$r->isValid())
+	die($priv_error);
 
 // global containing all this user's privileges
 $PRIV = $r->buildArray();
 $PRIV = array_key_exists(0, $PRIV) ? $PRIV[0] : null;
+
+if ($PRIV == null)
+	die($priv_error);
 
 function forbidden() {
 	global $data;
@@ -65,6 +67,7 @@ function updateVolunteer($exists) {
 	global $db;
 	global $data;
 	global $mail;
+	global $PRIV;
 	$id = $_REQUEST['id'];						
 	$firstName = $_REQUEST['firstname'];		
 	$middleName = $_REQUEST['middlename'];
@@ -77,15 +80,21 @@ function updateVolunteer($exists) {
 	$city = $_REQUEST['city'];
 	$state = $_REQUEST['state'];
 	$zip = $_REQUEST['zip'];
-	$priv_id = $_REQUEST['privilege_id'];
 	$notes =  $_REQUEST['note'];
+	/* forget about source id
     if(!isset($_REQUEST['source_id']))
 		$source_id = 1; // Default to "Others";
     else
 		$source_id = $_REQUEST['source_id'];
+	*/
+
+    if (isset($_REQUEST['privilege_id']))
+		$priv_id = $_REQUEST['privilege_id'];
+	else
+		$priv_id = null;
 	
 	if ($exists) { // volunteer exists so just update
-		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', organization='$organization', phone='$phone', email='$email', status=$status, street='$street', city='$city', state='$state',zip='$zip', notes='$notes', where id=$id";						
+		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', organization='$organization', phone='$phone', email='$email', status=$status, street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";						
 		$r = $db->q($sql);
 		getError($r);
 		
@@ -114,13 +123,18 @@ function updateVolunteer($exists) {
 		$r = $db->q($sql);
 		$row = $r->getRow();
 		
-		if ($priv_id != $row[0]) { // privs have changed
+		if ($priv_id != null && $priv_id != $row[0]) { // privs have changed
+			if (!$PRIV['change_priv']) { // make sure this user can modify other users
+				$data['status']=403;
+				$data['message']='Are you trying to hack us? You cannot change user privileges!';
+				return;
+			}
 			$sql = "UPDATE volunteers SET privilege_id=$priv_id"; // new priv
 			$message = "$firstName $lastName,\r\nYour privileges have changed. You are now a(n) $row[1]!\r\n";
 			if (empty($row[3])) { // no password
 				$pass = generatePassword(); // so generate
 				// http://dev.mysql.com/doc/refman/5.5/en/encryption-functions.html#function_sha2
-				$sql .= ", password = SHA2($pass) "; // and add to update
+				$sql .= ", password = SHA2('$pass', 256) "; // and add to update
 				$message .=  "The following password has been generated for you:\r\n$pass";
 			}
 			$sql .= " WHERE id=$id"; // only update this volunteer
@@ -130,11 +144,9 @@ function updateVolunteer($exists) {
 			$mail->send($subject, $message, $email); // use default from/replyto
 		}
 	
-	} 
-	else // adding new volunteer
-	{ 
-		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, status, street, city, state, zip, privilege_id, notes, source_id, signed_up) VALUES
-		('$firstName', '$middleName', '$lastName', '$organization', '$phone', '$email', '$status', '$street', '$city', '$state', '$zip', '$priv_id', '$notes', $source_id, CURDATE())";
+	} else { // adding new volunteer
+		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, status, street, city, state, zip, privilege_id, notes, signed_up) VALUES
+		('$firstName', '$middleName', '$lastName', '$organization', '$phone', '$email', '$status', '$street', '$city', '$state', '$zip', '$priv_id', '$notes', CURDATE())";
 		$r = $db->q($sql);
 		getError($r);
 

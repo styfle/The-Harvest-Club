@@ -23,14 +23,14 @@ $r = $db->q("SELECT p.*
 );
 
 if (!$r->isValid())
-	die('An error occurred while checking your privileges.\nI cannot allow you to proceed.');
+	die('<h1>Error 500</h1>An error occurred while checking your privileges. I cannot allow you to proceed.</p>');
 
 // global containing all this user's privileges
 $PRIV = $r->buildArray();
 $PRIV = array_key_exists(0, $PRIV) ? $PRIV[0] : null;
 
 if (!$PRIV)
-	die('An error occurred while checking your privileges.\nI cannot allow you to proceed.');
+	die('<h1>Error 500</h1>An error occurred while checking your privileges. I cannot allow you to proceed.</p>');
 
 ?>
 <!doctype html>
@@ -89,7 +89,7 @@ if (!$PRIV)
 		<div class="toolbar">
 			<span id="toolbar" class="css_right ui-widget-header ui-corner-all">
 				<button id="add-button">Add</button>
-				<button id="remove-button">Remove</button>
+				<button id="del-button">Delete</button>
 				<button id="email-button">Email</button>
 				<button id="export-button">Export</button>
 			</span>
@@ -140,7 +140,7 @@ if (!$PRIV)
 	// PRIVILEGES (astheic only)
 	var priv = <?php echo json_encode($PRIV); ?>;
 	for (var o in priv)
-		priv[o] = (priv[o] === '1'); // conver to bools
+		priv[o] = (priv[o] === '1'); // convert to bools for quick checks
 
 	// GLOBAL FUNCTIONS (probably move to separate file)
 	
@@ -286,6 +286,21 @@ if (!$PRIV)
 	// Generic Ajax Error
 	function ajaxError(e) {
 		alert('Ajax error (internet issue) occurred.\n' + e.responseText);
+	}
+
+	// show or hide 4 buttons at the top right
+	function showAddDelEmailExport(add, del, eml, exp) {
+		if(add)	$('#add-button').removeClass('hidden');
+		else	$('#add-button').addClass('hidden');
+
+		if(del)	$('#del-button').removeClass('hidden');
+		else	$('#del-button').addClass('hidden');
+
+		if(eml)	$('#email-button').removeClass('hidden');
+		else	$('#email-button').addClass('hidden');
+
+		if(exp)	$('#export-button').removeClass('hidden');
+		else	$('#export-button').addClass('hidden');
 	}
 
 	// GLOBAL VARIABLES
@@ -612,6 +627,7 @@ if (!$PRIV)
 			$(this).dialog('close');
 		}
 	}; 
+
 	
 	$(function() {
 		$("#add-button").button({
@@ -694,8 +710,8 @@ if (!$PRIV)
 			
 		});
 
-		$("#remove-button").button({
-			label: "Remove Selected",
+		$("#del-button").button({
+			label: "Delete Selected",
 			icons: { primary: "ui-icon-trash" },
 			text: false
 		}).click(function()	{
@@ -713,7 +729,7 @@ if (!$PRIV)
 					if(deleteList.length > 0)
 					{
 						//pop up confirmation window
-						var x = window.confirm("Are you sure you want to delete "+deleteList.length+" items");
+						var x = window.confirm("Are you sure you want to delete "+deleteList.length+" items?");
 						if(x)
 						{
 							var deleted = 0;
@@ -733,13 +749,10 @@ if (!$PRIV)
 											return false;
 										deleted++;
 										dt.fnDeleteRow(row[0]);
-										setInfo('Deleted ' + deleted + ' items');
-										//console.log(data);
-										//alert('Information is Removed!');
+										setInfo('Deleted ' + deleted + ' volunteers.');
 									},
 									'error': ajaxError
 								});
-								//row.remove();
 							});
 
 						}
@@ -988,38 +1001,62 @@ if (!$PRIV)
 
 					currentTable = data.id; // set current table after it is populated
 					$('#page_title').text(data.title); // set page title
-					if(currentTable == 3){									//If current Tab is Trees 
-						if(growerID != 0){
-							$('#dt tbody tr').each(function() {				//For every row in the table
-								tempId = dt.fnGetData(this)[3];    			//Get growerID of current row in Tree tabs
-								if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
-									dt.fnDeleteRow(this);					// so it is not in this view
-							});					
-						}						
-						growerID = 0;										//Reset growerID
+					switch (currentTable)
+					{
+						case 0:
+							showAddDelEmailExport(0,0,0,0);
+						break;
+
+						case 1: // volunteers
+							showAddDelEmailExport(priv.edit_volunteer, priv.del_volunteer, priv.send_email, priv.exp_volunteer);
+							if(privilegeID == 1) {
+								$('#dt tbody tr').each(function() {
+									tempId = dt.fnGetData(this)[14];
+									if(tempId != privilegeID)
+										dt.fnDeleteRow(this);
+								});
+							}
+							privilegeID = 0;
+						break;
+
+						case 2: // growers
+							showAddDelEmailExport(priv.edit_grower, priv.del_grower, priv.send_email, priv.exp_grower);
+							if(pending == 1) {
+								$('#dt tbody tr').each(function() {
+									tempId = dt.fnGetData(this)[15];
+									if(tempId != pending)
+										dt.fnDeleteRow(this);
+								});
+							}
+							pending = 0;
+						break;
+
+						case 3: // Trees
+							showAddDelEmailExport(priv.edit_grower, priv.del_grower, 0, priv.exp_grower); // tree has no email
+							if(growerID != 0){
+								$('#dt tbody tr').each(function() {				//For every row in the table
+									tempId = dt.fnGetData(this)[3];    			//Get growerID of current row in Tree tabs
+									if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
+										dt.fnDeleteRow(this);					// so it is not in this view
+								});					
+							}						
+							growerID = 0;										//Reset growerID
+						break;
+
+						case 4: // distribution sites
+							showAddDelEmailExport(priv.edit_distrib, priv.del_distrib, priv.send_email, priv.exp_distrib);
+						break;
+
+						case 5: // events
+							showAddDelEmailExport(priv.edit_event, priv.del_event, 0, priv.exp_event); // no email
+						break;
+
+						case 6: // donations
+							showAddDelEmailExport(priv.edit_donor, priv.del_donor, 0, priv.exp_donor); // no email
+						break;
+
 					}
 
-					if(currentTable == 1) {
-						if(privilegeID == 1) {
-							$('#dt tbody tr').each(function() {
-								tempId = dt.fnGetData(this)[14];
-								if(tempId != privilegeID)
-									dt.fnDeleteRow(this);
-							});
-						}
-						privilegeID = 0;
-					}
-
-					if(currentTable == 2) {
-						if(pending == 1) {
-							$('#dt tbody tr').each(function() {
-								tempId = dt.fnGetData(this)[15];
-								if(tempId != pending)
-									dt.fnDeleteRow(this);
-							});
-						}
-						pending = 0;
-					}
 
 				},
 				'error': ajaxError
@@ -1046,6 +1083,7 @@ if (!$PRIV)
 		$(document).on('click', '#dt tbody tr',function(e) {
 			row = (dt.fnGetData(this));
 			aPos = dt.fnGetPosition( this );
+			var buttonList = [cancelButton];
 			switch (currentTable)
 			{
 				case 0: //notification
@@ -1053,50 +1091,53 @@ if (!$PRIV)
 				break;
 
 				case 1: //volunteer
-				switchForm('volunteer');
-				for (var i = 0; i < row.length; i++)
-					$('#volunteer' + i).val(row[i]);
+					switchForm('volunteer');
+					if (priv.edit_volunteer)
+						buttonList.unshift(saveButton);
+					for (var i = 0; i < row.length; i++)
+						$('#volunteer' + i).val(row[i]);
 
-				$.ajax({
-                        'dataType': 'json',
-                        'type': 'GET',
-                        'url': 'ajax.php?cmd=get_volunteer_role&id='+row[1],
-                        'success': function (data) {
-							if (!validResponse(data))
-								return false;
-							for ( var i=1; i< 5; ++i )   // clear data
-							  $('#volunteerRole'+i).prop("checked", false);
-							
-							if( data.datatable != null) 							
-					   		 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
-								$('#volunteerRole'+data.datatable.aaData[i][0]).prop("checked", true);									
-									
-                        },
-                        'error': ajaxError
-                    });
-					
-				$.ajax({
-                        'dataType': 'json',
-                        'type': 'GET',
-                        'url': 'ajax.php?cmd=get_volunteer_prefer&id='+row[1],
-                        'success': function (data) {
-							if (!validResponse(data))
-								return false;
-							for ( var i=1; i< 8; ++i )   // clear data
-							  $('#volunteerDay'+i).prop("checked", false);
-							
-							if( data.datatable != null) 							
-					   		 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
-								$('#volunteerDay'+data.datatable.aaData[i][0]).prop("checked", true);									
-									
-                        },
-                        'error': ajaxError
-                    });
-					
+					$.ajax({
+							'dataType': 'json',
+							'type': 'GET',
+							'url': 'ajax.php?cmd=get_volunteer_role&id='+row[1],
+							'success': function (data) {
+								if (!validResponse(data))
+									return false;
+								for ( var i=1; i< 5; ++i )   // clear data
+								  $('#volunteerRole'+i).prop("checked", false);
+								
+								if( data.datatable != null) 							
+								 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
+									$('#volunteerRole'+data.datatable.aaData[i][0]).prop("checked", true);									
+										
+							},
+							'error': ajaxError
+						});
+						
+					$.ajax({
+							'dataType': 'json',
+							'type': 'GET',
+							'url': 'ajax.php?cmd=get_volunteer_prefer&id='+row[1],
+							'success': function (data) {
+								if (!validResponse(data))
+									return false;
+								for ( var i=1; i< 8; ++i )   // clear data
+								  $('#volunteerDay'+i).prop("checked", false);
+								
+								if( data.datatable != null) 							
+								 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
+									$('#volunteerDay'+data.datatable.aaData[i][0]).prop("checked", true);									
+										
+							},
+							'error': ajaxError
+						});
 				break;
 				
 				case 2: // grower
 					switchForm('grower');					
+					if (priv.edit_grower)
+						buttonList.unshift(saveButton);
 					
 					for (var i = 1; i < row.length; i++)
 						$('#grower' + i).val(row[i]);
@@ -1115,6 +1156,8 @@ if (!$PRIV)
 				
 				case 3: // tree
 					switchForm('tree');
+					if (priv.edit_grower)
+						buttonList.unshift(saveButton);
 					for (var i = 1; i < row.length; i++)
 						$('#tree' + i).val(row[i]);
 					$.ajax({
@@ -1141,6 +1184,8 @@ if (!$PRIV)
 				case 4: // distribution
 					initHours();
 					switchForm('distribution');
+					if (priv.edit_distrib)
+						buttonList.unshift(saveButton);
                     for (var i = 1; i < row.length; i++)
                         $('#distribution' + i).val(row[i]);                                                                            
                     $.ajax({
@@ -1175,6 +1220,8 @@ if (!$PRIV)
 				break;
 			
 				case 5: // event				
+					if (priv.edit_event)
+						buttonList.unshift(saveButton);
 					for (var i = 1; i < row.length; i++)
 						$('#event' + i).val(row[i]);
 					event_id = row[1];	
@@ -1185,18 +1232,20 @@ if (!$PRIV)
 				break;
 				
 				case 6: // donation
+					switchForm('donation');
+					if (priv.edit_donor)
+						buttonList.unshift(saveButton);
 					for (var i = 1; i < row.length; i++)
                     	$('#donations' + i).val(row[i]);
-					switchForm('donation');
 					$('#donations5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
 				break;	
 
 
-			}			
+			}
 			
-			$('#edit-dialog').dialog("option", "buttons", [saveButton, cancelButton]);
+			$('#edit-dialog').dialog("option", "buttons", buttonList);
 			$('#edit-dialog').dialog({ title: 'Edit Record' });
-			if(currentTable != 0)
+			if(currentTable != 0) // don't show dialog for notifications
 				$('#edit-dialog').dialog('open') // show dialog
 		}); // on.click tr
 		

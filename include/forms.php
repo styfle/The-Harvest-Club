@@ -47,6 +47,12 @@ $avgHeight = $r->buildArray();
 	<form id="volunteer" class="hidden">
 		<h3>Volunteer</h3>
 		<table>
+		<?php if ($PRIV['appr_volunteer']) { ?>
+		<tr>
+			<td>*Pending approval</td>
+			<td colspan="2"><input type="button" name="approve" value="Approve" onclick="approveGrower();"/></td>
+		</tr>
+		<?php } ?>
 		<tr>
 			<td colspan="3" class="hidden"><input id="volunteer1" name="id" type="text" size="2"/></td>
 		</tr>
@@ -185,7 +191,7 @@ $avgHeight = $r->buildArray();
 		<tr>
 			<td><b>User Type</b></td>
 			<td colspan="2">
-				<?php echo options('volunteer14', 'privilege_id', $privileges); ?>
+				<?php echo options('volunteer14', 'privilege_id', $privileges, !$PRIV['change_priv']); ?>
 			</td>
 		</tr>
 		
@@ -202,12 +208,13 @@ $avgHeight = $r->buildArray();
 	<form id="grower" class="hidden">
 		<h3>Grower</h3>
 		<table>	
-		<div id="pending">
-			<div><b>This person's application is still pending for approval. Would you like to approve this application?</b></div>			
-			<div><input type="button" name="approve" id="approve" value="Approve" OnClick="approveGrower();"/></div>		
-		</div>
+		<?php if ($PRIV['appr_grower']) { ?>
+		<tr>
+			<td colspan="2">*Pending approval</td>
+			<td><input type="button" name="approve" value="Approve" onclick="approveGrower();"/></td>
+		</tr>
+		<?php } ?>
 		
-		<?php echo $empty_cell ?>
 		<tr>
 			<td colspan="3" class="hidden"><input id="grower1" name="id" type="text" size="2"/></td>
 		</tr>
@@ -262,10 +269,10 @@ $avgHeight = $r->buildArray();
 			<td><input type="text" name="zip" id="grower11" size="8" required="required"/></td>
 		</tr>
 		<tr>
-			<td colspan="3"><b>Sources</b></td>			
+			<td colspan="3"><b>Source</b></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><?php echo options('grower13', 'source_id', $sources, true); ?></td>			
+			<td colspan="3"><?php echo options('grower13', 'source_id', $sources, true); ?></td>
 		</tr>	
 		<tr>
 			<td colspan="3"><label for="grower17">Property Type</label></td>
@@ -459,7 +466,6 @@ $avgHeight = $r->buildArray();
 				<td><select name="distributionHour1-CloseHour" id ="distributionHour1-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
 				<td><select name="distributionHour1-CloseMin" id ="distributionHour1-CloseMin"></select></td>
-				
 			</tr>				
 			<tr>	
 				<td><label for="city">Tuesday </label></td>			
@@ -471,7 +477,6 @@ $avgHeight = $r->buildArray();
 				<td><select name="distributionHour2-CloseHour" id ="distributionHour2-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
 				<td><select name="distributionHour2-CloseMin" id ="distributionHour2-CloseMin"></select></td>
-				
 			</tr>			
 			<tr>	
 				<td><label for="city">Wednesday </label></td>			
@@ -483,7 +488,6 @@ $avgHeight = $r->buildArray();
 				<td><select name="distributionHour3-CloseHour" id ="distributionHour3-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
 				<td><select name="distributionHour3-CloseMin" id ="distributionHour3-CloseMin"></select></td>
-				
 			</tr>		
 			<tr>	
 				<td><label for="city">Thursday </label></td>			
@@ -495,7 +499,6 @@ $avgHeight = $r->buildArray();
 				<td><select name="distributionHour4-CloseHour" id ="distributionHour4-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
 				<td><select name="distributionHour4-CloseMin" id ="distributionHour4-CloseMin"></select></td>
-				
 			</tr>		
 			<tr>	
 				<td><label for="city">Friday </label></td>			
@@ -507,7 +510,6 @@ $avgHeight = $r->buildArray();
 				<td><select name="distributionHour5-CloseHour" id ="distributionHour5-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
 				<td><select name="distributionHour5-CloseMin" id ="distributionHour5-CloseMin"></select></td>
-				
 			</tr>		
 			<tr>	
 				<td><label for="city">Saturday </label></td>			
@@ -519,7 +521,6 @@ $avgHeight = $r->buildArray();
 				<td><select name="distributionHour6-CloseHour" id ="distributionHour6-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
 				<td><select name="distributionHour6-CloseMin" id ="distributionHour6-CloseMin"></select></td>
-				
 			</tr>		
 			<tr>	
 				<td><label for="city">Sunday </label></td>			
@@ -531,7 +532,6 @@ $avgHeight = $r->buildArray();
 				<td><select name="distributionHour7-CloseHour" id ="distributionHour7-CloseHour"></select></td>
 				<td><label size="1">:</label></td>			
 				<td><select name="distributionHour7-CloseMin" id ="distributionHour7-CloseMin"></select></td>
-				
 			</tr>		
 		</table>
 	<div style="margin-top:5px;">
