@@ -125,7 +125,6 @@ if (!$PRIV)
 	
 	<footer id="footer">
 		The Harvest Club &copy; 
-		<a >Click</a>
 		<?php 
 			date_default_timezone_set('America/Los_Angeles');
 			echo date('Y');
