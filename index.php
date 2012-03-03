@@ -91,7 +91,7 @@ if (!$PRIV)
 				<button id="add-button">Add</button>
 				<button id="del-button">Delete</button>
 				<button id="email-button">Email</button>
-				<button id="export-button">Export</button>
+				<button id="export-button" OnClick="location.href='export.php'">Export</button>
 			</span>
 		</div><!-- End toolbar -->
 
@@ -125,6 +125,7 @@ if (!$PRIV)
 	
 	<footer id="footer">
 		The Harvest Club &copy; 
+		<a >Click</a>
 		<?php 
 			date_default_timezone_set('America/Los_Angeles');
 			echo date('Y');
@@ -931,7 +932,7 @@ if (!$PRIV)
 			},
 			text: false
 		}).click(function() {
-			setError('Export unavailable at this time.');
+			//setError('Export unavailable at this time.');
 			return false;
 		}); // .click() export end
 	});
