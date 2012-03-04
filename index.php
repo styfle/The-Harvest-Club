@@ -944,55 +944,24 @@ if (!$PRIV)
 			var exportList = [];
 			var arrayID = [];
 			
-			switch (currentTable)
-			{
-				case 0: // notifications
-					setError('No Export for this table.');
-					return;
-				case 1: //volunteer
-					//arrayID.clear();
-					$('input[name=select-row]:checked').each(function(){						
-						exportList.push($(this).parent().parent());
-					});
-					if(exportList.length > 0)
-					{										
-						$('input[name=select-row]:checked').each(function(){						
-							var row = $(this).parent().parent();
-							var data = dt.fnGetData(row[0]);
-							var id = data[1];;
-							arrayID.push(id);
-													
-						});												
-					}
-					alert(arrayID);
-					$.post('export.php', {'arrayID[]':arrayID}); //, function(){
-						//document.location.href = 'export.php';        
-					//});
-
-					window.location.replace("test.csv");		
-				break;
-				
-				case 2: // grower
-							
-				break;
-				
-				case 3: // tree
-					
-				break;
-				
-				case 4: // distribution
-						
-				break;
-						
-				case 5: // event
-					
-                break;
-				
-				case 6: // donation
-							
-				break;
-			}		
-
+			$('input[name=select-row]:checked').each(function(){						
+				exportList.push($(this).parent().parent());
+			});
+			if (exportList.length <= 0) {
+				setInfo('Select 1 or more checkboxes to Export.');
+				return false;
+			}
+			else {										
+				$('input[name=select-row]:checked').each(function(){						
+					var row = $(this).parent().parent();
+					var data = dt.fnGetData(row[0]);
+					var id = data[1];
+					arrayID.push(id);
+				});												
+				alert("Exporting "+exportList.length+" row(s) of data");
+				window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
+					+ 'export.php?arrayID[]='+arrayID+'&table='+currentTable;
+			}
 		}); // .click() export end
 	});
 	

@@ -2,15 +2,40 @@
 
 	require_once('include/Database.inc.php');
 
-	//header("Content-type: application/octet-stream");
-	//header("Content-Disposition: attachment; filename=\"test.csv\"");
+	header("Content-type: application/octet-stream");
+	header("Content-Disposition: attachment; filename=\"test.csv\"");
+	header("Content-Transfer-Encoding: binary");
+	header("Pragma: no-cache");
+	header("Cache-Control: no-cache, must-revalidate");
+	header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
+	$table = $_REQUEST['table'];
 	$arrayID = $_REQUEST['arrayID'];
 	$ids = join(',',$arrayID);
 	
-	$fp = fopen("test.csv", "w");
+//	$fp = fopen("test.csv", "w");
 
-	$res = mysql_query("SELECT * FROM volunteers WHERE id IN($ids) ");
+	switch ($table)
+	{
+		case 1: //volunteer
+			$res = mysql_query("SELECT first_name, middle_name, last_name FROM volunteers WHERE id IN($ids) ");
+		break;
+		
+		case 2: // grower
+		break;
+		
+		case 3: // tree
+		break;
+		
+		case 4: // distribution
+		break;
+				
+		case 5: // event
+		break;
+		
+		case 6: // donation
+		break;
+	}		
 
 	// fetch a row and write the column names out to the file
 	$row = mysql_fetch_assoc($res);
@@ -21,7 +46,8 @@
 		$comma = ",";
 	}
 	$line .= "\n";
-	fputs($fp, $line);
+//	fputs($fp, $line);
+	echo ($line);
 
 	// remove the result pointer back to the start
 	mysql_data_seek($res, 0);
@@ -36,11 +62,11 @@
 			$comma = ",";
 		}
 		$line .= "\n";
-		fputs($fp, $line);
-	   
+//		fputs($fp, $line);
+		echo ($line);
 	}
 
-	fclose($fp);	
+//	fclose($fp);	
  
 
 ?>
