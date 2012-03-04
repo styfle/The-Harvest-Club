@@ -34,8 +34,9 @@ $months = $r->buildArray();
 
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
 	<title>Grower Registration</title>
 	<script src="js/jquery-1.7.1.min.js"></script>
 	<script>
@@ -71,15 +72,14 @@ $months = $r->buildArray();
     	
     	<fieldset>
     		<legend>Contact</legend>
-    		<label for="email">Email*</label><input id="email" type="email" name="email" placeholder="peter@uci.edu" required="required" />
-    		<label for="phone">Phone*</label><input id="phone" type="tel" name="phone" placeholder="9495551234" pattern="[0-9]{10}" required="required" />
+    		<label for="phone">Phone*</label><input id="phone" type="tel" name="phone" placeholder="(949) 555-1234" required="required" />
+    		<label for="email">Email</label><input id="email" type="email" name="email" placeholder="peter@uci.edu" />
     		<div>
 				<label>Preferred Contact* </label>
 				&nbsp;
-				<input id="contact-email" name="prefer" type="radio" value="email" checked="checked" /><label for="contact-email">Email</label>
+				<input id="contact-phone" name="prefer" type="radio" value="phone" checked="checked"/><label for="contact-phone">Phone</label>
 				&nbsp;
-				<input id="contact-phone" name="prefer" type="radio" value="phone"/><label for="contact-phone">Phone</label>
-				<!--input id="contact-address" name="prefer" type="radio" /><label for="contact-address">Mail</label-->
+				<input id="contact-email" name="prefer" type="radio" value="email" /><label for="contact-email">Email</label>
 			</div>
     	</fieldset>
     	
@@ -148,7 +148,6 @@ $months = $r->buildArray();
 					<option value="WI">Wisconsin</option> 
 					<option value="WY">Wyoming</option>
 				</select>
-				<!-- input type="text" name="state" id="state" placeholder="CA"  size="2" pattern="[A-Z]{2}" required="required" /-->
 				<label for="zip">Zip*</label><input type="text" name="zip" id="zip" placeholder="92617" size="4" pattern="[0-9]{5}" required="required" />
 			</div>
 			
@@ -190,7 +189,7 @@ $months = $r->buildArray();
 		<h2>Tree Information</h2>
 		
 		<div>
-			<label for="type-count">How many different types of trees would you like to register?</label>
+			<label for="type-count">How many different types of trees (or other kinds or produce) would you like to register?</label>
 			<select id="type-count" name="type-count" required="required" onchange="changeTreeCount(this);">
 				<option value="" disabled="disabled" selected="selected">Select...</option>
 				<option value="1">1</option>
@@ -246,7 +245,8 @@ $months = $r->buildArray();
 			var legend = document.createElement('legend');
 			$(legend).text('Tree Type ' + i);
 			
-			var type = '<div> <label>Tree Type* (Orange, Apple, etc.)</label> <select name="trees[tree'+i+'][type]" required="required"> ';
+			var type = '<div>Produce other than tree fruits can be registered by selecting "Other" below.</div>';
+			type += '<div> <label>Tree Type* (Orange, Apple, etc.)</label> <select name="trees[tree'+i+'][type]" required="required"> ';
 			type += options(tree_types);
 			type += '</select> </div>'; // <input type="text" placeholder="If other, specify" /></div>';
 			
@@ -256,7 +256,7 @@ $months = $r->buildArray();
 
 			var quantity = '<div> <label>Number of trees of this type</label> <input name="trees[tree'+i+'][quantity]" type="number" min="1" /> </div>';
 			
-			var height = '<div> <label>Tree Height</label> <select name="trees[tree'+i+'][height]" required="required">';
+			var height = '<div> <label>Tree Height</label> <select name="trees[tree'+i+'][height]">';
 			height += options(tree_heights);
 			height += '</select> </div>';
 			

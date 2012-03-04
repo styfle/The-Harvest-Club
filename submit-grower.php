@@ -28,19 +28,22 @@ include('include/autoresponse.inc.php');
 	$errorMessage = "";
 	
 	if(empty($firstname)) {
-		$errorMessage .= "<li>No First Name!</li>";
+		$errorMessage .= "<li>First Name required!</li>";
 	}
 	if(empty($lastname)) {
-		$errorMessage .= "<li>No Last Name!</li>";
+		$errorMessage .= "<li>No Last Name required!</li>";
 	}
 	if(empty($email)) {
-		$errorMessage .= "<li>No Email!</li>";
+		$email = ''; // no longer required
 	}
 	if(empty($phone)) {
-		$errorMessage .= "<li>No Phone!</li>";
-	}
-	if(!is_numeric($phone)) {
-	  $errorMessage .= "<li>Phone Number is Non-Numeric!</li>";
+		$errorMessage .= "<li>Phone number required!</li>";
+	} else {
+		$phone = preg_replace('/\D/', '', $phone); // strip out all chars except numbers
+		if (strlen($phone) != 10)
+			$errorMessage .= '<li>Phone number must be exactly 10 numbers!</li>';
+		else
+			$phone = '(' . substr($phone, 0, 3) . ') ' . substr($phone, 3, 3) . '-' . substr($phone, 6, 4); // (949) 555-1234
 	}
 	if(empty($preferred)) {
 	  $errorMessage .= "<li>No Preferred Contact!</li>";
@@ -99,18 +102,12 @@ include('include/autoresponse.inc.php');
 		}
 		$varietal = $tree['varietal'];
 		$quantity = $tree['quantity'];
-		if(empty($quantity)) {
-			$errorMessage .= "<li>No Quantity for Trees!</li>";
-		}
-		if(!is_numeric($quantity)) {
-			$errorMessage .= "<li>Tree Quantity must be Numeric!</li>";
-		}
-		if($quantity < 1) {
-			$errorMessage .= "<li>Tree Quantity must be at least 1!</li>";
+		if(empty($quantity) || !is_numeric($quantity) || $quantity < 1) {
+			$quantity = 1; //optional so default to 1
 		}
 		$height = $tree['height'];
 		if(empty($height)) {
-			$errorMessage .= "<li>No Tree Height!</li>";
+			$height = 1; //optional so default to 1
 		}
 		$months = $tree['month'];
 		$chemical = $tree['chemical'];
@@ -158,7 +155,7 @@ include('include/autoresponse.inc.php');
 	
 	$r = $db->commit();
 	if ($r->isValid()) {
-		$sent = $mail-send('Registration Confirmed', growerResponse($firstname, $lastname), $email);
+		$sent = $mail->send('Registration Confirmed', growerResponse($firstname, $lastname), $email);
 		echo "$firstname $lastname, Thank you for registering!";
 		if ($sent)
 			echo "<br/>An email has been sent to: $email";

@@ -214,6 +214,10 @@ $avgHeight = $r->buildArray();
 			<td><input type="button" name="approve" value="Approve" onclick="approveGrower();"/></td>
 		</tr>
 		<?php } ?>
+		<tr> 
+			<td colspan=2">Show all his/her trees</td>
+			<td colspan="1"><input type="button" onclick="viewTrees();" value="View Trees"/></td>
+		</tr>		
 		
 		<tr>
 			<td colspan="3" class="hidden"><input id="grower1" name="id" type="text" size="2"/></td>
@@ -233,17 +237,17 @@ $avgHeight = $r->buildArray();
 			<td><label for="grower4">Last</label></td>
 		</tr>
 		<tr>
-			<td><input id="grower2" name="firstname" type="text" size="12" required="required"/></td>
-			<td><input id="grower3" name="middlename" type="text" size="4"/></td>
-			<td><input id="grower4" name="lastname" type="text" size="10" required="required"/></td>
+			<td><input id="grower2" name="firstname" type="text" size="15" required="required"/></td>
+			<td><input id="grower3" name="middlename" type="text" size="6"/></td>
+			<td><input id="grower4" name="lastname" type="text" size="14" required="required"/></td>
 		</tr>		
 		<tr>
 			<td><label for="grower5">Phone</label></td>
 			<td colspan="2"><label for="grower6">Email</label></td>
 		</tr>
 		<tr>
-			<td><input type="tel" name="phone" id="grower5" size="12" /></td>
-			<td colspan="2"><input type="email" name="email" id="grower6" size="17" /></td>
+			<td><input type="tel" name="phone" id="grower5" size="15" /></td>
+			<td colspan="2"><input type="email" name="email" id="grower6" size="20" /></td>
 		</tr>
 		<tr>
 			<td colspan="3"><label for="grower7">Preference</label></td>			
@@ -264,12 +268,12 @@ $avgHeight = $r->buildArray();
 			<td><label for="grower11">Zip</label></td>
 		</tr>
 		<tr>			
-			<td><input type="text" name="city" id="grower9" size="12" required="required"/></td>
+			<td><input type="text" name="city" id="grower9" size="15" required="required"/></td>
 			<td><input type="text" name="state" id="grower10" size="2" required="required"/></td>
 			<td><input type="text" name="zip" id="grower11" size="8" required="required"/></td>
 		</tr>
 		<tr>
-			<td colspan="3"><b>Source</b></td>			
+			<td colspan="3">Source</td>			
 		</tr>
 		<tr>
 			<td colspan="3"><?php echo options('grower13', 'source_id', $sources, true); ?></td>
@@ -280,29 +284,30 @@ $avgHeight = $r->buildArray();
 		<tr>			
 			<td colspan="3">
 			<?php echo options('grower17', 'property_type', $property_types); ?>				
-			</td >
+			</td>
 		</tr>
-		<tr>			
+		<tr>
 			<td colspan="3"><label for="grower18">Property Relationship</label></td>
 		</tr>
-		<tr>			
+		<tr>
 			<td colspan="3">
 				<?php echo options('grower18', 'property_relationship', $property_relationships); ?>
 			</td>
 		</tr>		
+		<tr>
+			<td colspan="3"><label for="grower12">Tools</label></td>
+		</tr>
+		<tr>
+			<td colspan="3"><textarea name="tools" id="grower12" rows="2" cols="30"></textarea></td>
+		</tr>
+		<tr>
+			<td colspan="3"><label for="grower14">Notes</label></tr>
+		</tr>
+		<tr>
+			<td colspan="3"><textarea name="notes" id="grower14" rows="4" cols="30"></textarea></td>
+		</tr>
 		
 		</table>	
-	<div style="margin-top:5px;">
-		<div><label for="grower12">Tools</label></div>
-		<div><textarea name="tools" id="grower12" rows="5" cols="30"></textarea></div>
-	</div>	
-	<div style="margin-top:5px;">
-		<div><label for="grower14">Notes</label></div>
-		<div><textarea name="notes" id="grower14" rows="5" cols="30"></textarea></div>
-	</div>	
-	<div style="margin-top:5px;">
-		<input type="button" OnClick="viewTrees();" value="View Trees"/>
-	</div>		
 	</form>
 	<!-- Grower end -->
 	

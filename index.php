@@ -76,7 +76,7 @@ if (!$PRIV)
 		<h1>
 			<?php echo PAGE_TITLE; ?> - <span id="page_title">Loading...</span>
 			<span id="me">
-				<a href="logout">Logout</a> as
+				<a href="logout.php">Logout</a> as
 				<?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>
 			</span>
 		</h1>
@@ -1127,7 +1127,7 @@ if (!$PRIV)
 			autoOpen: false,
 			title: 'Edit Record',
 			height: 550,
-			width: 600,
+			width: 450,
 			modal: true,
 			/*close: function() {
 				console.log('dialog closed');
