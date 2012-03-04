@@ -658,14 +658,14 @@ switch ($cmd)
 			break;
 		}
 		updateGrower(true);
-		break;	
+	break;	
 	case 'add_grower':
 		if (!$PRIV['edit_grower']) {
 			forbidden();
 			break;
 		}
 		updateGrower(false);
-		break;
+	break;
 	case 'approve_grower':
 		if (!$PRIV['edit_grower']) { //TODO find out if this needs a separate priv
 			forbidden();
@@ -676,7 +676,18 @@ switch ($cmd)
 				WHERE id=".$growerID;
 		$r = $db->q($sql);
 		getError($r);
-		break;
+	break;
+	case 'approve_volunteer':
+		if (!$PRIV['edit_volunteer']) { //TODO find out if this needs a separate priv
+			forbidden();
+			break;
+		}
+		$volunteerID = $_REQUEST['volunteerID'];
+		$sql = "UPDATE volunteers SET privilege_id = 2
+				WHERE id=".$volunteerID;
+		$r = $db->q($sql);
+		getError($r);
+	break;
 	case 'update_tree':		
 		if (!$PRIV['edit_grower']) {
 			forbidden();

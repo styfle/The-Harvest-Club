@@ -67,6 +67,7 @@ if (!$PRIV)
 	<script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
 	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
+	<script type="text/javascript" src="js/event.js"></script>
 </head>
 
 <body>
@@ -91,7 +92,7 @@ if (!$PRIV)
 				<button id="add-button">Add</button>
 				<button id="del-button">Delete</button>
 				<button id="email-button">Email</button>
-				<button id="export-button" OnClick="location.href='export.php'">Export</button>
+				<button id="export-button">Export</button>
 			</span>
 		</div><!-- End toolbar -->
 
@@ -311,6 +312,8 @@ if (!$PRIV)
 	var growerID = 0;
 	var pending = 0;
 	var privilegeID = 0;
+	var aPos;
+	var row;
 	//----- These are the variables for event
 	var loadGrower=0;
 	var loadCaptain = 0;
@@ -669,11 +672,18 @@ if (!$PRIV)
 					return;
 				case 1: //volunteer
 					switchForm('volunteer');
+					$('#pending').hide();						
+					for (var i = 1; i < 18; i++)
+						$('#volunteer' + i).prop('disabled', false);
+					for ( var i=1; i< 6; i++ )
+						$('#volunteerRole'+i).prop('disabled', false);
+					for ( var i=1; i< 8; ++i )
+						$('#volunteerDay'+i).prop('disabled', false);		
 				break;
 				
 				case 2: // grower
 					switchForm('grower');
-					$('#pending').hide();
+					$('#pending2').hide();
 					for (var i = 1; i < 21; i++)
 							$('#grower' + i).prop('disabled', false);
 				break;
@@ -931,8 +941,7 @@ if (!$PRIV)
 			},
 			text: false
 		}).click(function() {
-			//setError('Export unavailable at this time.');
-			return false;
+			
 		}); // .click() export end
 	});
 	
@@ -965,8 +974,7 @@ if (!$PRIV)
 
 		$('#nav input').click(function() {
 			var cmd = this.id; // button id is the ajax command
-			var aPos;
-			var row;
+			
 			
 			$.ajax( {
 				'dataType': 'json', 
@@ -1095,8 +1103,8 @@ if (!$PRIV)
 					if (priv.edit_volunteer)
 						buttonList.unshift(saveButton);
 					for (var i = 0; i < row.length; i++)
-						$('#volunteer' + i).val(row[i]);
-
+						$('#volunteer' + i).val(row[i]);					
+					
 					$.ajax({
 							'dataType': 'json',
 							'type': 'GET',
@@ -1132,6 +1140,25 @@ if (!$PRIV)
 							},
 							'error': ajaxError
 						});
+					
+					if(row[14]>1){
+						$('#pending').hide();						
+						for (var i = 1; i < row.length; i++)
+							$('#volunteer' + i).prop('disabled', false);
+						for ( var i=1; i< 5; ++i )
+							$('#volunteerRole'+i).prop('disabled', false);
+						for ( var i=1; i< 8; ++i )
+							$('#volunteerDay'+i).prop('disabled', false);
+					}
+					else if(row[14]==1){
+						$('#pending').show();
+						for (var i = 1; i < row.length; i++)
+							$('#volunteer' + i).prop('disabled', true);
+						for ( var i=1; i< 5; ++i )
+							$('#volunteerRole'+i).prop('disabled', true);
+						for ( var i=1; i< 8; ++i )
+							$('#volunteerDay'+i).prop('disabled', true);
+					}
 				break;
 				
 				case 2: // grower
@@ -1143,12 +1170,13 @@ if (!$PRIV)
 						$('#grower' + i).val(row[i]);
 						
 					if(row[15]==0){
-						$('#pending').hide();
+						$('#pending2').hide();						
 						for (var i = 1; i < row.length; i++)
 							$('#grower' + i).prop('disabled', false);
 					}
 					else if(row[15]==1){
-						$('#pending').show();
+						buttonList.shift(saveButton);
+						$('#pending2').show();
 						for (var i = 1; i < row.length; i++)
 							$('#grower' + i).prop('disabled', true);
 					}
@@ -1319,9 +1347,34 @@ if (!$PRIV)
 				//$('#edit-dialog').dialog('close');
 				reloadTable("get_growers");
 				$('#grower15').val(0);
-				$('#pending').hide();
+				$('#pending2').hide();
 				for (var i = 1; i < row.length; i++)
 					$('#grower' + i).prop('disabled', false);
+			},
+			'error': ajaxError
+		});			
+	}
+	
+	function approveVolunteer(){
+		var volunteerID = $('#volunteer1').val();	
+		$.ajax({							
+			'type': 'GET',
+			'url': 'ajax.php?cmd=approve_volunteer&volunteerID='+volunteerID,
+			'success': function (data) {
+				if (!validResponse(data))
+					return false;
+				setInfo('Information Updated');
+				//$('#edit-dialog').dialog('close');
+				
+				$('#volunteer14').val(2); // approve from pending to volunteer
+				$('#pending').hide();
+				reloadTable("get_volunteers");
+				for (var i = 1; i < 18; i++)
+					$('#volunteer' + i).prop('disabled', false);
+				for ( var i=1; i< 6; i++ )
+					$('#volunteerRole'+i).prop('disabled', false);
+				for ( var i=1; i< 8; ++i )
+					$('#volunteerDay'+i).prop('disabled', false);
 			},
 			'error': ajaxError
 		});			

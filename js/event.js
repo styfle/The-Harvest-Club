@@ -83,13 +83,22 @@
             }
         }
 		
-		function addVolunteerRow(tableID) {
- 
-            var table = document.getElementById(tableID);
+function addVolunteerRow(tableID) {
+
+	        var table = document.getElementById(tableID);
 			
-			if(table.rows.length==0)
-			{
-			 var row = table.insertRow(0);
+			 
+			
+			var rowCount = table.rows.length;
+
+            var row = table.insertRow(rowCount);
+			// New table
+			var c = row.insertCell(0);
+            var tbl = document.createElement("table");
+			tbl.style.backgroundColor = "#E3E4FA";
+            c.appendChild(tbl);
+			
+			var row = tbl.insertRow(0);
 			 var cell1 = row.insertCell(0);
 			 var label1 = document.createElement("label");
 			 label1.style.width = "2em"
@@ -121,92 +130,184 @@
 			 label4.appendChild(txt4);
 			 cell4.appendChild(label4);
 			 
-			 var cell5 = row.insertCell(4);
-			 var label5 = document.createElement("label");
-			 label5.style.width = "5em";
-			 label5.style.fontWeight = 'bold';
-			 var txt5=document.createTextNode('Tree Type');
-			 label5.appendChild(txt5);
-			 cell5.appendChild(label5);
+
+
+
+
+
+
+
 			 
-			 var cell6 = row.insertCell(5);
-			 var label6 = document.createElement("label");
-			 label6.style.fontWeight = 'bold';
-			 label6.style.width = "5em";
-			 var txt6=document.createTextNode('Pound');
-			 label6.appendChild(txt6);
-			 cell6.appendChild(label6);
+
+
+
+
+
+
+
 			 
-			 var cell7 = row.insertCell(6);
-			 var label7 = document.createElement("label");
-			 label7.style.width = "5em";
-			 label7.style.fontWeight = 'bold';
-			 var txt7=document.createTextNode('Distribution');
-			 label7.appendChild(txt7);
-			 cell7.appendChild(label7);
-			 
-			}
-			 
-            var rowCount = table.rows.length;
-            var row = table.insertRow(rowCount);
- 
-            var cell1 = row.insertCell(0);
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+			var row1 = tbl.insertRow(1);
+		    var cell1 = row1.insertCell(0);
             var element1 = document.createElement("input");
             element1.type = "checkbox";
             cell1.appendChild(element1);
  
-            var cell2 = row.insertCell(1);
+            var cell2 = row1.insertCell(1);
 			var element2 = document.createElement("select");
 			element2.innerHTML = (options(volunteerNames));
 			cell2.appendChild(element2);
 				
-            var cell3 = row.insertCell(2);
+            var cell3 = row1.insertCell(2);
             var element3 = document.createElement("input");
             element3.type = "text";
 			element3.style.width = "4em"
             cell3.appendChild(element3);
 			
-			var cell4 = row.insertCell(3);
+			var cell4 = row1.insertCell(3);
             var element4 = document.createElement("input");
             element4.type = "checkbox";
 			element4.style.width = "4em"
             cell4.appendChild(element4);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			
-			var cell5 = row.insertCell(4);
-			var element5 = document.createElement("select");
-			element5.innerHTML = (options(treeNames));
-			cell5.appendChild(element5);
+
+
+
 			
-			
-			var cell6 = row.insertCell(5);
-			var element6 = document.createElement("input");
-			element6.type = "text";
-			element6.style.width = "4em"
-			cell6.appendChild(element6);
-			
-			var cell7 = row.insertCell(6);
-			var element7 = document.createElement("select");
-			element7.innerHTML = (options(distributionNames));
-			cell7.appendChild(element7);
-			
-			element5.style.visibility="hidden";
-			element6.style.visibility="hidden";
-			element7.style.visibility="hidden";
-			
+					
 			
 			element4.checked = false;
 			element4.onclick = function() { 
 			  if (element4.checked)
 			  {
-				element5.style.visibility="visible";
-				element6.style.visibility="visible";
-				element7.style.visibility="visible";
+
+
+
+			  
+			  			
+				var row2 = tbl.insertRow(2);
+				var cell5 = row2.insertCell(0);
+				var element5 = document.createElement("input");
+				element5.type = "checkbox";
+				cell5.appendChild(element5);
+				element5.style.visibility="hidden";
+				  
+				var cell6 = row2.insertCell(1);
+				var label1 = document.createElement("label");
+				label1.style.width = "5em";
+				label1.style.color = 'blue';
+				label1.style.font='Arial';
+				var txt1=document.createTextNode('Tree Types');
+				label1.appendChild(txt1);
+				cell6.appendChild(label1);
+				
+				var cell7 = row2.insertCell(2);
+				var buttonnode= document.createElement('input');
+				buttonnode.setAttribute('type','button');
+				buttonnode.setAttribute('name','button'+1);
+				buttonnode.setAttribute('value','+');
+				buttonnode.onclick = function()
+									{
+										var rowCount = tbl.rows.length;
+										var r = tbl.insertRow(rowCount);
+										
+										var c1 = r.insertCell(0);									
+										var e1 = document.createElement("input");
+										e1.type = "checkbox";
+										c1.appendChild(e1);
+							 
+										var c2 = r.insertCell(1);
+										var e2 = document.createElement("select");
+										e2.innerHTML = (options(treeNames));
+										c2.appendChild(e2);
+										
+										var c3 = r.insertCell(2);
+										var e3 = document.createElement("input");
+										e3.type = "text";
+										e3.style.width = "4em";
+										e3.placeholder = "Pounds";
+										c3.appendChild(e3);
+										
+										var c4 = r.insertCell(3);									
+										var e4 = document.createElement("label");
+										var txt=document.createTextNode('------>');
+										e4.style.textAlign="center";
+										e4.appendChild(txt);		
+										c4.appendChild(e4);
+										
+										var c5 = r.insertCell(4);
+										var e5 = document.createElement("select");
+										e5.innerHTML = (options(distributionNames));
+										c5.appendChild(e5);
+											
+										
+									};
+				cell7.appendChild(buttonnode);
+				
+				var cell8 = row2.insertCell(3);
+				var buttonnode2= document.createElement('input');
+				buttonnode2.setAttribute('type','button');
+				buttonnode2.setAttribute('name','button'+2);
+				buttonnode2.setAttribute('value','-');
+				buttonnode2.onclick = function()
+										{
+											var rowCount = tbl.rows.length;
+											for(var i=3; i<rowCount; i++) {
+												var row = tbl.rows[i];
+												var chkbox = row.cells[0].childNodes[0];
+												if(null != chkbox && true == chkbox.checked) {
+													tbl.deleteRow(i);
+													rowCount--;
+													i--;
+												}
+											}
+										
+										};
+				cell8.appendChild(buttonnode2);
 			  }
 			  else
 			  {
-				element5.style.visibility="hidden";
-				element6.style.visibility="hidden";
-				element7.style.visibility="hidden";
+
+
+
+			    var rowCount = tbl.rows.length;
+				for(var i=2; i<rowCount; i++) {
+					var row = tbl.rows[i];
+					var chkbox = row.cells[0].childNodes[0];
+					chkbox.checked = true;
+				}
+				deleteTreeTypeRow(tbl);
 			  }
 			};
 
@@ -219,10 +320,11 @@
             try {
             var table = document.getElementById(tableID);
             var rowCount = table.rows.length;
- 
+
             for(var i=0; i<rowCount; i++) {
-                var row = table.rows[i];
-                var chkbox = row.cells[0].childNodes[0];
+                var r = table.rows[i];
+				var tbl = r.cells[0].childNodes[0];
+                var chkbox = tbl.rows[1].cells[0].childNodes[0];
                 if(null != chkbox && true == chkbox.checked) {
                     table.deleteRow(i);
                     rowCount--;
@@ -235,6 +337,23 @@
             }
         }
 		
+		function deleteTreeTypeRow(table) {
+            try {
+            var rowCount = table.rows.length;
+			for(var i=2; i<rowCount; i++) {
+            var row = table.rows[i];
+            var chkbox = row.cells[0].childNodes[0];
+                if(null != chkbox && true == chkbox.checked) {
+                    table.deleteRow(i);
+                    rowCount--;
+                    i--;
+                }
+ 
+            }
+            }catch(e) {
+                alert(e);
+            }
+        }
 		function loadGrowerToForm(grower_id)
 	{
 		$.ajax( {

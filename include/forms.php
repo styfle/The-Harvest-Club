@@ -48,9 +48,9 @@ $avgHeight = $r->buildArray();
 		<h3>Volunteer</h3>
 		<table>
 		<?php if ($PRIV['appr_volunteer']) { ?>
-		<tr>
+		<tr id="pending">
 			<td>*Pending approval</td>
-			<td colspan="2"><input type="button" name="approve" value="Approve" onclick="approveGrower();"/></td>
+			<td colspan="2"><input type="button" name="approve" value="Approve" onclick="approveVolunteer();"/></td>
 		</tr>
 		<?php } ?>
 		<tr>
@@ -207,9 +207,9 @@ $avgHeight = $r->buildArray();
 	<!-- Grower form -->
 	<form id="grower" class="hidden">
 		<h3>Grower</h3>
-		<table>	
+		<table id="growerT">	
 		<?php if ($PRIV['appr_grower']) { ?>
-		<tr>
+		<tr id="pending2">
 			<td colspan="2">*Pending approval</td>
 			<td><input type="button" name="approve" value="Approve" onclick="approveGrower();"/></td>
 		</tr>
