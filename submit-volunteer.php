@@ -37,22 +37,25 @@ include('include/autoresponse.inc.php');;
 		$errorMessage .= "<li>No Email!</li>";
 	}
 	if(empty($phone)) {
-		$errorMessage .= "<li>No Phone!</li>";
-	}
-	if(!is_numeric($phone)) {
-		$errorMessage .= "<li>Phone Number is Non-Numeric!</li>";
+		$errorMessage .= "<li>Phone number required!</li>";
+	} else {
+		$phone = preg_replace('/\D/', '', $phone); // strip out all chars except numbers
+		if (strlen($phone) != 10)
+			$errorMessage .= '<li>Phone number must be exactly 10 numbers!</li>';
+		else
+			$phone = '(' . substr($phone, 0, 3) . ') ' . substr($phone, 3, 3) . '-' . substr($phone, 6, 4); // (949) 555-1234
 	}
 	if(empty($city)) {
-		$errorMessage .= "<li>No City!</li>";
+		$errorMessage .= "<li>City required!</li>";
 	}
 	if(empty($state)) {
-		$errorMessage .= "<li>No State!</li>";
+		$errorMessage .= "<li>State required!</li>";
 	}
 	if(empty($zip)) {
-		$errorMessage .= "<li>No Zip!</li>";
+		$errorMessage .= "<li>Zip code required!</li>";
 	}
-	if(!is_numeric($zip)) {
-		$errorMessage .= "<li>Zip is Non-Numeric!</li>";
+	if(!is_numeric($zip) || strlen($zip) != 5) {
+		$errorMessage .= "<li>Zip code must be 5 numbers!</li>";
 	}
 	if(!empty($errorMessage)) {
 	  die($errorMessage);
@@ -114,7 +117,7 @@ include('include/autoresponse.inc.php');;
 
 	$r = $db->commit();
 	if ($r->isValid()) {
-		$sent = $mail-send('Registration Confirmed', volunteerResponse($firstname, $lastname), $email);
+		$sent = $mail->send('Registration Confirmed', volunteerResponse($firstname, $lastname), $email);
 		echo "$firstname $lastname, Thank you for registering!";
 		if ($sent)
 			echo "<br/>An email has been sent to: $email";

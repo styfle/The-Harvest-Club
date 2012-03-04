@@ -58,33 +58,32 @@ $roles = $r->buildArray();
     		<label for="organization">Organization</label>
     		<input id="organization" name="organization" type="text" size="40" placeholder="Donald Bren School of ICS" />
 		</fieldset>
-		<fieldset>
+
+    	<fieldset>
     		<legend>Contact</legend>
+    		<label for="phone">Phone*</label><input id="phone" type="tel" name="phone" placeholder="(949) 555-1234" required="required" />
     		<label for="email">Email*</label><input id="email" type="email" name="email" placeholder="peter@uci.edu" required="required" />
-    		<label for="phone">Phone*</label><input id="phone" type="tel" name="phone" placeholder="9495551234" pattern="[0-9]{10}" required="required"/>
     	</fieldset>
+
 
     	<fieldset>
     		<legend>Address</legend>
 			<div>
-				<label for="street">Street Address</label>
-				<input id="street" type="text" name="street" size="40" placeholder="67 E Peltason Dr" />
-			</div>
-			<div>
-				<label for="street">Address Line 2:</label>
-				<input id="street2" type="text" name="street2" size="40" placeholder="" />
-			</div> 
-			<div>
+				<label for="street">Street</label>
+				<input id="street" type="text" name="street" id="street" placeholder="67 E Peltason Dr" />
+				
 				<label for="city">City*</label>
 				<input type="text" name="city" id="city" placeholder="Irvine"  size="10" required="required" />
-				<label for="state">State</label>
+			</div>
+			<div>
+				<label for="state">State*</label>
 				<select id="state" name="state" required="required"> 
-					<!-- <option value="" disabled="disabled">Select...</option> --> <!-- TODO: Force option -->
+					<option value="" disabled="disabled" selected="selected">Select...</option><!-- TODO: Force option -->
 					<option value="AL">Alabama</option> 
 					<option value="AK">Alaska</option> 
 					<option value="AZ">Arizona</option> 
 					<option value="AR">Arkansas</option> 
-					<option value="CA" selected="yes">California</option> 
+					<option value="CA" selected="selected">California</option> 
 					<option value="CO">Colorado</option> 
 					<option value="CT">Connecticut</option> 
 					<option value="DE">Delaware</option> 
@@ -134,10 +133,12 @@ $roles = $r->buildArray();
 				</select>
 				<label for="zip">Zip*</label><input type="text" name="zip" id="zip" placeholder="92617" size="4" pattern="[0-9]{5}" required="required" />
 			</div>
-		</fieldset> 
+			
+		</fieldset> <!-- end Address -->
+
 
 		<h3>Volunteer Interests</h3>
-		<p>There are many ways to volunteer with The Harvest Club.  Please select any of the volunteer roles below that are of interest to you.</p>
+		<p>There are many ways to volunteer with The Harvest Club. Please select any of the volunteer roles below that are of interest to you.</p>
 		<fieldset>
 			<legend>Preferred Roles</legend>
 			<i>Hover mouse over each role for a description.</i>
@@ -151,22 +152,6 @@ $roles = $r->buildArray();
 					role += '<div title = "'+o.description+'">';
 					role += '<input type="checkbox" name="roles[]" value="'+o.id+'" />' + o.type;
 					role += '</div>';
-/*
-					var checkbox = document.createElement('input');
-					checkbox.type = "checkbox";
-					checkbox.name = "roles[]";
-					checkbox.value = '"'+o.id+'"';
-					checkbox.id = "id";
-
-					var label = document.createElement('label')
-					label.htmlFor = "id";
-					label.appendChild(document.createTextNode(o.type));
-					label.title = o.description;
-
-					container.appendChild(checkbox);
-					container.appendChild(label);
-					// container.append('<br>');
-*/
 				}
 				role += '</div>';
 				$(container).append(role);
@@ -188,104 +173,12 @@ $roles = $r->buildArray();
 					day += '<div title = "'+o.name+'">';
 					day += '<input type="checkbox" name="days[]" value="'+o.id+'" />' + o.name;
 					day += '</div>';
-/*
-				var container = document.getElementById('days');
-					for (var i=0; i<days.length; i++) {
-						var o = days[i];
-						var checkbox = document.createElement('input');
-						checkbox.type = "checkbox";
-						checkbox.name = "days[]";
-						checkbox.value = '"'+o.id+'"';
-						checkbox.id = "id";
-
-						var label = document.createElement('label')
-						label.htmlFor = "id";
-						label.appendChild(document.createTextNode(o.name));
-
-						container.appendChild(checkbox);
-						container.appendChild(label);
-					}
-*/
 				}
 				day += '</div>';
 				$(container).append(day);
 				</script>
 			
 		</fieldset>
-
-		<!--
-		<fieldset>
-    		<legend>Volunteer Role</legend>
-			<p><i>Choose all that apply.</i></p>
-			<span>
-			<input name="roles[]" type="checkbox" id="harvester" value="1"><label for="harvester">Harvester</label>
-			 - volunteers at harvesting events
-			</span>
-			<br />
-			<span>
-			<input name="roles[]" type="checkbox" id="havestcaptain" value="2"><label for="harvestcaptain">Harvest Captain</label>
-			 - leads a harvest crew
-			</span>
-			<br />
-			<input name="roles[]" type="checkbox" id="driver" value="3"><label for="driver">Driver</label>
-			- transports donated food to local food pantries
-			<br />
-			<span>
-			<input name="roles[]" type="checkbox" id="ambassador" value="4"><label for="ambassador">Ambassador</label>
-			- canvasses neighborhoods and hands out leaflets to homes with visible fruit trees
-			</span>
-    	</fieldset>
-
-    		<legend>Preferred Days to Volunteer</legend>
-			<p><i>Note: Harvest Events usually takes two hours long and generally take place over the weekends.</i></p>
-			<span title="Monday">
-			<input name="days[]" type="checkbox" id="monday" value="1"><label for="monday">Mon</label>
-			</span>
-			&nbsp;
-			<span title="Tuesday">
-			<input name="days[]" type="checkbox" id="tuesday" value="2"><label for="tuesday">Tue</label>
-			</span>
-			&nbsp;
-			<span title="Wednesday">
-			<input name="days[]" type="checkbox" id="wednesday" value="3"><label for="wednesday">Wed</label>
-			</span>
-			&nbsp;
-			<span title="Thursday">
-			<input name="days[]" type="checkbox" id="thursday" value="4"><label for="thursday">Thu</label>
-			</span>
-			&nbsp;
-			<span title="Friday">
-			<input name="days[]" type="checkbox" id="friday" value="5"><label for="friday">Fri</label>
-			</span>
-			&nbsp;
-			<span title="Saturday">
-			<input name="days[]" type="checkbox" id="saturday" value="6"><label for="saturday">Sat</label>
-			</span>
-			&nbsp;
-			<span title="Sunday">
-			<input name="days[]" type="checkbox" id="sunday" value="7"><label for="sunday">Sun</label>
-			</span>
-			&nbsp;
-		-->	
-
-<!--
-		<h3>For Groups</h3>
-		<fieldset>
-			<legend>Group Registration</legend>
-			<label for="group-number">How many people?</label>
-			<input id="group-number" name="group-number" type="number" pattern="[0-9]{10}" min="0" max="99" placeholder="10"/>
-			<br />
-			<label for="group-age">What is the age range?</label>
-			<input id="group-age" name="group-age" type="text" placeholder="18-23" size="9"/>
-			<br />
-			<label for="group-avail">When is the group available to harvest?</label>
-			<input id="group-avail" name="group-avail" type="text" placeholder="Monday-Sunday" size="15"/>
-			<br />
-			<label>Any special requirements or dates for harvesting?</label><br/>
-				<textarea name="group-notes" type="textarea" cols="50" rows="3" placeholder=""></textarea>
-			
-		</fieldset>
--->
 
     	<h3>Misc Information</h3>
 
@@ -297,7 +190,6 @@ $roles = $r->buildArray();
 				<select id="source" name="source">
 				</select>
 			</div>
-			<br />
 			<label>Additional comments:</label><br/>
 				<textarea name="comments" type="textarea" cols="50" rows="3" placeholder="For Group Registration, please enter the information in this area: provide the Age Range, Number of Members, and When are they able to volunteer."></textarea>
 		</fieldset>
@@ -305,10 +197,10 @@ $roles = $r->buildArray();
 		<br />
 		<br />
 		<fieldset>
+			<i>Privacy: Information entered here is used solely by The Harvest Club; We do not share, sell, or otherwise distribute your personal information.</i>
 			<legend>Register</legend>
 					<div><input name="Submit" value="Register as Volunteer" type="submit" id = "submit"></div>
 		</fieldset>			
-		<p>Privacy: Information entered here is used solely by The Harvest Club; We do not share, sell, or otherwise distribute your personal information.</p>
     </form>
 </div>
 

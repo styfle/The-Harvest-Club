@@ -49,19 +49,19 @@ include('include/autoresponse.inc.php');
 	  $errorMessage .= "<li>No Preferred Contact!</li>";
 	}
 	if(empty($street)) {
-		$errorMessage .= "<li>No Street!</li>";
+		$errorMessage .= "<li>Street required!</li>";
 	}
 	if(empty($city)) {
-		$errorMessage .= "<li>No City!</li>";
+		$errorMessage .= "<li>City required!</li>";
 	}
 	if(empty($state)) {
-		$errorMessage .= "<li>No State!</li>";
+		$errorMessage .= "<li>State required!</li>";
 	}
 	if(empty($zip)) {
-		$errorMessage .= "<li>No Zip!</li>";
+		$errorMessage .= "<li>Zip code required!</li>";
 	}
-	if(!is_numeric($zip)) {
-		$errorMessage .= "<li>Zip is Non-Numeric!</li>";
+	if(!is_numeric($zip) || strlen($zip) != 5) {
+		$errorMessage .= "<li>Zip code must be 5 numbers!</li>";
 	}
 	if(empty($property)) {
 	  $errorMessage .= "<li>No Property Type!</li>";
@@ -155,7 +155,10 @@ include('include/autoresponse.inc.php');
 	
 	$r = $db->commit();
 	if ($r->isValid()) {
-		$sent = $mail->send('Registration Confirmed', growerResponse($firstname, $lastname), $email);
+		if (empty($email)) // if no email supplied then we don't try to send mail
+			$sent = false;
+		else
+			$sent = $mail->send('Registration Confirmed', growerResponse($firstname, $lastname), $email);
 		echo "$firstname $lastname, Thank you for registering!";
 		if ($sent)
 			echo "<br/>An email has been sent to: $email";

@@ -531,7 +531,7 @@ if (!$PRIV)
 								return false;
 							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
-							reloadTable("get_volunteers");									
+							reloadTable("get_growers");									
 						},
 						'error': ajaxError
 					});
@@ -1060,7 +1060,7 @@ if (!$PRIV)
 						break;
 
 						case 3: // Trees
-							showAddDelEmailExport(priv.edit_grower, priv.del_grower, 0, priv.exp_grower); // tree has no email
+							showAddDelEmailExport(priv.edit_grower, priv.del_grower, 0, 0); // tree has no email, no export
 							if(growerID != 0){
 								$('#dt tbody tr').each(function() {				//For every row in the table
 									tempId = dt.fnGetData(this)[3];    			//Get growerID of current row in Tree tabs
@@ -1076,7 +1076,7 @@ if (!$PRIV)
 						break;
 
 						case 5: // events
-							showAddDelEmailExport(priv.edit_event, priv.del_event, 0, priv.exp_event); // no email
+							showAddDelEmailExport(priv.edit_event, priv.del_event, 0, 0); // no email, no export
 						break;
 
 						case 6: // donations
