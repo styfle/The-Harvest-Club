@@ -92,7 +92,7 @@ if (!$PRIV)
 				<button id="add-button">Add</button>
 				<button id="del-button">Delete</button>
 				<button id="email-button">Email</button>
-				<button id="export-button">Export</button>
+				<button id="export-button" >Export</button>
 			</span>
 		</div><!-- End toolbar -->
 
@@ -941,7 +941,58 @@ if (!$PRIV)
 			},
 			text: false
 		}).click(function() {
+			var exportList = [];
+			var arrayID = [];
 			
+			switch (currentTable)
+			{
+				case 0: // notifications
+					setError('No Export for this table.');
+					return;
+				case 1: //volunteer
+					//arrayID.clear();
+					$('input[name=select-row]:checked').each(function(){						
+						exportList.push($(this).parent().parent());
+					});
+					if(exportList.length > 0)
+					{										
+						$('input[name=select-row]:checked').each(function(){						
+							var row = $(this).parent().parent();
+							var data = dt.fnGetData(row[0]);
+							var id = data[1];;
+							arrayID.push(id);
+													
+						});												
+					}
+					alert(arrayID);
+					$.post('export.php', {'arrayID[]':arrayID}); //, function(){
+						//document.location.href = 'export.php';        
+					//});
+
+					window.location.replace("test.csv");		
+				break;
+				
+				case 2: // grower
+							
+				break;
+				
+				case 3: // tree
+					
+				break;
+				
+				case 4: // distribution
+						
+				break;
+						
+				case 5: // event
+					
+                break;
+				
+				case 6: // donation
+							
+				break;
+			}		
+
 		}); // .click() export end
 	});
 	
