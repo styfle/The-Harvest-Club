@@ -983,47 +983,50 @@ if (!$PRIV)
 				return false;
 			}
 			else {										
-				$('input[name=select-row]:checked').each(function(){						
-					var row = $(this).parent().parent();
-					var data = dt.fnGetData(row[0]);
-					var id = data[1];
-					arrayID.push(id);
-				});												
-				alert("Exporting "+exportList.length+" row(s) of data");
-				if(currentTable == 2){					
-					var yesButton = {
-						text: 'Yes',
-						click: function() {	
-							alert(arrayID);
-							$(this).dialog('close');
-							window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
-							+ 'export.php?arrayID[]='+arrayID+'&table=3';								
-						}
-					};
-					
-					var noButton = {
-						text: 'No',
-						click: function() {
-							//currentTable = 2; //Export ONLY grower info
-							$(this).dialog('close');
-							window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
-							+ 'export.php?arrayID[]='+arrayID+'&table=2';
-						}
-					};
-					var buttonList = [yesButton, noButton];
-					var $exportdialog = $('<div></div>')
-							.html("Do you want to export tree information of " +arrayID.length+ " selected grower(s)?")
-							.dialog({
-								autoOpen: false,
-								title: 'Grower Export'
-							});
-					$exportdialog.dialog("option", "buttons", buttonList);
-					$exportdialog.dialog('open');
-									
-				}
-				else{
-					window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
-					+ 'export.php?arrayID[]='+arrayID+'&table='+currentTable;
+				var x = window.confirm("Are you sure you want to export "+exportList.length+" items?");
+				if(x)
+				{
+					$('input[name=select-row]:checked').each(function(){						
+						var row = $(this).parent().parent();
+						var data = dt.fnGetData(row[0]);
+						var id = data[1];
+						arrayID.push(id);
+					});												
+					//alert("Exporting "+exportList.length+" row(s) of data");
+					if(currentTable == 2){					
+						var yesButton = {
+							text: 'Yes',
+							click: function() {	
+								$(this).dialog('close');
+								window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
+								+ 'export.php?arrayID[]='+arrayID+'&table=3';								
+							}
+						};
+						
+						var noButton = {
+							text: 'No',
+							click: function() {
+								//currentTable = 2; //Export ONLY grower info
+								$(this).dialog('close');
+								window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
+								+ 'export.php?arrayID[]='+arrayID+'&table=2';
+							}
+						};
+						var buttonList = [yesButton, noButton];
+						var $exportdialog = $('<div></div>')
+								.html("Do you want to export tree information of " +arrayID.length+ " selected grower(s)?")
+								.dialog({
+									autoOpen: false,
+									title: 'Grower Export'
+								});
+						$exportdialog.dialog("option", "buttons", buttonList);
+						$exportdialog.dialog('open');
+										
+					}
+					else{
+						window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
+						+ 'export.php?arrayID[]='+arrayID+'&table='+currentTable;
+					}
 				}
 			}
 		}); // .click() export end

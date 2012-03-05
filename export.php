@@ -18,7 +18,18 @@
 	switch ($table)
 	{
 		case 1: //volunteer
-			$res = mysql_query("SELECT first_name, middle_name, last_name, email, phone, street, city, state, zip, signed_up, notes  FROM volunteers WHERE id IN($ids) ");
+			$res = mysql_query("SELECT first_name as 'First Name',
+									   middle_name as 'Middle Name',
+									   last_name as 'Last Name',
+									   email as Email,
+									   phone as Phone,
+									   street as Street, 
+									   city as City,
+									   state as State,
+									   zip as Zip,
+									   signed_up as 'Signed Up',
+									   notes as Notes
+ 							    FROM volunteers WHERE id IN($ids) ");
 		break;
 		
 		case 2: // grower
@@ -75,10 +86,24 @@
 								WHERE	g.id IN($ids)");
 		
 		case 4: // distribution
-//			$res = 
+			$res = mysql_query("SELECT name as 'Agency Name',
+									   street as 'Street Address',
+									   city as City,
+									   state as State,
+									   zip as 'Zip Code',
+									   contact as 'Agency Contact',
+									   email as Email,
+									   phone as Phone,
+									   notes as Notes
+								FROM distributions WHERE id IN($ids) ");
 		break;
 				
 		case 6: // donation
+			$res = mysql_query("SELECT donation as Donation,
+									   donor as Donor,
+									   value as Value,
+									   date as Date
+								FROM donations WHERE id IN($ids) ");
 		break;
 	}		
 
