@@ -29,18 +29,14 @@ audio:not([controls]) { display: none; }
  * 1. Correct text resizing oddly in IE6/7 when body font-size is set using em units
  * 2. Prevent iOS text size adjust on device orientation change, without disabling user zoom: h5bp.com/g
  */
-
 html { font-size: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
-
 body { margin: 0; font-size: 1em; line-height: 1.4; }
-
 body, button, input, select, textarea { font-family: sans-serif; color: #222; }
 
 /*
  * Remove text-shadow in selection highlight: h5bp.com/i
  * These selection declarations have to be separate
  */
-
 ::-moz-selection,
 ::selection { background: #3EA7F1; color: #fff; text-shadow: none; }
 
@@ -48,7 +44,6 @@ body, button, input, select, textarea { font-family: sans-serif; color: #222; }
 /* =============================================================================
    Links
    ========================================================================== */
-
 a { color: #00e; }
 a:visited { color: #551a8b; }
 a:hover { color: #06e; }
@@ -57,23 +52,15 @@ a:focus { outline: thin dotted; }
 /* Improve readability when focused and hovered in all browsers: h5bp.com/h */
 a:hover, a:active { outline: 0; }
 
-
 /* =============================================================================
    Typography
    ========================================================================== */
-
 abbr[title] { border-bottom: 1px dotted; }
-
 b, strong { font-weight: bold; }
-
 blockquote { margin: 1em 40px; }
-
 dfn { font-style: italic; }
-
 hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0; }
-
 ins { background: #ff9; color: #000; text-decoration: none; }
-
 mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
 
 /* Redeclare monospace font family: h5bp.com/j */
@@ -81,7 +68,6 @@ pre, code, kbd, samp { font-family: monospace, serif; _font-family: 'courier new
 
 /* Improve readability of pre-formatted text in all browsers */
 pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; }
-
 q { quotes: none; }
 q:before, q:after { content: ""; content: none; }
 
@@ -110,7 +96,6 @@ nav ul, nav ol { list-style: none; list-style-image: none; margin: 0; padding: 0
  * 1. Improve image quality when scaled in IE7: h5bp.com/d
  * 2. Remove the gap between images and borders on image containers: h5bp.com/e
  */
-
 img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
 
 /*
@@ -123,14 +108,12 @@ svg:not(:root) { overflow: hidden; }
 /* =============================================================================
    Figures
    ========================================================================== */
-
 figure { margin: 0; }
 
 
 /* =============================================================================
    Forms
    ========================================================================== */
-
 form { margin: 0; }
 fieldset { border: 0; margin: 0; padding: 0; }
 

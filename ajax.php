@@ -302,7 +302,7 @@ function getTable($sql) {
 	// first column is select-all checkbox
 	$data['datatable']['aoColumns'][] = array(
 		'sTitle' => '<input type="checkbox" name="select-all" />',
-		'sWidth' => '1%',
+		'sWidth' => '30px',
 		'bSortable' => false
 	);
 
@@ -315,8 +315,8 @@ function getTable($sql) {
 			$column['bVisible'] = false;
 		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip' || contains($k, '_tag')) {
 			$column['bVisible'] = false; // hide but still searchable
-		} else if ($k == 'notes') {
-			$column['sClass'] = 'left'; // align left
+		} else if (contains($k,'notes') || contains($k,'phone') || contains($k,'email') || contains($k,'signed')) {
+			$column['sClass'] = 'small';
 		}
 		$data['datatable']['aoColumns'][] = $column;
 	}

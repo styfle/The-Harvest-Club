@@ -145,8 +145,7 @@ if (!$PRIV)
 
 	// GLOBAL FUNCTIONS (probably move to separate file)
 	
-	function reloadTable(cmd)
-	{
+	function reloadTable(cmd) {
 		$.ajax( {
 			'dataType': 'json', 
 			'type': 'GET', 
@@ -216,6 +215,13 @@ if (!$PRIV)
 			},
 			'error': ajaxError
 		});
+	}
+
+	function contains(str, i) {
+		if (str)
+			return str.toLowerCase().indexOf(i) != -1;
+		else
+			return false;
 	}
 
 	function hideStatus() {
@@ -904,7 +910,7 @@ if (!$PRIV)
 			var iEmail = -1;
 			var cols = dt.fnSettings().aoColumns;
 			for (var i=0; i<cols.length; i++) {
-				if (cols[i].sTitle.toLowerCase() == 'email') {
+				if (contains(cols[i].sTitle, 'email')) {
 					iEmail = i;
 					break;
 				}
@@ -915,7 +921,8 @@ if (!$PRIV)
 				var row = $(this).parent().parent();
 				var data = dt.fnGetData(row[0]);
 				var emailAddr = data[iEmail];
-				emailList.push(emailAddr);
+				if (emailAddr != '') // check if empty
+					emailList.push(emailAddr);
 			}); // :checked end
 			if (iEmail == -1) {
 				setError('There is no email address in this table. How do you expect to send email?');
@@ -1144,6 +1151,8 @@ if (!$PRIV)
 			row = (dt.fnGetData(this));
 			aPos = dt.fnGetPosition( this );
 			var buttonList = [cancelButton];
+			
+			var cols = dt.fnSettings().aoColumns;
 			switch (currentTable)
 			{
 				case 0: //notification
@@ -1158,79 +1167,97 @@ if (!$PRIV)
 						$('#volunteer' + i).val(row[i]);					
 					
 					$.ajax({
-							'dataType': 'json',
-							'type': 'GET',
-							'url': 'ajax.php?cmd=get_volunteer_role&id='+row[1],
-							'success': function (data) {
-								if (!validResponse(data))
-									return false;
-								for ( var i=1; i< 5; ++i )   // clear data
-								  $('#volunteerRole'+i).prop("checked", false);
-								
-								if( data.datatable != null) 							
-								 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
-									$('#volunteerRole'+data.datatable.aaData[i][0]).prop("checked", true);									
-										
-							},
-							'error': ajaxError
-						});
+						'dataType': 'json',
+						'type': 'GET',
+						'url': 'ajax.php?cmd=get_volunteer_role&id='+row[1],
+						'success': function (data) {
+							if (!validResponse(data))
+								return false;
+							for ( var i=1; i< 5; ++i )   // clear data
+							  $('#volunteerRole'+i).prop("checked", false);
+							
+							if( data.datatable != null) 							
+							 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
+								$('#volunteerRole'+data.datatable.aaData[i][0]).prop("checked", true);									
+									
+						},
+						'error': ajaxError
+					});
 						
 					$.ajax({
-							'dataType': 'json',
-							'type': 'GET',
-							'url': 'ajax.php?cmd=get_volunteer_prefer&id='+row[1],
-							'success': function (data) {
-								if (!validResponse(data))
-									return false;
-								for ( var i=1; i< 8; ++i )   // clear data
-								  $('#volunteerDay'+i).prop("checked", false);
-								
-								if( data.datatable != null) 							
-								 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
-									$('#volunteerDay'+data.datatable.aaData[i][0]).prop("checked", true);									
-										
-							},
-							'error': ajaxError
-						});
-					
-					if(row[14]>1){
-						$('#pending').hide();						
-						for (var i = 1; i < row.length; i++)
-							$('#volunteer' + i).prop('disabled', false);
-						for ( var i=1; i< 5; ++i )
-							$('#volunteerRole'+i).prop('disabled', false);
-						for ( var i=1; i< 8; ++i )
-							$('#volunteerDay'+i).prop('disabled', false);
+						'dataType': 'json',
+						'type': 'GET',
+						'url': 'ajax.php?cmd=get_volunteer_prefer&id='+row[1],
+						'success': function (data) {
+							if (!validResponse(data))
+								return false;
+							for ( var i=1; i< 8; ++i )   // clear data
+							  $('#volunteerDay'+i).prop("checked", false);
+							
+							if( data.datatable != null) 							
+							 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
+								$('#volunteerDay'+data.datatable.aaData[i][0]).prop("checked", true);									
+									
+						},
+						'error': ajaxError
+					});
+
+					var iType = -1;
+					for (var i=0; i<cols.length; i++) {
+						if (contains(cols[i].sTitle, 'privilege_id')) {
+							iType = i;
+							break;
+						}
 					}
-					else if(row[14]==1){
-						$('#pending').show();
-						for (var i = 1; i < row.length; i++)
-							$('#volunteer' + i).prop('disabled', true);
-						for ( var i=1; i< 5; ++i )
-							$('#volunteerRole'+i).prop('disabled', true);
-						for ( var i=1; i< 8; ++i )
-							$('#volunteerDay'+i).prop('disabled', true);
+					
+					if (iType != -1) {
+						if(row[iType]>1){
+							$('#pending').hide();						
+							for (var i = 1; i < row.length; i++)
+								$('#volunteer' + i).prop('disabled', false);
+							for ( var i=1; i< 5; ++i )
+								$('#volunteerRole'+i).prop('disabled', false);
+							for ( var i=1; i< 8; ++i )
+								$('#volunteerDay'+i).prop('disabled', false);
+						} else { // assume pending
+							$('#pending').show();
+							for (var i = 1; i < row.length; i++)
+								$('#volunteer' + i).prop('disabled', true);
+							for ( var i=1; i< 5; ++i )
+								$('#volunteerRole'+i).prop('disabled', true);
+							for ( var i=1; i< 8; ++i )
+								$('#volunteerDay'+i).prop('disabled', true);
+						}
 					}
 				break;
 				
 				case 2: // grower
-					switchForm('grower');					
+					switchForm('grower');
 					if (priv.edit_grower)
 						buttonList.unshift(saveButton);
 					
 					for (var i = 1; i < row.length; i++)
 						$('#grower' + i).val(row[i]);
-						
-					if(row[15]==0){
-						$('#pending2').hide();						
-						for (var i = 1; i < row.length; i++)
-							$('#grower' + i).prop('disabled', false);
+
+					var iPending = -1;
+					for (var i=0; i<cols.length; i++) {
+						if (contains(cols[i].sTitle, 'pending_id')) {
+							iPending = i;
+							break;
+						}
 					}
-					else if(row[15]==1){
-						buttonList.shift(saveButton);
-						$('#pending2').show();
-						for (var i = 1; i < row.length; i++)
-							$('#grower' + i).prop('disabled', true);
+
+					if (iPending != -1) {
+						if(row[iPending]==0){
+							$('#pending2').hide();						
+							for (var i = 1; i < row.length; i++)
+								$('#grower' + i).prop('disabled', false);
+						} else { // assume approved
+							buttonList.shift(saveButton);
+							$('#pending2').show();
+							for (var i = 1; i < row.length; i++)
+								$('#grower' + i).prop('disabled', true);
+						}
 					}
 				break;
 				
