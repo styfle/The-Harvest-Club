@@ -22,7 +22,59 @@
 		break;
 		
 		case 2: // grower
-		break;
+			$res = mysql_query("SELECT 	g.first_name AS First,
+										g.middle_name AS Middle,
+										g.last_name AS Last,
+										g.phone AS Phone,
+										g.email AS Email,
+										g.preferred AS Preferred,
+										g.street AS Street,
+										g.city AS City,
+										g.state AS state,
+										g.zip AS Zip,
+										g.tools AS Tools,
+										s.name AS Source,
+										g.notes AS Notes,
+										IF(g.pending=1,'YES','NO') AS Pending,
+										pt.name AS 'Property Type',
+										pr.name AS 'Property Relationship'
+								FROM	growers g, sources s, property_types pt, property_relationships pr
+								WHERE	g.id IN($ids) AND g.source_id = s.id AND g.property_type_id = pt.id AND g.property_relationship_id = pr.id");										
+		break;		
+		case 3: // tree
+			$res = mysql_query("SELECT 	g.first_name AS First,
+										g.middle_name AS Middle,
+										g.last_name AS Last,
+										g.phone AS Phone,
+										g.email AS Email,
+										g.preferred AS Preferred,
+										g.street AS Street,
+										g.city AS City,
+										g.state AS state,
+										g.zip AS Zip,
+										g.tools AS Tools,
+										s.name AS Source,
+										g.notes AS Notes,
+										IF(g.pending=1,'YES','NO') AS Pending,
+										pt.name AS 'Property Type',
+										pr.name AS 'Property Relationship',
+										tt.name AS 'Tree type',
+										gt.varietal AS Varietal,
+										gt.number AS Number,
+										gt.chemicaled AS Chemicaled_id,
+										IF((gt.chemicaled=0),'No','Yes') AS Chemicaled,										
+										th.name AS Height,
+										(SELECT group_concat(m.name)
+										FROM	month_harvests mh, months m
+										WHERE mh.tree_id = gt.id AND mh.month_id = m.id) 'Harvest Months'										
+								FROM	growers g 	LEFT JOIN sources s ON g.source_id = s.id
+													LEFT JOIN property_types pt ON g.property_type_id = pt.id
+													LEFT JOIN property_relationships pr ON g.property_relationship_id = pr.id
+													LEFT JOIN grower_trees gt ON g.id = gt.grower_id 
+													LEFT JOIN tree_types tt ON gt.tree_type = tt.id
+													LEFT JOIN tree_heights th ON gt.avgHeight_id = th.id																							
+								WHERE	g.id IN($ids)");										
+		break;		
 		
 		case 4: // distribution
 //			$res = 

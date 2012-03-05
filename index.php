@@ -969,10 +969,11 @@ if (!$PRIV)
 				if(currentTable == 2){					
 					var yesButton = {
 						text: 'Yes',
-						click: function() {							
+						click: function() {	
+							alert(arrayID);
 							$(this).dialog('close');
 							window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
-							+ 'export.php?arrayID[]='+arrayID+'&table=2';								
+							+ 'export.php?arrayID[]='+arrayID+'&table=3';								
 						}
 					};
 					
@@ -982,7 +983,7 @@ if (!$PRIV)
 							//currentTable = 2; //Export ONLY grower info
 							$(this).dialog('close');
 							window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
-							+ 'export.php?arrayID[]='+arrayID+'&table=3';
+							+ 'export.php?arrayID[]='+arrayID+'&table=2';
 						}
 					};
 					var buttonList = [yesButton, noButton];
