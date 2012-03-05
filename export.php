@@ -1,7 +1,8 @@
 <?php 
 
 	require_once('include/Database.inc.php');
-
+	require_once('include/auth.inc.php');
+	
 	header("Content-type: application/octet-stream");
 	header("Content-Disposition: attachment; filename=\"test.csv\"");
 	header("Content-Transfer-Encoding: binary");
@@ -12,8 +13,49 @@
 	$table = $_REQUEST['table'];
 	$arrayID = $_REQUEST['arrayID'];
 	$ids = join(',',$arrayID);
-	
-//	$fp = fopen("test.csv", "w");
+
+	if (!isLoggedIn(false)) { // if we're not logged in, tell user
+		echo json_encode(array(
+			'status'=>401, // unauthorized
+			'message'=>'Unauthorized. Please login to complete your request.'
+			)
+		);
+		exit();
+	}
+
+	if (isExpired()) { // if session expired, tell user
+		echo json_encode(array(
+			'status'=>401, // unauthorized
+			'message'=>'Session expired. Please login to complete your request.'
+			)
+		);
+		exit();
+	}
+
+	updateLastReq(); // ajax req means user is active
+
+	// try to get current user permissions
+	$r = $db->q("SELECT p.*
+			FROM volunteers v
+			LEFT JOIN privileges p
+			ON v.privilege_id = p.id
+			WHERE v.id=$_SESSION[id]"
+	);
+
+	$priv_error = json_encode(array(
+			'status'=>500, //  db error
+			'message'=>"An error occurred while checking your privileges.\nI cannot allow you to proceed."
+		)
+	);
+	if (!$r->isValid())
+		die($priv_error);
+
+	// global containing all this user's privileges
+	$PRIV = $r->buildArray();
+	$PRIV = array_key_exists(0, $PRIV) ? $PRIV[0] : null;
+
+	if ($PRIV == null)
+		die($priv_error);
 
 	switch ($table)
 	{
