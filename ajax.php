@@ -528,8 +528,11 @@ switch ($cmd)
 					   phone as Phone,
 					   notes as Notes,
 					   email as email_tag,
-					   state as state_tag
-				FROM distributions d;";
+					   state as state_tag,
+					   (	SELECT group_concat(d.name)
+						FROM	distribution_hours dh, days d
+						WHERE dh.distribution_id = dis.id AND dh.day_id = d.id) day_tag
+				FROM distributions dis;";
 		getTable($sql);
 		break;
 	case 'get_distribution_times':

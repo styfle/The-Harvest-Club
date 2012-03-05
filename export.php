@@ -136,8 +136,11 @@
 									   contact as 'Agency Contact',
 									   email as Email,
 									   phone as Phone,
-									   notes as Notes
-								FROM distributions WHERE id IN($ids) ");
+									   notes as Notes,
+									   (	SELECT group_concat(d.name)
+										FROM	distribution_hours dh, days d
+										WHERE dh.distribution_id = dis.id AND dh.day_id = d.id) Days
+								FROM distributions dis WHERE id IN($ids) ");
 		break;
 				
 		case 6: // donation
