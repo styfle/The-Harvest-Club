@@ -60,9 +60,8 @@
 										pr.name AS 'Property Relationship',
 										tt.name AS 'Tree type',
 										gt.varietal AS Varietal,
-										gt.number AS Number,
-										gt.chemicaled AS Chemicaled_id,
-										IF((gt.chemicaled=0),'No','Yes') AS Chemicaled,										
+										gt.number AS Number,										
+										IF(gt.chemicaled is null,'',(IF((gt.chemicaled=0),'No','Yes'))) AS Chemicaled,										
 										th.name AS Height,
 										(SELECT group_concat(m.name)
 										FROM	month_harvests mh, months m
@@ -73,8 +72,7 @@
 													LEFT JOIN grower_trees gt ON g.id = gt.grower_id 
 													LEFT JOIN tree_types tt ON gt.tree_type = tt.id
 													LEFT JOIN tree_heights th ON gt.avgHeight_id = th.id																							
-								WHERE	g.id IN($ids)");										
-		break;		
+								WHERE	g.id IN($ids)");
 		
 		case 4: // distribution
 //			$res = 
