@@ -146,7 +146,7 @@ if (!$PRIV)
 	// GLOBAL FUNCTIONS (probably move to separate file)
 	
 	function reloadTable(cmd) {
-		$.ajax( {
+		$.ajax({
 			'dataType': 'json', 
 			'type': 'GET', 
 			'url': 'ajax.php?cmd=' + cmd, 
@@ -167,7 +167,7 @@ if (!$PRIV)
 					'bJQueryUI': true, // style using jQuery UI
 					'sPaginationType': 'full_numbers', // full pagination
 					'bProcessing': true, // show loading bar text
-					'bAutoWidth': true, // auto column size
+					'bAutoWidth': false, // auto column size
 					'aaSorting': [], // disable initial sort
 					"aLengthMenu": [[10, 25, 50, 100, -1], // sort length
 									[10, 25, 50, 100, "All"]], // sort name
@@ -179,42 +179,66 @@ if (!$PRIV)
 
 				currentTable = data.id; // set current table after it is populated
 				$('#page_title').text(data.title); // set page title
-				if(currentTable == 3){									//If current Tab is Trees 
-					if(growerID != 0){
-						$('#dt tbody tr').each(function() {				//For every row in the table
-							tempId = dt.fnGetData(this)[1];    			//Get growerID of current row in Tree tabs
-							if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
-								//$(this).hide();							//So it is hidden
-								dt.fnDeleteRow(this);					// so it is not in this view
-						});					
-					}						
-					growerID = 0;										//Reset growerID
+				switch (currentTable)
+				{
+					case 0:
+						showAddDelEmailExport(0,0,0,0);
+					break;
+
+					case 1: // volunteers
+						showAddDelEmailExport(priv.edit_volunteer, priv.del_volunteer, priv.send_email, priv.exp_volunteer);
+						if(privilegeID == 1) {
+							$('#dt tbody tr').each(function() {
+								tempId = dt.fnGetData(this)[14];
+								if(tempId != privilegeID)
+									dt.fnDeleteRow(this);
+							});
+						}
+						privilegeID = 0;
+					break;
+
+					case 2: // growers
+						showAddDelEmailExport(priv.edit_grower, priv.del_grower, priv.send_email, priv.exp_grower);
+						if(pending == 1) {
+							$('#dt tbody tr').each(function() {
+								tempId = dt.fnGetData(this)[15];
+								if(tempId != pending)
+									dt.fnDeleteRow(this);
+							});
+						}
+						pending = 0;
+					break;
+
+					case 3: // Trees
+						showAddDelEmailExport(priv.edit_grower, priv.del_grower, 0, 0); // tree has no email, no export
+						if(growerID != 0){
+							$('#dt tbody tr').each(function() {				//For every row in the table
+								tempId = dt.fnGetData(this)[3];    			//Get growerID of current row in Tree tabs
+								if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
+									dt.fnDeleteRow(this);					// so it is not in this view
+							});					
+						}						
+						growerID = 0;										//Reset growerID
+					break;
+
+					case 4: // distribution sites
+						showAddDelEmailExport(priv.edit_distrib, priv.del_distrib, priv.send_email, priv.exp_distrib);
+					break;
+
+					case 5: // events
+						showAddDelEmailExport(priv.edit_event, priv.del_event, 0, 0); // no email, no export
+					break;
+
+					case 6: // donations
+						showAddDelEmailExport(priv.edit_donor, priv.del_donor, 0, priv.exp_donor); // no email
+					break;
+
 				}
 
-				if(currentTable == 1) {									//If current tab is Volunteers
-					if(privilegeID == 1) {
-						$('#dt tbody tr').each(function() {
-							tempId = dt.fnGetData(this)[14];			//Get privilegeID of current row
-							if(tempId != privilegeID)
-								dt.fnDeleteRow(this);
-						});
-					}
-					privilegeID = 0;	
-				}
 
-				if(currentTable == 2) {									//If current tab is Growers
-					if(pending == 1) {
-						$('#dt tbody tr').each(function() {
-							tempId = dt.fnGetData(this)[15];				//Get pending of current row
-							if(tempId != pending)
-								dt.fnDeleteRow(this);
-						});
-					}
-					pending = 0;
-				}
 			},
 			'error': ajaxError
-		});
+		}); // end ajax
 	}
 
 	function contains(str, i) {
@@ -1011,7 +1035,7 @@ if (!$PRIV)
 			'bJQueryUI': true, // style using jQuery UI
 			'sPaginationType': 'full_numbers', // full pagination
 			'bProcessing': true, // show loading bar text
-			'bAutoWidth': true, // auto column size
+			'bAutoWidth': false, // auto column size
 			'aaSorting': [], // disable initial sort
 			"sScrollX": "100%",
 			//"bScrollCollapse": true
@@ -1033,102 +1057,7 @@ if (!$PRIV)
 			});
 
 		$('#nav input').click(function() {
-			var cmd = this.id; // button id is the ajax command
-			
-			
-			$.ajax( {
-				'dataType': 'json', 
-				'type': 'GET', 
-				'url': 'ajax.php?cmd=' + cmd, 
-				'success': function (data) {
-					if (!validResponse(data))
-						return false;
-					if (!data.datatable || !data.datatable.aoColumns || !data.datatable.aaData)
-						return alert('There is no column and row data!');
-					
-					// destroy datatable on each click
-					dt.fnDestroy(); // destroy
-					
-					// clear out data in table head and body
-					$('#dt thead').html('');
-					$('#dt tbody').html('');
-					
-					dt = $('#dt').dataTable({
-						'bJQueryUI': true, // style using jQuery UI
-						'sPaginationType': 'full_numbers', // full pagination
-						'bProcessing': true, // show loading bar text
-						'bAutoWidth': true, // auto column size
-						'aaSorting': [], // disable initial sort
-						"aLengthMenu": [[10, 25, 50, 100, -1], // sort length
-										[10, 25, 50, 100, "All"]], // sort name
-						'aoColumns': data.datatable.aoColumns,
-						'aaData': data.datatable.aaData,
-						//"sScrollX": "100%",
-						//"bScrollCollapse": true
-					});
-
-					currentTable = data.id; // set current table after it is populated
-					$('#page_title').text(data.title); // set page title
-					switch (currentTable)
-					{
-						case 0:
-							showAddDelEmailExport(0,0,0,0);
-						break;
-
-						case 1: // volunteers
-							showAddDelEmailExport(priv.edit_volunteer, priv.del_volunteer, priv.send_email, priv.exp_volunteer);
-							if(privilegeID == 1) {
-								$('#dt tbody tr').each(function() {
-									tempId = dt.fnGetData(this)[14];
-									if(tempId != privilegeID)
-										dt.fnDeleteRow(this);
-								});
-							}
-							privilegeID = 0;
-						break;
-
-						case 2: // growers
-							showAddDelEmailExport(priv.edit_grower, priv.del_grower, priv.send_email, priv.exp_grower);
-							if(pending == 1) {
-								$('#dt tbody tr').each(function() {
-									tempId = dt.fnGetData(this)[15];
-									if(tempId != pending)
-										dt.fnDeleteRow(this);
-								});
-							}
-							pending = 0;
-						break;
-
-						case 3: // Trees
-							showAddDelEmailExport(priv.edit_grower, priv.del_grower, 0, 0); // tree has no email, no export
-							if(growerID != 0){
-								$('#dt tbody tr').each(function() {				//For every row in the table
-									tempId = dt.fnGetData(this)[3];    			//Get growerID of current row in Tree tabs
-									if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
-										dt.fnDeleteRow(this);					// so it is not in this view
-								});					
-							}						
-							growerID = 0;										//Reset growerID
-						break;
-
-						case 4: // distribution sites
-							showAddDelEmailExport(priv.edit_distrib, priv.del_distrib, priv.send_email, priv.exp_distrib);
-						break;
-
-						case 5: // events
-							showAddDelEmailExport(priv.edit_event, priv.del_event, 0, 0); // no email, no export
-						break;
-
-						case 6: // donations
-							showAddDelEmailExport(priv.edit_donor, priv.del_donor, 0, priv.exp_donor); // no email
-						break;
-
-					}
-
-
-				},
-				'error': ajaxError
-			});
+			reloadTable(this.id); // button id is the ajax command
 		});
 		
 		
