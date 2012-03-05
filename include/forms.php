@@ -57,61 +57,61 @@ $avgHeight = $r->buildArray();
 			<td colspan="3" class="hidden"><input id="volunteer1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="hidden"><input id="volunteer8" name="password" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="volunteer16" name="password" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="hidden"><input id="volunteer15" name="signedup" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="volunteer8" name="signedup" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3" class="hidden"><input id="volunteer18" name="user_type" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="volunteer7" name="user_type" type="text" size="2"/></td>
 		</tr>
 		<tr>
 			<td><label for="volunteer2"><b>First</b></label></td>
-			<td><label for="volunteer3"><b>Middle</b></label></td>
-			<td><label for="volunteer4"><b>Last</b></label></td>
+			<td><label for="volunteer11"><b>Middle</b></label></td>
+			<td><label for="volunteer3"><b>Last</b></label></td>
 		</tr>
 		<tr>
 			<td><input id="volunteer2" name="firstname" type="text" size="20" required="required"/></td>
-			<td><input id="volunteer3" name="middlename" type="text" size="10"/></td>
-			<td><input id="volunteer4" name="lastname" type="text" size="15" required="required"/></td>
+			<td><input id="volunteer11" name="middlename" type="text" size="10"/></td>
+			<td><input id="volunteer3" name="lastname" type="text" size="15" required="required"/></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="volunteer5"><b>Organization</b></label></td>
+			<td colspan="3"><label for="volunteer12"><b>Organization</b></label></td>
 		</tr>
-			<td colspan="3"><input type="text" name="organization" id="volunteer5" size="52"></td>
+			<td colspan="3"><input type="text" name="organization" id="volunteer12" size="52"></td>
 		<tr>
 			<td><label for="volunteer6"><b>Phone</b></label></td>
-			<td colspan="2"><label for="volunteer7"><b>Email</b></label></td>
+			<td colspan="2"><label for="volunteer5"><b>Email</b></label></td>
 		</tr>
 		<tr>
 			<td><input type="tel" name="phone" id="volunteer6" size="20" required="required"/></td>
-			<td colspan="2"><input type="email" name="email" id="volunteer7" size="28" required="required"/></td>
+			<td colspan="2"><input type="email" name="email" id="volunteer5" size="28" required="required"/></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="volunteer10"><b>Street</b></label></td>			
+			<td colspan="3"><label for="volunteer13"><b>Street</b></label></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="street" id="volunteer10" size="52"/></td>			
+			<td colspan="3"><input type="text" name="street" id="volunteer13" size="52"/></td>			
 		</tr>
 		<tr>
-			<td><label for="volunteer11"><b>City</b></label></td>
-			<td><label for="volunteer12"><b>State</b></label></td>
-			<td><label for="volunteer13"><b>Zip</b></label></td>
+			<td><label for="volunteer4"><b>City</b></label></td>
+			<td><label for="volunteer14"><b>State</b></label></td>
+			<td><label for="volunteer15"><b>Zip</b></label></td>
 		</tr>
 		<tr>			
-			<td><input type="text" name="city" id="volunteer11" size="20" required="required"/></td>
-			<td><input type="text" name="state" id="volunteer12" size="10" maxlength="2"/></td>
-			<td><input type="text" name="zip" id="volunteer13" size="15" required="required"/></td>
+			<td><input type="text" name="city" id="volunteer4" size="20" required="required"/></td>
+			<td><input type="text" name="state" id="volunteer14" size="10" maxlength="2"/></td>
+			<td><input type="text" name="zip" id="volunteer15" size="15" required="required"/></td>
 		</tr>
 		
 		<?php echo $empty_cell ?>
 		
 		<tr>
-			<td><label for="volunteer9"><b>Status</b></label></td>					
+			<td><label for="volunteer9"><b>Active</b></label></td>					
 			<td colspan="2">
-				<select id="volunteer9" name="status">
-					<option value="1">Active</option>
-					<option value="0">Inactive</option>					
+				<select id="volunteer9" name="active_id">
+					<option value="1">Yes</option>
+					<option value="0">No</option>					
 				</select>
 			</td>			
 		</tr>
@@ -191,15 +191,15 @@ $avgHeight = $r->buildArray();
 		<tr>
 			<td><b>User Type</b></td>
 			<td colspan="2">
-				<?php echo options('volunteer14', 'privilege_id', $privileges, !$PRIV['change_priv']); ?>
+				<?php echo options('volunteer18', 'privilege_id', $privileges, !$PRIV['change_priv']); ?>
 			</td>
 		</tr>
 		
 		</table>	
 	
 	<div style="margin-top:5px;">
-		<div><label for="volunteer16"><b>Notes</b></label></div>
-		<div><textarea name="note" id="volunteer16" rows="5" cols="48"></textarea></div>
+		<div><label for="volunteer10"><b>Notes</b></label></div>
+		<div><textarea name="note" id="volunteer10" rows="5" cols="48"></textarea></div>
 	</div>	
 	</form>
 	<!-- Volunteer end -->
@@ -427,18 +427,24 @@ $avgHeight = $r->buildArray();
 			<td colspan="3"><input id="distribution2" name="name" type="text" size="45"/></td>
 		</tr>		
 		<tr>
-			<td><label for="distribution3">Phone</label></td>
-			<td colspan="2"><label for="distribution4">Email</label></td>
+			<td colspan="3"><label for="distribution6" >Agency Contact</label></td>			
 		</tr>
 		<tr>
-			<td><input type="tel" name="phone" id="distribution3" size="21" /></td>
-			<td colspan="2"><input type="text" name="email" id="distribution4" size="20" /></td>
+			<td colspan="3"><input id="distribution6" name="contact" type="text" size="45"/></td>
+		</tr>		
+		<tr>
+			<td><label for="distribution7">Phone</label></td>
+			<td colspan="2"><label for="distribution9">Email</label></td>
+		</tr>
+		<tr>
+			<td><input type="tel" name="phone" id="distribution7" size="21" /></td>
+			<td colspan="2"><input type="text" name="email" id="distribution9" size="20" /></td>
 		</tr>
 		<tr>
 			<td colspan="3"><label for="street">Street</label></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="street" id="distribution5" size="45"/></td>			
+			<td colspan="3"><input type="text" name="street" id="distribution3" size="45"/></td>			
 		</tr>
 		<tr>
 			<td><label for="city">City</label></td>
@@ -446,9 +452,9 @@ $avgHeight = $r->buildArray();
 			<td><label for="zip">Zip</label></td>
 		</tr>
 		<tr>			
-			<td><input type="text" name="city" id="distribution6" size="20"/></td>
-			<td><input type="text" name="state" id="distribution7" size="4"/></td>
-			<td><input type="text" name="zip" id="distribution8" size="12"/></td>
+			<td><input type="text" name="city" id="distribution4" size="20"/></td>
+			<td><input type="text" name="state" id="distribution10" size="4"/></td>
+			<td><input type="text" name="zip" id="distribution5" size="12"/></td>
 		</tr>				
 		</table>
 		

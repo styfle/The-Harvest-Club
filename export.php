@@ -18,21 +18,16 @@
 	switch ($table)
 	{
 		case 1: //volunteer
-			$res = mysql_query("SELECT first_name, middle_name, last_name FROM volunteers WHERE id IN($ids) ");
+			$res = mysql_query("SELECT first_name, middle_name, last_name, email, phone, street, city, state, zip, signed_up, notes  FROM volunteers WHERE id IN($ids) ");
 		break;
 		
 		case 2: // grower
 		break;
 		
-		case 3: // tree
-		break;
-		
 		case 4: // distribution
+//			$res = 
 		break;
 				
-		case 5: // event
-		break;
-		
 		case 6: // donation
 		break;
 	}		

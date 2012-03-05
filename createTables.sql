@@ -296,7 +296,7 @@ CREATE TABLE volunteers (
 	phone varchar(17) NOT NULL, 
 	email nvarchar(255) NOT NULL, 
 	password nvarchar(255) NULL, 
-	status TINYINT(1) DEFAULT 1, -- 1-Active, 0-Inactive
+	active_id TINYINT(1) DEFAULT 1, -- 1-Active, 0-Inactive
 	street nvarchar(255) NOT NULL,
 	city nvarchar(255) NOT NULL,
 	state CHAR(2) NOT NULL, 
@@ -310,7 +310,7 @@ CREATE TABLE volunteers (
 ) ENGINE=innodb;
 
 -- start temp insert
-INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, status, street, city, state, zip, privilege_id, signed_up, notes) VALUES
+INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, active_id, street, city, state, zip, privilege_id, signed_up, notes) VALUES
 ('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', SHA2('password', 256), 1, '456 Fake St', 'Irvine', 'CA', '91234', 5,'2010-05-01', 'Fearless mascot'),
 ('Joanne','', 'Lolcatz', '(949) 555-3418', 'joanne@uci.edu', SHA2('password', 256), 1, '1 Harvest Cir', 'Irvine', 'CA', '91234', 5,'2012-03-01', 'Executive Power'),
 ('Gillian','', 'Pwn', '(555) 555-1090', 'gillian@uci.edu', SHA2('password', 256), 1, '2 Harvest Cir', 'Irvine', 'CA', '91234', 4,'2012-03-01', 'Administrative skillz'),
@@ -375,6 +375,7 @@ DROP TABLE IF EXISTS distributions;
 CREATE TABLE distributions (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	name nvarchar(255) NOT NULL,
+	contact nvarchar(255),
 	phone varchar(17) NOT NULL, 
 	email nvarchar(255), 
 	street nvarchar(255) NOT NULL,

@@ -39,7 +39,7 @@ $r = $db->q("SELECT p.*
 
 $priv_error = json_encode(array(
 		'status'=>500, //  db error
-		'message'=>'An error occurred while checking your privileges.\nI cannot allow you to proceed.'
+		'message'=>"An error occurred while checking your privileges.\nI cannot allow you to proceed."
 	)
 );
 if (!$r->isValid())
@@ -75,7 +75,7 @@ function updateVolunteer($exists) {
 	$organization = $_REQUEST['organization'];
 	$phone = $_REQUEST['phone'];
 	$email = $_REQUEST['email'];
-	$status = $_REQUEST['status'];
+	$active_id = $_REQUEST['active_id'];
 	$street = $_REQUEST['street'];
 	$city = $_REQUEST['city'];
 	$state = $_REQUEST['state'];
@@ -94,7 +94,7 @@ function updateVolunteer($exists) {
 		$priv_id = null;
 	
 	if ($exists) { // volunteer exists so just update
-		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', organization='$organization', phone='$phone', email='$email', status=$status, street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";						
+		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', organization='$organization', phone='$phone', email='$email', active_id=$active_id, street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";						
 		$r = $db->q($sql);
 		getError($r);
 		
@@ -145,8 +145,8 @@ function updateVolunteer($exists) {
 		}
 	
 	} else { // adding new volunteer
-		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, status, street, city, state, zip, privilege_id, notes, signed_up) VALUES
-		('$firstName', '$middleName', '$lastName', '$organization', '$phone', '$email', '$status', '$street', '$city', '$state', '$zip', '$priv_id', '$notes', CURDATE())";
+		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, active_id, street, city, state, zip, privilege_id, notes, signed_up) VALUES
+		('$firstName', '$middleName', '$lastName', '$organization', '$phone', '$email', '$active_id', '$street', '$city', '$state', '$zip', '$priv_id', '$notes', CURDATE())";
 		$r = $db->q($sql);
 		getError($r);
 
@@ -313,7 +313,7 @@ function getTable($sql) {
 		if ($k == 'id' || $k == 'password' || contains($k, '_id')) {
 			$column['bSearchable'] = false;
 			$column['bVisible'] = false;
-		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip' || contains($k, '_flag')) {
+		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip' || contains($k, '_tag')) {
 			$column['bVisible'] = false; // hide but still searchable
 		} else if ($k == 'notes') {
 			$column['sClass'] = 'left'; // align left
@@ -462,7 +462,26 @@ switch ($cmd)
 		}
 		$data['id'] = 1;
 		$data['title'] = 'Volunteers';
-		$sql = "SELECT v.*, p.name AS user_type FROM volunteers v LEFT JOIN privileges p ON v.privilege_id = p.id;";
+		$sql = "SELECT v.id,							
+					   v.first_name as First, 			
+					   v.last_name as Last,				
+					   v.city as City,
+					   v.email as Email,
+					   v.phone as Phone,
+					   p.name as 'User Type',
+					   v.signed_up as 'Signed Up',
+					   IF((v.active_id=1),'Active','Inactive') as Active, 
+					   v.notes as Notes,
+					   v.middle_name as middle_tag,
+					   v.organization as organization_tag,
+					   v.street as street_tag,
+					   v.state as state_tag,
+					   v.zip as zip_tag,
+					   v.password as password_id,
+					   v.source_id,
+					   v.privilege_id
+				FROM volunteers v 
+				LEFT JOIN privileges p ON v.privilege_id = p.id;";
 		getTable($sql);
 		break;
 	case 'get_growers':
@@ -488,7 +507,7 @@ switch ($cmd)
 		$sql = "SELECT gt.id AS tree_id, Concat(g.first_name,' ', g.last_name) AS Owner, g.id AS grower_id , tt.id AS 'tree_type_id', tt.name AS 'Tree type', gt.varietal AS Varietal, gt.number AS Number, gt.chemicaled AS Chemicaled_id, IF((gt.chemicaled=0),'No','Yes') AS Chemicaled, th.id AS avgHeight_id, th.name AS Height, 
 					(	SELECT group_concat(m.name)
 						FROM	month_harvests mh, months m
-						WHERE mh.tree_id = gt.id AND mh.month_id = m.id) month_flag
+						WHERE mh.tree_id = gt.id AND mh.month_id = m.id) month_tag
 				FROM grower_trees gt, tree_types tt, growers g, tree_heights th
 				WHERE g.id = gt.grower_id AND gt.tree_type=tt.id AND gt.avgHeight_id = th.id;";
 		getTable($sql);
@@ -500,7 +519,17 @@ switch ($cmd)
 		}
 		$data['id'] = 4;
 		$data['title'] = 'Distributions';
-		$sql = "SELECT * FROM distributions d;";
+		$sql = "SELECT id,
+					   name as 'Agency Name',
+				       street as 'Street Address',
+					   city as City,
+					   zip as 'Zip Code',
+					   contact as 'Agency Contact',
+					   phone as Phone,
+					   notes as Notes,
+					   email as email_tag,
+					   state as state_tag
+				FROM distributions d;";
 		getTable($sql);
 		break;
 	case 'get_distribution_times':
@@ -522,6 +551,7 @@ switch ($cmd)
 		global $data;
 		$id = $_REQUEST['id'];
 		$name = $_REQUEST['name'];
+		$contact = $_REQUEST['contact'];
 		$phone = $_REQUEST['phone'];
 		$email = $_REQUEST['email'];
 		$street = $_REQUEST['street'];
@@ -529,7 +559,7 @@ switch ($cmd)
 		$state = $_REQUEST['state'];
 		$zip = $_REQUEST['zip'];
 		$notes =  $_REQUEST['note'];
-		$sql = "Update distributions Set name='$name', phone='$phone', email='$email', street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";				
+		$sql = "Update distributions Set name='$name', contact='$contact', phone='$phone', email='$email', street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";				
 		$r = $db->q($sql);	
 		
 		for ($i=1; $i<8 ; $i++) {
@@ -568,6 +598,10 @@ switch ($cmd)
 		if (isset($_REQUEST['name']))
 			$name = $_REQUEST['name'];
 		else $name ="";
+
+		if (isset($_REQUEST['contact']))
+			$contact = $_REQUEST['contact'];
+		else $contact ="";
 		
 		if (isset($_REQUEST['phone']))
 			$phone = $_REQUEST['phone'];
@@ -597,7 +631,7 @@ switch ($cmd)
 			$notes = $_REQUEST['notes'];
 		else $notes ="";
 		
-		$sql = "Insert into distributions(name,phone, email, street, city, state, zip, notes) Values ('$name', '$phone', '$email','$street','$city', '$state','$zip','$notes')";				
+		$sql = "Insert into distributions(name, contact, phone, email, street, city, state, zip, notes) Values ('$name', '$contact', '$phone', '$email','$street','$city', '$state','$zip','$notes')";				
 		$r = $db->q($sql);
 		if (!$r->isValid())
 			$data = getError();
