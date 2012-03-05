@@ -126,7 +126,7 @@
 													LEFT JOIN tree_types tt ON gt.tree_type = tt.id
 													LEFT JOIN tree_heights th ON gt.avgHeight_id = th.id																							
 								WHERE	g.id IN($ids)");
-		
+								break;		
 		case 4: // distribution
 			$res = mysql_query("SELECT name as 'Agency Name',
 									   street as 'Street Address',
