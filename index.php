@@ -1356,12 +1356,14 @@ if (!$PRIV)
 				if (!validResponse(data))
 					return false;
 				setInfo('Information Updated');
-				//$('#edit-dialog').dialog('close');
-				reloadTable("get_growers");
-				$('#grower15').val(0);
 				$('#pending2').hide();
+				$('#edit-dialog').dialog('close');
+				reloadTable("get_growers");
+				/*
+				$('#grower15').val(0);
 				for (var i = 1; i < row.length; i++)
 					$('#grower' + i).prop('disabled', false);
+				*/
 			},
 			'error': ajaxError
 		});			
@@ -1376,17 +1378,18 @@ if (!$PRIV)
 				if (!validResponse(data))
 					return false;
 				setInfo('Information Updated');
-				//$('#edit-dialog').dialog('close');
-				
-				$('#volunteer14').val(2); // approve from pending to volunteer
 				$('#pending').hide();
+				$('#edit-dialog').dialog('close');
 				reloadTable("get_volunteers");
+				/*
+				$('#volunteer14').val(2); // approve from pending to volunteer
 				for (var i = 1; i < 18; i++)
 					$('#volunteer' + i).prop('disabled', false);
 				for ( var i=1; i< 6; i++ )
 					$('#volunteerRole'+i).prop('disabled', false);
 				for ( var i=1; i< 8; ++i )
 					$('#volunteerDay'+i).prop('disabled', false);
+				*/
 			},
 			'error': ajaxError
 		});			

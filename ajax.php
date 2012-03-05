@@ -313,7 +313,7 @@ function getTable($sql) {
 		if ($k == 'id' || $k == 'password' || contains($k, '_id')) {
 			$column['bSearchable'] = false;
 			$column['bVisible'] = false;
-		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip' || contains($k, '_tag')) {
+		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip' || contains($k, '_tag') || contains($k, 'property_')) {
 			$column['bVisible'] = false; // hide but still searchable
 		} else if (contains($k,'notes') || contains($k,'phone') || contains($k,'email') || contains($k,'signed')) {
 			$column['sClass'] = 'small';
@@ -491,7 +491,7 @@ switch ($cmd)
 		}
 		$data['id'] = 2;
 		$data['title'] = 'Growers';
-		$sql = "SELECT g.id, g.first_name AS 'First Name', g.middle_name, g.last_name AS 'Last Name', g.phone AS 'Phone', g.email AS 'Email', g.preferred AS 'Preferred', g.street, g.city AS 'City', g.state, g.zip, g.tools AS tools_id, g.source_id, g.notes, g.pending AS pending_id, IF((g.pending=1),'Pending','Approved') AS Pending, g.property_type_id, g.property_relationship_id, pt.name AS property_type, pr.name AS property_relationship
+		$sql = "SELECT g.id, g.first_name AS 'First Name', g.middle_name, g.last_name AS 'Last Name', g.phone AS 'Phone', g.email AS 'Email', g.preferred AS 'Preferred', g.street, g.city AS 'City', g.state, g.zip, g.tools AS tools_id, g.source_id, g.notes AS Notes, g.pending AS pending_id, IF((g.pending=1),'Pending','Approved') AS Pending, g.property_type_id, g.property_relationship_id, pt.name AS property_type, pr.name AS property_relationship
 				FROM growers g, property_types pt, property_relationships pr
 				WHERE g.property_type_id = pt.id AND g.property_relationship_id = pr.id;";
 		getTable($sql);
