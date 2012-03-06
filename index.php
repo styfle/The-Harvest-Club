@@ -80,7 +80,7 @@ if (!$PRIV)
 				<?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>
 			</span>
 		</h1>
-		<div id="quote">"The harvest is plentiful but the workers are few"</div>
+		<div id="quote">"Share the Bounty"</div>
 
 		<div id="status" class="invisible">
 			<span id="status-icon" class="ui-icon ui-icon-info"></span>
@@ -1148,7 +1148,7 @@ if (!$PRIV)
 							$('#pending').hide();						
 							for (var i = 1; i < row.length; i++)
 								$('#volunteer' + i).prop('disabled', false);
-							for ( var i=1; i< 5; ++i )
+							for ( var i=1; i< 6; ++i )
 								$('#volunteerRole'+i).prop('disabled', false);
 							for ( var i=1; i< 8; ++i )
 								$('#volunteerDay'+i).prop('disabled', false);
@@ -1156,7 +1156,7 @@ if (!$PRIV)
 							$('#pending').show();
 							for (var i = 1; i < row.length; i++)
 								$('#volunteer' + i).prop('disabled', true);
-							for ( var i=1; i< 5; ++i )
+							for ( var i=1; i< 6; ++i )
 								$('#volunteerRole'+i).prop('disabled', true);
 							for ( var i=1; i< 8; ++i )
 								$('#volunteerDay'+i).prop('disabled', true);

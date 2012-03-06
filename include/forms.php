@@ -125,65 +125,76 @@ $avgHeight = $r->buildArray();
 			</td>
 		</tr>
 	
+		<?php echo $empty_cell ?>
 
 		<tr>			
-			<td colspan="3"><label for="volunteer5"><b>Volunteer Role</b></label></td>
+			<td><b>Volunteer Role</b></td>
+			<td colspan="2"><b>Preferred Days</b></td>
 		</tr>
 		
 		<tr>
-			<td><label for="volunteer5">Harvester</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerRole1" id="volunteerRole1"  size="28" /></td>
+			<td>
+				<input type="checkbox" name="volunteerRole1" id="volunteerRole1"  size="28" />
+				<label for="volunteerRole1">Harvester</label>
+			</td>
+			<td colspan="2">
+				<input type="checkbox" name="volunteerDay1" id="volunteerDay1" size="28" />
+				<label for="volunteerDay1">Monday</label>
+			</td>
 		</tr>
 		<tr>
-			<td><label for="volunteer5">Harvest Captain</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerRole2" id="volunteerRole2" size="28" /></td>
+			<td>
+				<input type="checkbox" name="volunteerRole2" id="volunteerRole2" size="28" />
+				<label for="volunteerRole2">Harvest Captain</label>
+			</td>
+			<td colspan="2">
+				<input type="checkbox" name="volunteerDay2" id="volunteerDay2" size="28" />
+				<label for="volunteerDay2">Tuesday</label>
+			</td>
 		</tr>
 		<tr>
-			<td><label for="volunteer5">Driver</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerRole3" id="volunteerRole3" size="28" /></td>
+			<td>
+				<input type="checkbox" name="volunteerRole3" id="volunteerRole3" size="28" />
+				<label for="volunteerRole3">Driver</label>
+			</td>
+			<td colspan="2">
+				<input type="checkbox" name="volunteerDay3" id="volunteerDay3" size="28" />
+				<label for="volunteerDay3">Wednesday</label>
+			</td>
 		</tr>
 		<tr>
-			<td><label for="volunteer5">Ambassador</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerRole4" id="volunteerRole4" size="28" /></td>
+			<td>
+				<input type="checkbox" name="volunteerRole4" id="volunteerRole4" size="28" />
+				<label for="volunteerRole4">Ambassador</label>
+			</td>
+			<td colspan="2">
+				<input type="checkbox" name="volunteerDay4" id="volunteerDay4" size="28" />
+				<label for="volunteerDay4">Thursday</label>
+			</td>
 		</tr>
 		<tr>
-			<td><label for="volunteer5">Tree Scout</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerRole5" id="volunteerRole5" size="28" /></td>
-		</tr>
-		
-		<?php echo $empty_cell ?>
-		
-		<tr>			
-			<td colspan="3"><label for="volunteer12"><b>Preferred Days</b></label></td>
-		</tr>
-		
-		<tr>
-			<td><label for="volunteer5">Monday</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerDay1" id="volunteerDay1" size="28" /></td>
+			<td>
+				<input type="checkbox" name="volunteerRole5" id="volunteerRole5" size="28" />
+				<label for="volunteerRole5">Tree Scout</label>
+			</td>
+			<td colspan="2">
+				<input type="checkbox" name="volunteerDay5" id="volunteerDay5" size="28" />
+				<label for="volunteerDay5">Friday</label>
+			</td>
 		</tr>
 		<tr>
-			<td><label for="volunteer5">Tuesday</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerDay2" id="volunteerDay2" size="28" /></td>
+			<td>&nbsp;</td>
+			<td colspan="2">
+				<input type="checkbox" name="volunteerDay6" id="volunteerDay6" size="28" />
+				<label for="volunteerDay6">Saturday</label>
+			</td>
 		</tr>
 		<tr>
-			<td><label for="volunteer5">Wednesday</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerDay3" id="volunteerDay3" size="28" /></td>
-		</tr>
-		<tr>
-			<td><label for="volunteer5">Thursday</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerDay4" id="volunteerDay4" size="28" /></td>
-		</tr>
-		<tr>
-			<td><label for="volunteer5">Friday</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerDay5" id="volunteerDay5" size="28" /></td>
-		</tr>
-		<tr>
-			<td><label for="volunteer5">Saturday</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerDay6" id="volunteerDay6" size="28" /></td>
-		</tr>
-		<tr>
-			<td><label for="volunteer5">Sunday</label></td>
-			<td colspan="2"><input type="checkbox" name="volunteerDay7" id="volunteerDay7" size="28" /></td>
+			<td>&nbsp;</td>
+			<td colspan="2">
+				<input type="checkbox" name="volunteerDay7" id="volunteerDay7" size="28" />
+				<label for="volunteerDay7">Sunday</label>
+			</td>
 		</tr>
 		
 		<?php echo $empty_cell ?>

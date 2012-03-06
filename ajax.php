@@ -123,19 +123,26 @@ function updateVolunteer($exists) {
 		$r = $db->q($sql);
 		$row = $r->getRow();
 		
-		if ($priv_id != null && $priv_id != $row[0]) { // privs have changed
+		$old_priv_id = $row[0];
+		$old_priv_name = $row[1];
+		$old_pass = $row[2];
+		$old_first = $row[3];
+		$old_last = $row[4];
+		
+		if ($priv_id != null && $priv_id != $old_priv_id) { // privs have changed
 			if (!$PRIV['change_priv']) { // make sure this user can modify other users
 				$data['status']=403;
 				$data['message']='Are you trying to hack us? You cannot change user privileges!';
 				return;
 			}
 			$sql = "UPDATE volunteers SET privilege_id=$priv_id"; // new priv
-			$message = "$firstName $lastName,\r\nYour privileges have changed. You are now a(n) $row[1]!\r\n";
-			if (empty($row[3])) { // no password
+			$message = "$firstName $lastName,\r\nYour privileges have changed. If you feel this is an error, please contact us.";
+			//You are no longer a(n) $old_priv_name!\r\n";
+			if (empty($old_pass)) { // no password
 				$pass = generatePassword(); // so generate
 				// http://dev.mysql.com/doc/refman/5.5/en/encryption-functions.html#function_sha2
 				$sql .= ", password = SHA2('$pass', 256) "; // and add to update
-				$message .=  "The following password has been generated for you:\r\n$pass";
+				$message .=  "\n\rThe following password has been generated for you:\r\n$pass\n\rThis password is required to Administrate The Harvest Club.";
 			}
 			$sql .= " WHERE id=$id"; // only update this volunteer
 			$r = $db->q($sql); // execute
