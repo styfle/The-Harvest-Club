@@ -1,87 +1,87 @@
-		var optionSelect = '<option value="" disabled="disabled" selected="selected">Select...</option>';
-		function options(data) {
-				var s = optionSelect; // first option is always select...
-				for (var i=0; i<data.length; i++) {
-					var o = data[i];
-					s += '<option value="'+o.id+'">'+o.name+'</option>';
-				}
-				return s;
-			}
+var optionSelect = '<option value="" disabled="disabled" selected="selected"></option>';
+function options(data) {
+		var s = optionSelect; // first option is always select...
+		for (var i=0; i<data.length; i++) {
+			var o = data[i];
+			s += '<option value="'+o.id+'">'+o.name+'</option>';
+		}
+		return s;
+	}
+
+function addTreeRow(tableID) {
+
+	var table = document.getElementById(tableID);
 	
-        function addTreeRow(tableID) {
- 
-            var table = document.getElementById(tableID);
-			
-			if(table.rows.length==0)
-			{
-			 var row = table.insertRow(0);
-			 var cell1 = row.insertCell(0);
-			 var label1 = document.createElement("label");
-			 label1.style.width = "2em"
-			 var txt1=document.createTextNode('');
-			 label1.appendChild(txt1);
-			 cell1.appendChild(label1);
-			 
-			 var cell2 = row.insertCell(1);
-			 var label2 = document.createElement("label");
-			 label2.style.width = "5em";
-			 var txt2=document.createTextNode('Tree');
-			 label2.style.fontWeight = 'bold';
-			 label2.appendChild(txt2);
-			 cell2.appendChild(label2);
-			 
-			 var cell3 = row.insertCell(2);
-			 var label3 = document.createElement("label");
-			 label3.style.width = "5em";
-			 label3.style.fontWeight = 'bold';
-			 var txt3=document.createTextNode('Pound');
-			 label3.appendChild(txt3);
-			 cell3.appendChild(label3);
-			}
- 
-            var rowCount = table.rows.length;
-            var row = table.insertRow(rowCount);
- 
-            var cell1 = row.insertCell(0);
-            var element1 = document.createElement("input");
-            element1.type = "checkbox";
-            cell1.appendChild(element1);
- 
-            var cell2 = row.insertCell(1);
-			var element2 = document.createElement("select");
-			element2.innerHTML = (options(treeNames));
-			cell2.appendChild(element2);
-			
-			
-			
-            var cell3 = row.insertCell(2);
-            var element3 = document.createElement("input");
-            element3.type = "text";
-			element3.style.width = "4em"
-            cell3.appendChild(element3);
-			
- 
-        }
- 
-        function deleteTreeRow(tableID) {
-            try {
-            var table = document.getElementById(tableID);
-            var rowCount = table.rows.length;
- 
-            for(var i=0; i<rowCount; i++) {
-                var row = table.rows[i];
-                var chkbox = row.cells[0].childNodes[0];
-                if(null != chkbox && true == chkbox.checked) {
-                    table.deleteRow(i);
-                    rowCount--;
-                    i--;
-                }
- 
-            }
-            }catch(e) {
-                alert(e);
-            }
-        }
+	if(table.rows.length==0)
+	{
+	 var row = table.insertRow(0);
+	 var cell1 = row.insertCell(0);
+	 var label1 = document.createElement("label");
+	 label1.style.width = "2em"
+	 var txt1=document.createTextNode('');
+	 label1.appendChild(txt1);
+	 cell1.appendChild(label1);
+	 
+	 var cell2 = row.insertCell(1);
+	 var label2 = document.createElement("label");
+	 label2.style.width = "5em";
+	 var txt2=document.createTextNode('Tree');
+	 label2.style.fontWeight = 'bold';
+	 label2.appendChild(txt2);
+	 cell2.appendChild(label2);
+	 
+	 var cell3 = row.insertCell(2);
+	 var label3 = document.createElement("label");
+	 label3.style.width = "5em";
+	 label3.style.fontWeight = 'bold';
+	 var txt3=document.createTextNode('Pound');
+	 label3.appendChild(txt3);
+	 cell3.appendChild(label3);
+	}
+
+	var rowCount = table.rows.length;
+	var row = table.insertRow(rowCount);
+
+	var cell1 = row.insertCell(0);
+	var element1 = document.createElement("input");
+	element1.type = "checkbox";
+	cell1.appendChild(element1);
+
+	var cell2 = row.insertCell(1);
+	var element2 = document.createElement("select");
+	element2.innerHTML = (options(treeNames));
+	cell2.appendChild(element2);
+	
+	
+	
+	var cell3 = row.insertCell(2);
+	var element3 = document.createElement("input");
+	element3.type = "text";
+	element3.style.width = "4em"
+	cell3.appendChild(element3);
+	
+
+}
+
+function deleteTreeRow(tableID) {
+	try {
+	var table = document.getElementById(tableID);
+	var rowCount = table.rows.length;
+
+	for(var i=0; i<rowCount; i++) {
+		var row = table.rows[i];
+		var chkbox = row.cells[0].childNodes[0];
+		if(null != chkbox && true == chkbox.checked) {
+			table.deleteRow(i);
+			rowCount--;
+			i--;
+		}
+
+	}
+	}catch(e) {
+		alert(e);
+	}
+}
 		
 function addVolunteerRow(tableID) {
 
@@ -594,8 +594,8 @@ function addVolunteerRow(tableID) {
 		var event_date =  $('#event5').val();
 		var grower_id =  $('#event-grower option:selected').val();
 		var captain_id = $('#event-captain option:selected').val();
-		var tree_type = new Array();
-		var volunteers = new Array();
+		var tree_type = [];
+		var volunteers = [];
 		
 		var table = document.getElementById("eventTree");
 		var rowCount = table.rows.length;
@@ -761,8 +761,8 @@ function addVolunteerRow(tableID) {
 		var event_date =  $('#event5').val();
 		var grower_id =  $('#event-grower option:selected').val();
 		var captain_id = $('#event-captain option:selected').val();
-		var tree_type = new Array();
-		var volunteers = new Array();
+		var tree_type = [];
+		var volunteers = [];
 		
 		var table = document.getElementById("eventTree");
 		var rowCount = table.rows.length;
@@ -872,62 +872,43 @@ function addVolunteerRow(tableID) {
 	}
 
 // This  is for distribution form
+
+function pad2(n) {
+	n += ''; //cast to str
+	while (n.length < 2)
+		n = '0' + n;
+	return n;
+}
 	
-function options(data) {
-				var s = optionSelect; // first option is always select...
-				for (var i=0; i<data.length; i++) {
-					var o = data[i];
-					s += '<option value="'+o.id+'">'+o.name+'</option>';
-				}
-				return s;
-			}
-function initHours()
-{	
-	var hours = new Array();
-	for ( var i=0;i< 24; ++i )
-		{
-			var v = {
-				"id": i,
-				"name": i
-			};
-			hours.push(v);
-		}
-	var mins = new Array();
-	for ( var i=0;i< 60; ++i )
-		{
-			var v = {
-				"id": i,
-				"name": i
-			};
-			mins.push(v);
-		}
-	var h='<option value="" disabled="disabled" selected="selected"></option>';;
-		for (var i=0; i<hours.length; i++) {
-				var o = hours[i];
-				if (i<10)
-					h += '<option value="0'+o.id+'">'+o.name+'</option>';
-				else
-					h += '<option value="'+o.id+'">'+o.name+'</option>';
-			}
-			
-	var m='<option value="" disabled="disabled" selected="selected"></option>';;
-		for (var i=0; i<mins.length; i++) {
-				var o = mins[i];
-				if (i <10) 
-					m += '<option value="0'+o.id+'">'+o.name+'</option>';
-				else
-					m += '<option value="'+o.id+'">'+o.name+'</option>';
-			}
-	for (var i = 1; i<8; i++)
-	{
+function initHours() {	
+	var t = [];
+	for (var i=0;i<24; ++i) {
+		var n = pad2(i);
+		t.push({
+			"id": n,
+			"name": n
+		});
+	}
+
+	var hString=options(t);
+	for (var i=24;i< 60; ++i) {
+		t.push({
+			"id": i,
+			"name": i
+		});
+	}
+
+	var mString=options(t);
+
+	for (var i = 1; i<8; i++) {
 		var selectTab = document.getElementById('distributionHour'+i+'-OpenHour');
-		selectTab.innerHTML = (h);
+		selectTab.innerHTML = (hString);
 		selectTab = document.getElementById('distributionHour'+i+'-CloseHour');
-		selectTab.innerHTML = (h);
+		selectTab.innerHTML = (hString);
 		selectTab = document.getElementById('distributionHour'+i+'-OpenMin');
-		selectTab.innerHTML = (m);
+		selectTab.innerHTML = (mString);
 		selectTab = document.getElementById('distributionHour'+i+'-CloseMin');
-		selectTab.innerHTML = (m);
+		selectTab.innerHTML = (mString);
 	}
 }
 

@@ -66,17 +66,17 @@ $avgHeight = $r->buildArray();
 			<td colspan="3" class="hidden"><input id="volunteer7" name="user_type" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td><label for="volunteer2"><b>First</b></label></td>
+			<td><label for="volunteer2"><b>First Name</b></label></td>
 			<td><label for="volunteer11"><b>Middle</b></label></td>
-			<td><label for="volunteer3"><b>Last</b></label></td>
+			<td><label for="volunteer3"><b>Last Name</b></label></td>
 		</tr>
 		<tr>
-			<td><input id="volunteer2" name="firstname" type="text" size="20" required="required"/></td>
-			<td><input id="volunteer11" name="middlename" type="text" size="10"/></td>
+			<td><input id="volunteer2" name="firstname" type="text" size="21" required="required"/></td>
+			<td><input id="volunteer11" name="middlename" type="text" size="8"/></td>
 			<td><input id="volunteer3" name="lastname" type="text" size="15" required="required"/></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="volunteer12"><b>Organization</b></label></td>
+			<td colspan="3"><label for="volunteer12"><b>Organization Name</b></label></td>
 		</tr>
 			<td colspan="3"><input type="text" name="organization" id="volunteer12" size="52"></td>
 		<tr>
@@ -84,7 +84,7 @@ $avgHeight = $r->buildArray();
 			<td colspan="2"><label for="volunteer5"><b>Email</b></label></td>
 		</tr>
 		<tr>
-			<td><input type="tel" name="phone" id="volunteer6" size="20" required="required"/></td>
+			<td><input type="tel" name="phone" id="volunteer6" size="21" required="required"/></td>
 			<td colspan="2"><input type="email" name="email" id="volunteer5" size="28" required="required"/></td>
 		</tr>
 		<tr>
@@ -96,37 +96,38 @@ $avgHeight = $r->buildArray();
 		<tr>
 			<td><label for="volunteer4"><b>City</b></label></td>
 			<td><label for="volunteer14"><b>State</b></label></td>
-			<td><label for="volunteer15"><b>Zip</b></label></td>
+			<td><label for="volunteer15"><b>Zip Code</b></label></td>
 		</tr>
 		<tr>			
-			<td><input type="text" name="city" id="volunteer4" size="20" required="required"/></td>
-			<td><input type="text" name="state" id="volunteer14" size="10" maxlength="2"/></td>
-			<td><input type="text" name="zip" id="volunteer15" size="15" required="required"/></td>
+			<td><input type="text" name="city" id="volunteer4" size="21" required="required"/></td>
+			<td><input type="text" name="state" id="volunteer14" size="8" maxlength="2"/></td>
+			<td><input type="text" name="zip" id="volunteer15" size="15" maxlength="5" required="required"/></td>
 		</tr>
 		
 		<?php echo $empty_cell ?>
 		
 		<tr>
+			<td><label for="volunteer17"><b>Source</b></label></td>
 			<td><label for="volunteer9"><b>Active</b></label></td>					
-			<td colspan="2">
+			<td><label for="volunteer18"><b>User Type</b></label></td>					
+		</tr>
+		<tr>
+			<td>
+				<?php echo options('volunteer17', 'source_id', $sources, true); ?>
+			</td>
+			<td>
 				<select id="volunteer9" name="active_id">
 					<option value="1">Yes</option>
 					<option value="0">No</option>					
 				</select>
 			</td>			
+			<td colspan="2">
+				<?php echo options('volunteer18', 'privilege_id', $privileges, !$PRIV['change_priv']); ?>
+			</td>
 		</tr>
 		
 		<?php echo $empty_cell ?>
 	
-		<tr>
-			<td><b>Source</b></td>
-			<td colspan="2">
-				<?php echo options('volunteer17', 'source_id', $sources, true); ?>
-			</td>
-		</tr>
-	
-		<?php echo $empty_cell ?>
-
 		<tr>			
 			<td><b>Volunteer Role</b></td>
 			<td colspan="2"><b>Preferred Days</b></td>
@@ -194,15 +195,6 @@ $avgHeight = $r->buildArray();
 			<td colspan="2">
 				<input type="checkbox" name="volunteerDay7" id="volunteerDay7" size="28" />
 				<label for="volunteerDay7">Sunday</label>
-			</td>
-		</tr>
-		
-		<?php echo $empty_cell ?>
-		
-		<tr>
-			<td><b>User Type</b></td>
-			<td colspan="2">
-				<?php echo options('volunteer18', 'privilege_id', $privileges, !$PRIV['change_priv']); ?>
 			</td>
 		</tr>
 		
@@ -452,15 +444,15 @@ $avgHeight = $r->buildArray();
 			<td colspan="2"><input type="text" name="email" id="distribution9" size="20" /></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="street">Street</label></td>			
+			<td colspan="3"><label for="distribution3">Street</label></td>			
 		</tr>
 		<tr>
 			<td colspan="3"><input type="text" name="street" id="distribution3" size="45"/></td>			
 		</tr>
 		<tr>
-			<td><label for="city">City</label></td>
-			<td><label for="state">State</label></td>
-			<td><label for="zip">Zip</label></td>
+			<td><label for="distribution4">City</label></td>
+			<td><label for="distribution10">State</label></td>
+			<td><label for="distribution5">Zip</label></td>
 		</tr>
 		<tr>			
 			<td><input type="text" name="city" id="distribution4" size="20"/></td>
@@ -473,93 +465,88 @@ $avgHeight = $r->buildArray();
 			<?php echo $empty_cell ?>
 			
 			<tr>
-				<td><label > <b> Hours </b></label></td>
-				<td colspan="3"><label > <b> Open </b> </label></td>
-				<td><label >   </label></td>
-				<td colspan="3"><label > <b>Close </b> </label></td>
+				<td><b>Day</b></td>
+				<td colspan="3"><b>Time Open</b></td>
+				<td>&nbsp;</td>
+				<td colspan="3"><b>Time Close</b></td>
 			</tr>
 			<tr>	
-				<td><label for="city">Monday </label></td>			
+				<td>Monday</td>			
 				<td><select name="distributionHour1-OpenHour" id ="distributionHour1-OpenHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour1-OpenMin" id ="distributionHour1-OpenMin"></select></td>
-				
-				<td><label >  ---   </label></td>
+				<td>&mdash;</td>
 				<td><select name="distributionHour1-CloseHour" id ="distributionHour1-CloseHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour1-CloseMin" id ="distributionHour1-CloseMin"></select></td>
 			</tr>				
 			<tr>	
-				<td><label for="city">Tuesday </label></td>			
+				<td>Tuesday</td>			
 				<td><select name="distributionHour2-OpenHour" id ="distributionHour2-OpenHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour2-OpenMin" id ="distributionHour2-OpenMin"></select></td>
-				
-				<td><label >  ---   </label></td>
+				<td>&mdash;</td>
 				<td><select name="distributionHour2-CloseHour" id ="distributionHour2-CloseHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>			
 				<td><select name="distributionHour2-CloseMin" id ="distributionHour2-CloseMin"></select></td>
 			</tr>			
 			<tr>	
-				<td><label for="city">Wednesday </label></td>			
+				<td>Wednesday</td>			
 				<td><select name="distributionHour3-OpenHour" id ="distributionHour3-OpenHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour3-OpenMin" id ="distributionHour3-OpenMin"></select></td>
-				
-				<td><label >  ---   </label></td>
+				<td>&mdash;</td>
 				<td><select name="distributionHour3-CloseHour" id ="distributionHour3-CloseHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour3-CloseMin" id ="distributionHour3-CloseMin"></select></td>
 			</tr>		
 			<tr>	
-				<td><label for="city">Thursday </label></td>			
+				<td>Thursday</td>			
 				<td><select name="distributionHour4-OpenHour" id ="distributionHour4-OpenHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour4-OpenMin" id ="distributionHour4-OpenMin"></select></td>
-				
-				<td><label >  ---   </label></td>
+				<td>&mdash;</td>
 				<td><select name="distributionHour4-CloseHour" id ="distributionHour4-CloseHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour4-CloseMin" id ="distributionHour4-CloseMin"></select></td>
 			</tr>		
 			<tr>	
-				<td><label for="city">Friday </label></td>			
+				<td>Friday</td>			
 				<td><select name="distributionHour5-OpenHour" id ="distributionHour5-OpenHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour5-OpenMin" id ="distributionHour5-OpenMin"></select></td>
-				
-				<td><label >  ---   </label></td>
+				<td>&mdash;</td>
 				<td><select name="distributionHour5-CloseHour" id ="distributionHour5-CloseHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour5-CloseMin" id ="distributionHour5-CloseMin"></select></td>
 			</tr>		
 			<tr>	
-				<td><label for="city">Saturday </label></td>			
+				<td>Saturday</td>			
 				<td><select name="distributionHour6-OpenHour" id ="distributionHour6-OpenHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour6-OpenMin" id ="distributionHour6-OpenMin"></select></td>
-				
-				<td><label >  ---   </label></td>
+				<td>&mdash;</td>
 				<td><select name="distributionHour6-CloseHour" id ="distributionHour6-CloseHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour6-CloseMin" id ="distributionHour6-CloseMin"></select></td>
 			</tr>		
 			<tr>	
-				<td><label for="city">Sunday </label></td>			
+				<td>Sunday</td>			
 				<td><select name="distributionHour7-OpenHour" id ="distributionHour7-OpenHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour7-OpenMin" id ="distributionHour7-OpenMin"></select></td>
-				
-				<td><label >  ---   </label></td>
+				<td>&mdash;</td>
 				<td><select name="distributionHour7-CloseHour" id ="distributionHour7-CloseHour"></select></td>
-				<td><label size="1">:</label></td>			
+				<td>:</td>
 				<td><select name="distributionHour7-CloseMin" id ="distributionHour7-CloseMin"></select></td>
-			</tr>		
+			</tr>
+			<tr>
+				<td colspan="8"><label for="distribution9"><b>Notes</b></label></td>
+			</tr>
+			<tr>
+				<td colspan="8"><textarea name="note" id="distribution9" rows="5" cols="43"></textarea></td>
+			</tr>
 		</table>
-	<div style="margin-top:5px;">
-		<div><label for="grower11">Notes</label></div>
-		<div><textarea name="note" id="distribution9" rows="5" cols="43"></textarea></div>
-	</div>	
 	</form>	
 	<!-- Distribution end -->
 
@@ -577,26 +564,23 @@ $avgHeight = $r->buildArray();
 			<td colspan="7" ><input id="event2" name="event-name" type="text" size="45"/></td>
 		</tr>
 		<tr>
-			<td colspan="7" ><label for="event5" ><b>Date</b></label></td>			
+			<td colspan="7" ><label for="event5"><b>Date</b></label></td>			
 		</tr>
 		<tr>
 			<td colspan="7" ><input id="event5" name="event-date" type="text" size="45"/></td>
 		</tr>
 
 		<tr>		
-			<td colspan="7" ><label for="event-grower-name"><b>Grower</b></label></td>	
+			<td colspan="4" ><label for="event-grower-name"><b>Grower</b></label></td>	
+			<td colspan="3" ><label for="event-captain"><b>Harvest Captain</b></label></td>	
 		</tr>
 		<tr>
-			<td  colspan="7" id ="event-grower"></td>			
+			<td colspan="4" id ="event-grower"></td>			
+			<td colspan="3" id ="event-captain"></td>			
 		</tr>	
-		
-		<tr>		
-			<td colspan="7" ><label for="event-grower-name"><b>Harvest Captain</b></label></td>	
-		</tr>
-		<tr>
-			<td colspan="7" id ="event-captain"></td>			
-		</tr>
-		<tr> <td> <br> </td> </tr>
+
+		<?php echo $empty_cell ?>
+
 		<table>
 			<tr>		
 				<td><label for="event-grower-name" ><b>Tree Type</b></label></td>	
@@ -605,11 +589,11 @@ $avgHeight = $r->buildArray();
 				 <INPUT type="button" value="Remove" onclick="deleteTreeRow('eventTree')" /> 
 				</td>
 			</tr>
-			<TABLE id="eventTree" width="250px"></TABLE>				
+			<table id="eventTree" width="250px"></table>				
 		
 		</table>
 		
-		<tr> <td> <br> </td> </tr>
+		<?php echo $empty_cell ?>
 		
 		<table>
 			<tr>		
