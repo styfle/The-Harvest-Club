@@ -98,8 +98,10 @@
 										IF(g.pending=1,'YES','NO') AS Pending,
 										pt.name AS 'Property Type',
 										pr.name AS 'Property Relationship'
-								FROM	growers g, sources s, property_types pt, property_relationships pr
-								WHERE	g.id IN($ids) AND g.source_id = s.id AND g.property_type_id = pt.id AND g.property_relationship_id = pr.id");										
+								FROM	growers g	LEFT JOIN property_types pt ON g.property_type_id = pt.id
+													LEFT JOIN property_relationships pr ON g.property_relationship_id = pr.id
+													LEFT JOIN sources s ON g.source_id = s.id
+								WHERE	g.id IN($ids)");										
 		break;		
 		case 3: // tree
 			$filename = "growers_trees";
