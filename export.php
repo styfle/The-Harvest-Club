@@ -164,6 +164,8 @@
 		break;
 	}		
 	
+	header("Content-Disposition: attachment; filename=\"$filename($my_t[month]-$my_t[mday]-$my_t[year]).csv\"");
+	
 	// fetch a row and write the column names out to the file
 	$row = mysql_fetch_assoc($res);
 	$line = "";
@@ -194,6 +196,6 @@
 	}
 
 //	fclose($fp);	
-	header("Content-Disposition: attachment; filename=\"$filename($my_t[month]-$my_t[mday]-$my_t[year]).csv\"");
+	
 
 ?>
