@@ -919,7 +919,7 @@ switch ($cmd)
 		}
 		$data['id'] = 10;
 		$data['title'] = 'Grower-Name';
-		$sql = "SELECT id, Concat(first_name,' ',middle_name,' ',last_name) FROM growers ;";
+		$sql = "SELECT id, Concat(first_name,' ',middle_name,' ',last_name), phone, street, city FROM growers ;";
 		getName($sql);
 		break;	
 		

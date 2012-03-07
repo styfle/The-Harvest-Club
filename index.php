@@ -354,6 +354,9 @@ if (!$PRIV)
 	var treeNames = [];
 	var volunteerNames = [];
 	var distributionNames = [];
+	var growerPhone =[];
+	var growerAddress =[];
+	var growerCity =[];
 	var grower_id,event_id, captain_id;
 	////
 	
@@ -1299,6 +1302,9 @@ if (!$PRIV)
 			volunteerNames.length = 0;
 			loadTree(grower_id, event_id);
 			loadVolunteerName(event_id);
+			$('#event8').val(growerPhone[grower_id-1]);
+			$('#event9').val(growerAddress[grower_id-1]);
+			$('#event7').val(growerCity[grower_id-1]);
 			
 		});
 		

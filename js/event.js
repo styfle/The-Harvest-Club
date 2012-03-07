@@ -364,7 +364,12 @@ function addVolunteerRow(tableID) {
 							var str = '<select id="event-grower-name" name="event-grower-name">';
 							if( data.datatable != null) 							
 								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
-										str += '<option value="'+data.datatable.aaData[i][0]+'">'+data.datatable.aaData[i][1]+'</option>';
+								{
+									str += '<option value="'+data.datatable.aaData[i][0]+'">'+data.datatable.aaData[i][1]+'</option>';
+									growerPhone.push(data.datatable.aaData[i][2]);
+									growerAddress.push(data.datatable.aaData[i][3]);
+									growerCity.push(data.datatable.aaData[i][4]);
+								}
 								str += '</select>';	
 								$('#event-grower').append(str);
 								getGrower(grower_id);
