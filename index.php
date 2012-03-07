@@ -188,11 +188,13 @@ if (!$PRIV)
 					case 1: // volunteers
 						showAddDelEmailExport(priv.edit_volunteer, priv.del_volunteer, priv.send_email, priv.exp_volunteer);
 						if(privilegeID == 1) {
-							$('#dt tbody tr').each(function() {
-								tempId = dt.fnGetData(this)[14];
-								if(tempId != privilegeID)
-									dt.fnDeleteRow(this);
-							});
+							// $('#dt tbody tr').each(function() {
+								// tempId = dt.fnGetData(this)[14];
+								// if(tempId != privilegeID)
+									// dt.fnDeleteRow(this);
+							// });
+							cmd = "get_pending_volunteers";
+							reloadTable(cmd);
 						}
 						privilegeID = 0;
 					break;
@@ -200,25 +202,24 @@ if (!$PRIV)
 					case 2: // growers
 						showAddDelEmailExport(priv.edit_grower, priv.del_grower, priv.send_email, priv.exp_grower);
 						if(pending == 1) {
-							$('#dt tbody tr').each(function() {
-								tempId = dt.fnGetData(this)[15];
-								if(tempId != pending)
-									dt.fnDeleteRow(this);
-							});
+							// $('#dt tbody tr').each(function() {
+								// tempId = dt.fnGetData(this)[15];
+								// if(tempId != pending)
+									// dt.fnDeleteRow(this);
+							// });
+							cmd = "get_pending_growers";
+							reloadTable(cmd);							
 						}
 						pending = 0;
 					break;
 
 					case 3: // Trees
-						showAddDelEmailExport(priv.edit_grower, priv.del_grower, 0, 0); // tree has no email, no export
+						showAddDelEmailExport(priv.edit_grower, priv.del_grower, 0, 0); // tree has no email, no export						
 						if(growerID != 0){
-							$('#dt tbody tr').each(function() {				//For every row in the table
-								tempId = dt.fnGetData(this)[3];    			//Get growerID of current row in Tree tabs
-								if(tempId != growerID)						//If growerIDs are different. That tree does not belong to the grower
-									dt.fnDeleteRow(this);					// so it is not in this view
-							});					
+							cmd = "get_trees_from&growerID="+growerID;
+							growerID = 0;
+							reloadTable(cmd);							
 						}						
-						growerID = 0;										//Reset growerID
 					break;
 
 					case 4: // distribution sites

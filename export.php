@@ -60,6 +60,9 @@
 	switch ($table)
 	{
 		case 1: //volunteer
+			$localtime = localtime();
+			"file".date('m-d-Y-His A e').".csv"; 
+			header("Content-Disposition: attachment; filename=\"file".getdate().".csv\"");
 			$res = mysql_query("SELECT first_name as 'First Name',
 									   middle_name as 'Middle Name',
 									   last_name as 'Last Name',
