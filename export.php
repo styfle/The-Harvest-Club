@@ -4,16 +4,17 @@
 	require_once('include/auth.inc.php');
 	
 	header("Content-type: application/octet-stream");
-	header("Content-Disposition: attachment; filename=\"test.csv\"");
+	header("Content-Disposition: attachment; filename=\"export.csv\"");	
 	header("Content-Transfer-Encoding: binary");
 	header("Pragma: no-cache");
 	header("Cache-Control: no-cache, must-revalidate");
 	header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-
+	date_default_timezone_set("America/Los_Angeles");
+	
 	$table = $_REQUEST['table'];
 	$arrayID = $_REQUEST['arrayID'];
 	$ids = join(',',$arrayID);
-
+ 
 	if (!isLoggedIn(false)) { // if we're not logged in, tell user
 		echo json_encode(array(
 			'status'=>401, // unauthorized
@@ -56,13 +57,15 @@
 
 	if ($PRIV == null)
 		die($priv_error);
-
+	$filename = "export";
+	$my_t=getdate(date("U"));
+	//print("$my_t[weekday], $my_t[month] $my_t[mday], $my_t[year]");
+ 
+		
 	switch ($table)
 	{
 		case 1: //volunteer
-			$localtime = localtime();
-			"file".date('m-d-Y-His A e').".csv"; 
-			header("Content-Disposition: attachment; filename=\"file".getdate().".csv\"");
+			$filename = "volunteers";		
 			$res = mysql_query("SELECT first_name as 'First Name',
 									   middle_name as 'Middle Name',
 									   last_name as 'Last Name',
@@ -78,6 +81,7 @@
 		break;
 		
 		case 2: // grower
+			$filename = "growers";
 			$res = mysql_query("SELECT 	g.first_name AS First,
 										g.middle_name AS Middle,
 										g.last_name AS Last,
@@ -98,6 +102,7 @@
 								WHERE	g.id IN($ids) AND g.source_id = s.id AND g.property_type_id = pt.id AND g.property_relationship_id = pr.id");										
 		break;		
 		case 3: // tree
+			$filename = "growers_trees";
 			$res = mysql_query("SELECT 	g.first_name AS First,
 										g.middle_name AS Middle,
 										g.last_name AS Last,
@@ -131,6 +136,7 @@
 								WHERE	g.id IN($ids)");
 								break;		
 		case 4: // distribution
+			$filename = "distribs";
 			$res = mysql_query("SELECT name as 'Agency Name',
 									   street as 'Street Address',
 									   city as City,
@@ -147,6 +153,7 @@
 		break;
 				
 		case 6: // donation
+			$filename = "donors";
 			$res = mysql_query("SELECT donation as Donation,
 									   donor as Donor,
 									   value as Value,
@@ -154,7 +161,7 @@
 								FROM donations WHERE id IN($ids) ");
 		break;
 	}		
-
+	
 	// fetch a row and write the column names out to the file
 	$row = mysql_fetch_assoc($res);
 	$line = "";
@@ -185,6 +192,6 @@
 	}
 
 //	fclose($fp);	
- 
+	header("Content-Disposition: attachment; filename=\"$filename($my_t[month]-$my_t[mday]-$my_t[year]).csv\"");
 
 ?>
