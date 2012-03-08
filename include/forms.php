@@ -551,7 +551,7 @@ $avgHeight = $r->buildArray();
 	<!-- Distribution end -->
 
 	<!-- Event form -->
-	<form id="event" class="hidden">
+	<form id="event" class="full_width hidden">
 		<h3>Event</h3>
 		<table>
 			<tr>
