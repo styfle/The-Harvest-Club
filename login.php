@@ -8,7 +8,7 @@ if (isset($_REQUEST['email']) && isset($_REQUEST['password'])) {
 			LEFT JOIN privileges p
 			ON v.privilege_id = p.id
 			WHERE email='%s'
-			AND password=SHA2('%s', 256);"; // password uses SHA2-256 (MySQL 5.5+)
+			AND password=SHA1('%s');"; // password uses SHA1
 	
 	$r = $db->q($sql, array(
 			$_REQUEST['email'],

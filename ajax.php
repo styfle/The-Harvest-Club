@@ -140,8 +140,7 @@ function updateVolunteer($exists) {
 			//You are no longer a(n) $old_priv_name!\r\n";
 			if (empty($old_pass)) { // no password
 				$pass = generatePassword(); // so generate
-				// http://dev.mysql.com/doc/refman/5.5/en/encryption-functions.html#function_sha2
-				$sql .= ", password = SHA2('$pass', 256) "; // and add to update
+				$sql .= ", password = SHA1('$pass') "; // and add to update
 				$message .=  "\n\rThe following password has been generated for you:\r\n$pass\n\rThis password is required to administrate The Harvest Club.";
 			}
 			$sql .= " WHERE id=$id"; // only update this volunteer
