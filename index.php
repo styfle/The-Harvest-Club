@@ -202,7 +202,7 @@ if (!$PRIV)
 
 					case 2: // growers
 						showAddDelEmailExport(priv.edit_grower, priv.del_grower, priv.send_email, priv.exp_grower);
-						if(saveGrowerDialog==1){
+						if(saveGrowerDialog==1 && $('#grower1').val()==growerID){
 							switchForm("grower");
 							$('#edit-dialog').dialog('open');
 						}
@@ -224,8 +224,9 @@ if (!$PRIV)
 							viewTreeClicked = 0;
 							saveGrowerDialog = 1;
 							cmd = "get_trees_from&growerID="+growerID;
-							reloadTable(cmd);							
-						}							
+							reloadTable(cmd);					
+						}
+						
 					break;
 
 					case 4: // distribution sites
