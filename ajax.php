@@ -458,7 +458,14 @@ switch ($cmd)
 		// no privs needed, just check user type
 		$data['id'] = 0;
 		$data['title'] = 'Notifications';
-		$sql = "SELECT 'Pending volunteers' AS 'Table', count(*) AS 'Updates' FROM volunteers WHERE privilege_id=1 UNION SELECT 'Pending growers' AS 'Table', count(*) AS 'Updates' FROM growers WHERE pending=1";
+		$sql = "SELECT 'Pending volunteers' AS 'Table', count(*) AS 'Updates' 
+				FROM volunteers WHERE privilege_id=1
+				UNION
+				SELECT 'Active volunteers' AS 'Table', count(*) AS 'Updates'
+				FROM volunteers WHERE active_id=1
+				UNION
+				SELECT 'Pending growers' AS 'Table', count(*) AS 'Updates'
+				FROM growers WHERE pending=1;";
 		getTable($sql);
 		break;
 	case 'get_volunteers':
@@ -502,6 +509,20 @@ switch ($cmd)
 								LEFT JOIN property_relationships pr ON g.property_relationship_id = pr.id;";
 		getTable($sql);
 		break;
+	case 'get_grower':
+		if (!$PRIV['view_grower']) {
+			forbidden();
+			break;
+		}
+		$data['id'] = 2;
+		$data['title'] = 'Grower';
+		$growerID = $_REQUEST['growerID'];
+		$sql = "SELECT g.id, g.first_name AS 'First Name', g.middle_name, g.last_name AS 'Last Name', g.phone AS 'Phone', g.email AS 'Email', g.preferred AS 'Preferred', g.street, g.city AS 'City', g.state, g.zip, g.tools AS tools_id, g.source_id, g.notes AS Notes, g.pending AS pending_id, IF((g.pending=1),'Pending','Approved') AS Pending, g.property_type_id, g.property_relationship_id, pt.name AS property_type, pr.name AS property_relationship
+				FROM growers g 	LEFT JOIN property_types pt ON g.property_type_id = pt.id
+								LEFT JOIN property_relationships pr ON g.property_relationship_id = pr.id
+				WHERE g.id = $growerID;";
+		getTable($sql);
+		break;
 	
 	case 'get_trees': // same priv as grower
 		if (!$PRIV['view_grower']) {
@@ -535,6 +556,36 @@ switch ($cmd)
 				WHERE g.id = gt.grower_id AND g.id = $growerID AND gt.tree_type=tt.id AND gt.avgHeight_id = th.id;";
 		getTable($sql);
 		break;
+	case 'get_active_volunteers':
+		if (!$PRIV['view_volunteer']) {
+			forbidden();
+			break;
+		}		
+		$data['id'] = 1;
+		$data['title'] = 'Volunteers';
+		$sql = "SELECT v.id,							
+					   v.first_name as First, 			
+					   v.last_name as Last,				
+					   v.city as City,
+					   v.email as Email,
+					   v.phone as Phone,
+					   p.name as 'User Type',
+					   v.signed_up as 'Signed Up',
+					   IF((v.active_id=1),'Active','Inactive') as Active, 
+					   v.notes as Notes,
+					   v.middle_name as middle_tag,
+					   v.organization as organization_tag,
+					   v.street as street_tag,
+					   v.state as state_tag,
+					   v.zip as zip_tag,
+					   v.password as password_id,
+					   v.source_id,
+					   v.privilege_id
+				FROM volunteers v 
+				LEFT JOIN privileges p ON v.privilege_id = p.id
+				WHERE v.active_id = 1;";
+		getTable($sql);
+		break;
 	case 'get_pending_volunteers':
 		if (!$PRIV['view_volunteer']) {
 			forbidden();
@@ -563,9 +614,8 @@ switch ($cmd)
 				FROM volunteers v 
 				LEFT JOIN privileges p ON v.privilege_id = p.id
 				WHERE v.privilege_id = 1;";
-		getTable($sql);
+		getTable($sql);		
 		break;
-	break;
 	case 'get_pending_growers':
 		if (!$PRIV['view_grower']) {
 			forbidden();

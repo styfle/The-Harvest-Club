@@ -188,39 +188,44 @@ if (!$PRIV)
 
 					case 1: // volunteers
 						showAddDelEmailExport(priv.edit_volunteer, priv.del_volunteer, priv.send_email, priv.exp_volunteer);
-						if(privilegeID == 1) {
-							// $('#dt tbody tr').each(function() {
-								// tempId = dt.fnGetData(this)[14];
-								// if(tempId != privilegeID)
-									// dt.fnDeleteRow(this);
-							// });
+						if(privilegeID == 1) {							
 							cmd = "get_pending_volunteers";
 							reloadTable(cmd);
 						}
+						else if(viewActiveVol == 1){
+							cmd = "get_active_volunteers";
+							reloadTable(cmd);
+						}
 						privilegeID = 0;
+						viewActiveVol = 0;
 					break;
 
 					case 2: // growers
 						showAddDelEmailExport(priv.edit_grower, priv.del_grower, priv.send_email, priv.exp_grower);
-						if(pending == 1) {
-							// $('#dt tbody tr').each(function() {
-								// tempId = dt.fnGetData(this)[15];
-								// if(tempId != pending)
-									// dt.fnDeleteRow(this);
-							// });
+						if($('#grower1').val()==-1){
+							switchForm("grower");
+							$('#edit-dialog').dialog('open');
+						}
+						if(pending == 1) {							
 							cmd = "get_pending_growers";
 							reloadTable(cmd);							
+						}
+						else if(viewGrowerClicked == 1){
+							viewGrowerClicked = 0;
+							cmd = "get_grower&growerID=" +growerID;
+							reloadTable(cmd);
 						}
 						pending = 0;
 					break;
 
 					case 3: // Trees
 						showAddDelEmailExport(priv.edit_grower, priv.del_grower, 0, 0); // tree has no email, no export						
-						if(viewTreeClicked == 1){
+						if(viewTreeClicked == 1 && $('#grower1').val()>=0){
 							viewTreeClicked = 0;
+							$('#grower1').val(-1);
 							cmd = "get_trees_from&growerID="+growerID;
 							reloadTable(cmd);							
-						}						
+						}							
 					break;
 
 					case 4: // distribution sites
@@ -343,9 +348,11 @@ if (!$PRIV)
 	var dt_length = 10; // show x entries
 	var forms = ['volunteer', 'grower', 'tree', 'distribution'];
 	var viewTreeClicked = 0;
+	var viewGrowerClicked = 0;
 	var growerID = 0;
 	var pending = 0;
 	var privilegeID = 0;
+	var viewActiveVol = 0;
 	var aPos;
 	var row;
 	//----- These are the variables for event
@@ -663,8 +670,10 @@ if (!$PRIV)
 	
 	var cancelButton = {
 		text: 'Cancel',
-		click: function() {
-			$(this).dialog('close');
+		click: function() {			
+			if(currentTable == 2)
+				$('#grower1').val(0);
+			$(this).dialog('close');			
 		}
 	}; 
 
@@ -1360,10 +1369,20 @@ if (!$PRIV)
 		$('#edit-dialog').dialog('close');				//Close pop-up
 		document.getElementById('get_trees').click();	//switch to Trees Tab	
 	}
+	function viewGrower(){
+		viewGrowerClicked = 1;	
+		growerID = $('#tree3').val();					//get grower ID;
+		$('#edit-dialog').dialog('close');				//Close pop-up
+		document.getElementById('get_growers').click();	//switch to Trees Tab	
+	}
 
 	function viewNotifications(row) {
 		if (row == 'Pending volunteers') {
 			privilegeID = 1;
+			document.getElementById('get_volunteers').click();
+		}
+		if (row == 'Active volunteers') {
+			viewActiveVol = 1;
 			document.getElementById('get_volunteers').click();
 		}
 		if (row == 'Pending growers') {

@@ -333,7 +333,12 @@ $avgHeight = $r->buildArray();
 		</tr>
 		<tr>
 			<td class="hidden"><input id="tree11" name="height_name" type="text" size="2"/></td>
-		</tr>		
+		</tr>	
+		<tr> 
+			<td>Show grower</td>
+			<td><input type="button" onclick="viewGrower();" value="View Grower"/></td>
+		</tr>
+		
 		<tr>			
 			<td colspan="4">
 			<label for="grower_id"> Owner</label>
