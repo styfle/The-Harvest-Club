@@ -53,7 +53,7 @@ $months = $r->buildArray();
 <body>
 <div id="main" role="main">
 	<h1>Grower Registration</h1>
-	<p>If you have fruit trees and/or other crops that produce more than you can use, donating part to The Harvest Club gleaners is a great way to make a difference and strengthen your community ties. This form provides us with the essential contact information and your harvest preferences.</p>
+	<p>By completing this form, you will be added to The Harvest Club Grower Database and we&#39;ll be in touch with you to coordinate a harvest.  This form provides us with the essential contact information and your harvest preferences.</p>
     <form id="grower" action="submit-grower.php" method="post">
     	<h2>Grower Information</h2>
     	
@@ -165,12 +165,12 @@ $months = $r->buildArray();
 		
 		</fieldset> <!-- end Address -->
 		
-		<h2>Misc Information</h2>
+		<h2>Harvesting Tools / Property</h2>
 		<fieldset>
 			<legend>Optional</legend>
 			
 			<div>
-				<label for="tools">Tools available for volunteers on site</label>
+				<label for="tools">Are there tools available on site for volunteers? If yes, please list:</label>
 				<input name="tools" type="text" />
 			</div>
 			
