@@ -907,7 +907,8 @@ switch ($cmd)
 		}
 		$data['id'] = 5;
 		$data['title'] = 'Events';		
-		$sql = "SELECT id, name as 'Event Name', grower_id, captain_id, date(date) as Date FROM events ;";
+		$sql = "SELECT e.id, e.grower_id, e.captain_id, date(e.date) as Date, Concat(g.first_name,' ',g.middle_name,' ',g.last_name) as Grower, g.city, e.time, e.notes FROM events E, growers g Where e.grower_id = g.id;";
+
 		getTable($sql);
 		break;
 		
@@ -1002,17 +1003,31 @@ switch ($cmd)
 		$data['id'] = 16;
 		$data['title'] = 'Update Event';
 		$rawData = $_POST;
-		$event_id = ($rawData["event_id"]);
-		$event_name = ($rawData["event_name"]);
-		$event_date = ($rawData["event_date"]);
+		$event_id = ($rawData["event_id"]);		
+
+
+		$event_date = ($rawData["event_date"]);		
 		$grower_id = ($rawData["grower_id"]);
 		$captain_id = ($rawData["captain_id"]);
+		
+		if (isset($rawData["event_time"])) 
+		 $event_time = ($rawData["event_time"]);		
+		else
+		 $event_time = "";		
+		
+		if (isset($rawData["event_notes"])) 
+		 $event_notes = ($rawData["event_notes"]);		
+		else
+		 $event_notes = "";	
+		
 		$tree_type = array();
 		$volunteers = array();
 		if (isset($rawData["treeType"]))
 		 $tree_type = $rawData["treeType"];
 		if (isset($rawData["volunteers"])) 
 		 $volunteers = $rawData["volunteers"];
+		 
+		//print_r($rawData);
 		
 		$hostname =  MYSQL_SERVER;
 		$dbname =  MYSQL_DB;
@@ -1037,28 +1052,36 @@ switch ($cmd)
 				$dbh->exec ("Delete From volunteer_events Where event_id=$event_id");
 				$dbh->exec ("Delete From harvests Where event_id=$event_id");		
 				// Adding new info	
-				$dbh->exec ("Update events Set name = '$event_name', grower_id = $grower_id, captain_id = $captain_id , date ='$event_date' Where id = $event_id");
-				
+				$dbh->exec ("Update events Set time = '$event_time', notes = '$event_notes',  grower_id = $grower_id, captain_id = $captain_id , date ='$event_date' Where id = $event_id");
+		
+
 				for( $i=0; $i< count($tree_type); $i++)
 				{
 				  $treeID = $tree_type[$i]["tree_id"];
+				  $number = $tree_type[$i]["number"];
 				  $pound = $tree_type[$i]["pound"];
-				  $dbh->exec ("Insert into harvests(event_id, tree_id, pound) Values ($event_id,$treeID,$pound)");
+				  $dbh->exec ("Insert into harvests(event_id, tree_id, number, pound) Values ($event_id,$treeID, $number, $pound)");
 				}
 				
 				for( $i=0; $i< count($volunteers); $i++)
 				{
-				  $d=0;
+				  $d =0;	
 				  $volunteerID = $volunteers[$i]["volunteer_id"];
 				  $hour = $volunteers[$i]["hour"];
 				  $driver = $volunteers[$i]["driver"];
 				  if ( $driver == 'true')
 				  {		
-					$d++;
-				    $treeID = $volunteers[$i]["tree_id"];
-					$pound =  $volunteers[$i]["pound"];
-					$distributionID = $volunteers[$i]["distribution_id"];
-					$dbh->exec ("Insert into drivings(event_id, tree_id, volunteer_id, distribution_id, pound) Values ($event_id,$treeID,$volunteerID,$distributionID, $pound)");	
+					$d =1;	
+				    $distributedTree = $volunteers[$i]["distributedTree"];
+					for( $j=0; $j< count($distributedTree); $j++)
+					{
+						$treeID = $distributedTree[$j]["tree_id"];
+
+
+						$pound =  $distributedTree[$j]["pound"];
+						$distributionID = $distributedTree[$j]["distribution_id"];
+						$dbh->exec ("Insert into drivings(event_id, tree_id, volunteer_id, distribution_id, pound) Values ($event_id,$treeID,$volunteerID,$distributionID, $pound)");	
+					}
 				  }
 					$dbh->exec ("Insert into volunteer_events(event_id, volunteer_id, hour, driver) Values ($event_id, $volunteerID, $hour, $d)");
 				  
@@ -1082,11 +1105,22 @@ switch ($cmd)
 		}
 		$data['id'] = 17;
 		$data['title'] = 'Create Event';
-		$rawData = $_POST;		
-		$event_name = ($rawData["event_name"]);
-		$event_date = ($rawData["event_date"]);
+		$rawData = $_POST;				
+
+		$event_date = ($rawData["event_date"]);		
 		$grower_id = ($rawData["grower_id"]);
 		$captain_id = ($rawData["captain_id"]);
+		
+		if (isset($rawData["event_time"])) 
+		 $event_time = ($rawData["event_time"]);		
+		else
+		 $event_time = "";		
+		
+		if (isset($rawData["event_notes"])) 
+		 $event_notes = ($rawData["event_notes"]);		
+		else
+		 $event_notes = "";		
+		 
 		$tree_type = array();
 		$volunteers = array();
 		if (isset($rawData["treeType"]))
@@ -1094,12 +1128,13 @@ switch ($cmd)
 		if (isset($rawData["volunteers"])) 
 		 $volunteers = $rawData["volunteers"];
 		 
+		 
 		$hostname =  MYSQL_SERVER;
 		$dbname =  MYSQL_DB;
 		$username = MYSQL_USER;
 		$password = MYSQL_PASS;
 		 
-		$sql = "Insert into events( name, grower_id, captain_id, date) Values ('$event_name', $grower_id, $captain_id,'$event_date')";			
+		$sql = "Insert into events(grower_id, captain_id, date, time, notes) Values ($grower_id, $captain_id,'$event_date','$event_time','$event_notes')";							
 		$r = $db->q($sql);
 		if (!$r->isValid())
 			$data = getError();
@@ -1127,29 +1162,36 @@ switch ($cmd)
 				for( $i=0; $i< count($tree_type); $i++)
 				{
 				  $treeID = $tree_type[$i]["tree_id"];
+				  $number = $tree_type[$i]["number"];
 				  $pound = $tree_type[$i]["pound"];
-				  $dbh->exec ("Insert into harvests(event_id, tree_id, pound) Values ($event_id,$treeID,$pound)");
+				  $dbh->exec ("Insert into harvests(event_id, tree_id, number, pound) Values ($event_id,$treeID, $number, $pound)");
 				}
 				
 				for( $i=0; $i< count($volunteers); $i++)
 				{
-				  $d=0;
+				  $d =0;	
 				  $volunteerID = $volunteers[$i]["volunteer_id"];
 				  $hour = $volunteers[$i]["hour"];
 				  $driver = $volunteers[$i]["driver"];
 				  if ( $driver == 'true')
 				  {		
-					$d++;
-				    $treeID = $volunteers[$i]["tree_id"];
-					$pound =  $volunteers[$i]["pound"];
-					$distributionID = $volunteers[$i]["distribution_id"];
-					$dbh->exec ("Insert into drivings(event_id, tree_id, volunteer_id, distribution_id, pound) Values ($event_id,$treeID,$volunteerID,$distributionID, $pound)");	
+					$d =1;	
+				    $distributedTree = $volunteers[$i]["distributedTree"];
+					for( $j=0; $j< count($distributedTree); $j++)
+					{
+						$treeID = $distributedTree[$j]["tree_id"];
+
+
+						$pound =  $distributedTree[$j]["pound"];
+						$distributionID = $distributedTree[$j]["distribution_id"];
+						$dbh->exec ("Insert into drivings(event_id, tree_id, volunteer_id, distribution_id, pound) Values ($event_id,$treeID,$volunteerID,$distributionID, $pound)");	
+					}
 				  }
 					$dbh->exec ("Insert into volunteer_events(event_id, volunteer_id, hour, driver) Values ($event_id, $volunteerID, $hour, $d)");
 				  
 				  
 				}
-				$dbh->commit ();                     # success
+				$dbh->commit ();                      # success
 			   }
 			   catch (PDOException $e)
 			   {

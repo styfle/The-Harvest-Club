@@ -551,60 +551,91 @@ $avgHeight = $r->buildArray();
 	<!-- Distribution end -->
 
 	<!-- Event form -->
-	<form id="event" class="full_width hidden">
+	<form id="event" class="hidden">
 		<h3>Event</h3>
 		<table>
-		<tr>
-			<td colspan="7" style = "display:none"><input id="event1" name="id" type="text" size="2"/></td>
-		</tr>
-		<tr>
-			<td colspan="7" ><label for="event2" ><b>Harvest Event</b></label></td>			
-		</tr>
-		<tr>
-			<td colspan="7" ><input id="event2" name="event-name" type="text" size="45"/></td>
-		</tr>
-		<tr>
-			<td colspan="7" ><label for="event5"><b>Harvest Date</b></label></td>			
-		</tr>
-		<tr>
-			<td colspan="7" ><input id="event5" name="event-date" type="text" size="45"/></td>
-		</tr>
-		
-		<tr>
-			<td colspan="7" ><label for="event6"><b>Harvest Time</b></label></td>			
-		</tr>
-		<tr>
-			<td colspan="7" ><input id="event6" name="event-date" type="text" size="45"/></td>
-		</tr>
-		
-		<tr>
-			<td colspan="7" ><label for="event7"><b>City of Harvest</b></label></td>			
-		</tr>
-		<tr>
-			<td colspan="7" ><input id="event7" name="event-city" type="text" size="45"/></td>
-		</tr>
+			<tr>
+				<td> 
+					<table>
+						<tr>
+							<td colspan="7" style = "display:none"><input id="event1" name="id" type="text" size="2"/></td>
+						</tr>
+						<tr>		
 
-		<tr>		
-			<td colspan="4" ><label for="event-grower-name"><b>Grower</b></label></td>	
-			<td colspan="3" ><label for="event-captain"><b>Harvest Captain</b></label></td>	
-		</tr>
-		<tr>
-			<td colspan="4" id ="event-grower"></td>			
-			<td colspan="3" id ="event-captain"></td>			
-		</tr>	
-		<tr>
-			<td colspan="7" ><label for="event8"><b>Grower's Phone Number</b></label></td>			
-		</tr>
-		<tr>
-			<td colspan="7" ><input id="event8" name="event-grower-number" type="text" size="45"/></td>
-		</tr>
+							<td colspan="4" ><label for="event-grower-name"><b>Grower</b></label></td>								
+						</tr>
+						<tr>
+							<td colspan="4" id ="event-grower"></td>										
+						</tr>	
+						<tr>
+							<td colspan="7" ><label for="event4"><b>Harvest Date</b></label></td>			
+						</tr>
+						<tr>
+							<td colspan="7" ><input id="event4" name="event-date" type="text" size="27"/></td>
+						</tr>
+						
+
+						<tr>
+							<td colspan="7" ><label for="event5"><b>Harvest Time</b></label></td>			
+						</tr>
+						<tr>
+							<td colspan="7" ><input id="event5" name="event-time" type="text" size="27"/></td>
+						</tr>
+						
+
+						<tr>
+							<td colspan="7" ><label for="event7"><b>City of Harvest</b></label></td>			
+						</tr>
+						<tr>
+							<td colspan="7" ><input id="event7" name="event-city" type="text" size="27" readonly /></td>
+						</tr>
+
+						
+						<tr>
+							<td colspan="7" ><label for="event8"><b>Grower's Phone Number</b></label></td>			
+						</tr>
+						<tr>
+							<td colspan="7" ><input id="event8" name="event-grower-number" type="text" size="27" readonly /></td>
+						</tr>
+						
+						<tr>
+							<td colspan="7" ><label for="event9"><b>Grower's Address</b></label></td>			
+						</tr>
+						<tr>
+							<td colspan="7" ><input id="event9" name="event-grower-address" type="text" size="27" readonly /></td>
+						</tr>
+					</table>
+				</td>
+				<!--   -->	
+				<td> 
+					<table>
+						<tr>							
+							<td colspan="3" ><label for="event-captain"><b>Harvest Captain</b></label></td>	
+						</tr>
+						<tr>						
+
+							<td colspan="3" id ="event-captain"></td>			
+						</tr>	
+						
+						<tr>
+							<td colspan="3"><label for="event6"><b>Notes</b></label></tr>
+						</tr>
+						<tr>
+							<td colspan="3"><textarea name="notes" id="event6" rows="11" cols="23"></textarea></td>
+						</tr>
+					</table>
+				</td>	
+			</tr>		
+		</table>
+
+
 		
-		<tr>
-			<td colspan="7" ><label for="event9"><b>Grower's Address</b></label></td>			
-		</tr>
-		<tr>
-			<td colspan="7" ><input id="event9" name="event-grower-address" type="text" size="45"/></td>
-		</tr>
+
+
+
+
+
+
 
 		<?php echo $empty_cell ?>
 
@@ -634,7 +665,8 @@ $avgHeight = $r->buildArray();
 			<TABLE id="eventVolunteer" width="450px"></TABLE>
 		</table>
 		
-		</table>
+		
+
 
 	</form>	
 	<!-- Event end -->

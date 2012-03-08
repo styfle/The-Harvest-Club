@@ -483,10 +483,10 @@ if (!$PRIV)
 					
 				case 5:  //event
 					if (checkEventForm() != -1) {
-						row[2] = $('#event2').val();
-						row[3] = $('#event-grower-name').val();
-						row[4] = $('#event-volunteer-name').val();
-						row[5] =  $('#event5').val();
+						row[2] = $('#event-grower-name').val();
+						row[3] = $('#event-captain-name').val();
+						row[7] =  $('#event5').val();
+						row[8] =  $('#event6').val();	
 						
 						updateEvent();
 						dt.fnUpdate(row, aPos, 0);
@@ -737,9 +737,10 @@ if (!$PRIV)
                 break;
 						
 				case 5: // event
-					$('#event2').val('');
-					$('#event5').val('');
-					loadAllEventForm(0,1,1);
+					$('#event4').val('');					
+					$('#event5').val('');					
+					$('#event6').val('');					
+					loadAllEventForm(0,0,0);	
                 break;
 				
 				case 6: // donation
@@ -1272,14 +1273,18 @@ if (!$PRIV)
 			
 				case 5: // event				
 					if (priv.edit_event)
-						buttonList.unshift(saveButton);
-					for (var i = 1; i < row.length; i++)
-						$('#event' + i).val(row[i]);
+
+
+
+						buttonList.unshift(saveButton);					
 					event_id = row[1];	
 
-					grower_id = row[3];	
-					captain_id = row[4];
-					loadAllEventForm(event_id,grower_id,captain_id);
+					grower_id = row[2];	
+					captain_id = row[3];	
+					$('#event4').val(row[4]);
+					$('#event5').val(row[7]);
+					$('#event6').val(row[8]);						
+					loadAllEventForm(event_id,grower_id,captain_id);					
 				break;
 				
 				case 6: // donation
