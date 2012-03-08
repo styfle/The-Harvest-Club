@@ -41,7 +41,7 @@ $roles = $r->buildArray();
     <p>Privacy: Information entered here is used solely by The Harvest Club; we do not share, sell, or otherwise distribute your personal information.</p>
     -->
 	<h1>Volunteer Registration</h1>
-	<p>The Harvest Club couldn&#39;t exist without wonderful volunteers like you! Please complete this form so we know how to contact you with upcoming harvest events.</p>
+	<p>The Harvest Club couldn&#39;t exist without wonderful volunteers like you! Please complete this form so we know how to contact you about upcoming harvest events.</p>
     <p>* Indicates required fields.</p>
     <form method="post" action="submit-volunteer.php" id="volunteer">
 		<h2>Volunteer Information</h2>
@@ -159,8 +159,8 @@ $roles = $r->buildArray();
 		</fieldset>
 
 		<fieldset>
-			<legend>Preferred Days to volunteer</legend>
-			<i>Note: Harvest Events usually takes two hours long and generally take place over the weekends.</i>
+			<legend>Preferred Days to Volunteer</legend>
+			<i>Note: Harvest Events are usually two hours and generally take place over the weekends.</i>
 				<tr>
 				<div id="days"></div>
 				</tr>
@@ -180,26 +180,26 @@ $roles = $r->buildArray();
 			
 		</fieldset>
 
-    	<h3>Misc Information</h3>
+    	<h3>Optional</h3>
 
 		<fieldset>
-			<legend>Optional</legend>
+			<!--<legend>Optional</legend>-->
 
 			<div>
-				<label for="source">How did you hear about us?</label>
+				<label for="source">How did you hear about The Harvest Club?</label>
 				<select id="source" name="source">
 				</select>
 			</div>
-			<label>Additional comments:</label><br/>
-				<textarea name="comments" type="textarea" cols="50" rows="3" placeholder="For Group Registration, please enter the information in this area: provide the Age Range, Number of Members, and When are they able to volunteer."></textarea>
+			<label>Additional Comments:</label><br/>
+				<textarea name="comments" type="textarea" cols="50" rows="3" placeholder="For group harvesters, please provide the following: age range of volunteers, number of volunteers and availability."></textarea>
 		</fieldset>
 				
 		<br />
 		<br />
 		<fieldset>
-			<i>Privacy: Information entered here is used solely by The Harvest Club; We do not share, sell, or otherwise distribute your personal information.</i>
+			<i>Privacy: Information entered here is used solely by The Harvest Club. We do not share, sell, or otherwise distribute your personal information.</i>
 			<legend>Register</legend>
-					<div><input name="Submit" value="Register as Volunteer" type="submit" id = "submit"></div>
+					<div><input name="Submit" value="Submit" type="submit" id = "submit"></div>
 		</fieldset>			
     </form>
 </div>
@@ -212,10 +212,11 @@ $roles = $r->buildArray();
 
 	function options(data) {
 		var s = optionSelect;
-		for (var i=0; i<data.length; i++) {
+		for (var i=1; i<data.length; i++) {
 			var o = data[i];
 			s += '<option value="'+o.id+'">'+o.name+'</option>';
 		}
+		s += '<option value="'+data[0].id+'">'+data[0].name+'</option>';
 		return s;
 	}
 

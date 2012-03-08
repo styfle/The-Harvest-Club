@@ -11,7 +11,7 @@ include('include/autoresponse.inc.php');;
 	$email = $_POST['email'];
 	$phone = $_POST['phone'];
 	$street = $_POST['street'];
-	$street2 = $_POST['street2'];
+	//$street2 = $_POST['street2'];
 	$city = $_POST['city'];
 	$state = $_POST['state'];
 	$zip = $_POST['zip'];
@@ -30,6 +30,9 @@ include('include/autoresponse.inc.php');;
 	if(empty($firstname)) {
 		$errorMessage .= "<li>No First Name!</li>";
 	}
+	if(empty($middlename)) {
+		$middlename = "";
+	}
 	if(empty($lastname)) {
 		$errorMessage .= "<li>No Last Name!</li>";
 	}
@@ -44,6 +47,9 @@ include('include/autoresponse.inc.php');;
 			$errorMessage .= '<li>Phone number must be exactly 10 numbers!</li>';
 		else
 			$phone = '(' . substr($phone, 0, 3) . ') ' . substr($phone, 3, 3) . '-' . substr($phone, 6, 4); // (949) 555-1234
+	}
+	if(empty($street)) {
+		$street = "";
 	}
 	if(empty($city)) {
 		$errorMessage .= "<li>City required!</li>";

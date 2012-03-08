@@ -217,11 +217,11 @@ CREATE TABLE volunteer_types (
 ) ENGINE=innodb;
 
 INSERT INTO volunteer_types (type, description) VALUES
-	('Harvester', 'Volunteers at harvesting events'),
-	('Harvest Captain', 'Leads a harvest crew'),
-	('Driver', 'Transports harvested food to local distribution establishments'),
+	('Harvester', 'Pick and sort fruit at Harvest Events'),
+	('Harvest Captain', 'Lead harvest crews during Harvest Events'),
+	('Driver', 'Deliver harvested produce to local distribution sites'),
 	('Ambassador', 'Distributes flyers in neighborhoods with visible fruit trees'),
-	('Tree Scout', 'Meets with growers and inspects properties before harvest events')
+	('Tree Scout', 'Meet with growers to inspect property prior to Harvest Events')
 ;
     
 DROP TABLE IF EXISTS privileges;
