@@ -130,7 +130,7 @@ CREATE TABLE growers (
 	last_name	NVARCHAR(255) NOT NULL,
 	phone		VARCHAR(17) NOT NULL, -- maybe (http://stackoverflow.com/q/75105/266535)
 	email		NVARCHAR(255) NOT NULL, -- max is actually 320, but so rare	
-	preferred	VARCHAR(6) NOT NULL, -- preferred contact method (phone/email)
+	preferred	VARCHAR(6) NULL, -- preferred contact method (phone/email)
 	street		NVARCHAR(255) NOT NULL,
 	city		NVARCHAR(255) NOT NULL,
 	state		CHAR(2)	NOT NULL, -- this makes sense right?
@@ -217,11 +217,11 @@ CREATE TABLE volunteer_types (
 ) ENGINE=innodb;
 
 INSERT INTO volunteer_types (type, description) VALUES
-	('Harvester', 'Pick and sort fruit at Harvest Events'),
-	('Harvest Captain', 'Lead harvest crews during Harvest Events'),
-	('Driver', 'Deliver harvested produce to local distribution sites'),
+	('Harvester', 'Volunteers at harvesting events'),
+	('Harvest Captain', 'Leads a harvest crew'),
+	('Driver', 'Transports harvested food to local distribution establishments'),
 	('Ambassador', 'Distributes flyers in neighborhoods with visible fruit trees'),
-	('Tree Scout', 'Meet with growers to inspect property prior to Harvest Events')
+	('Tree Scout', 'Meets with growers and inspects properties before harvest events')
 ;
     
 DROP TABLE IF EXISTS privileges;
@@ -311,12 +311,12 @@ CREATE TABLE volunteers (
 
 -- start temp insert
 INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, active_id, street, city, state, zip, privilege_id, signed_up, notes) VALUES
-('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', SHA1('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 5,'2010-05-01', 'Fearless mascot'),
-('Joanne','', 'Lolcatz', '(949) 555-3418', 'joanne@uci.edu', SHA1('password'), 1, '1 Harvest Cir', 'Irvine', 'CA', '91234', 5,'2012-03-01', 'Executive Power'),
-('Gillian','', 'Pwn', '(555) 555-1090', 'gillian@uci.edu', SHA1('password'), 1, '2 Harvest Cir', 'Irvine', 'CA', '91234', 4,'2012-03-01', 'Administrative skillz'),
-('Captain','Jack', 'Sparrow', '(949) 555-1337', 'captain@uci.edu', SHA1('password'), 1, '4 Black Pearl Rd', 'Pacific Ocean', 'CA', '99999', 3,'2012-03-01', 'Cursed'),
-('Victor','', 'Van', '(949) 555-9168', 'victor@uci.edu', SHA1('password'), 1, '2121 Ball Rd', 'Anaheim', 'CA', '92806', 2,'2012-03-01', 'Donut owner'),
-('Peter','', 'Pending', '(949) 555-0001', 'peter@uci.edu', SHA1('password'), 1, '6 Blue Nowhere', 'San Clemente', 'CA', '96539', 1,'2012-03-01', 'I am waiting...');
+('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', SHA2('password', 256), 1, '456 Fake St', 'Irvine', 'CA', '91234', 5,'2010-05-01', 'Fearless mascot'),
+('Joanne','', 'Lolcatz', '(949) 555-3418', 'joanne@uci.edu', SHA2('password', 256), 1, '1 Harvest Cir', 'Irvine', 'CA', '91234', 5,'2012-03-01', 'Executive Power'),
+('Gillian','', 'Pwn', '(555) 555-1090', 'gillian@uci.edu', SHA2('password', 256), 1, '2 Harvest Cir', 'Irvine', 'CA', '91234', 4,'2012-03-01', 'Administrative skillz'),
+('Captain','Jack', 'Sparrow', '(949) 555-1337', 'captain@uci.edu', SHA2('password', 256), 1, '4 Black Pearl Rd', 'Pacific Ocean', 'CA', '99999', 3,'2012-03-01', 'Cursed'),
+('Victor','', 'Van', '(949) 555-9168', 'victor@uci.edu', SHA2('password', 256), 1, '2121 Ball Rd', 'Anaheim', 'CA', '92806', 2,'2012-03-01', 'Donut owner'),
+('Peter','', 'Pending', '(949) 555-0001', 'peter@uci.edu', SHA2('password', 256), 1, '6 Blue Nowhere', 'San Clemente', 'CA', '96539', 1,'2012-03-01', 'I am waiting...');
 -- end temp insert
 
 -- A volunteer can have many rolls
@@ -340,11 +340,12 @@ CREATE TABLE volunteer_prefers (
 
 DROP TABLE IF EXISTS events;
 CREATE TABLE events (
-	id INT AUTO_INCREMENT PRIMARY KEY,
-	name NVARCHAR(255) NOT NULL,
+	id INT AUTO_INCREMENT PRIMARY KEY,	
 	grower_id INT NOT NULL,
 	captain_id INT NOT NULL,
 	date datetime,
+  time text,
+  notes text,
 	CONSTRAINT fk_event_grower_id FOREIGN KEY (grower_id) REFERENCES growers(id),
 	CONSTRAINT fk_event_captain_id FOREIGN KEY (captain_id) REFERENCES volunteers(id)
 ) ENGINE=innodb;
@@ -365,6 +366,7 @@ DROP TABLE IF EXISTS harvests;
 CREATE TABLE harvests (
 	event_id INT NOT NULL,
 	tree_id INT NOT NULL,
+  number INT NOT NULL,  
 	pound INT NOT NULL,
 	CONSTRAINT pk_harvests PRIMARY KEY (tree_id, event_id),
 	CONSTRAINT fk_harvests_tree_id FOREIGN KEY (tree_id) REFERENCES tree_types(id),
