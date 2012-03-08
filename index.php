@@ -202,7 +202,7 @@ if (!$PRIV)
 
 					case 2: // growers
 						showAddDelEmailExport(priv.edit_grower, priv.del_grower, priv.send_email, priv.exp_grower);
-						if($('#grower1').val()==-1){
+						if(saveGrowerDialog==1){
 							switchForm("grower");
 							$('#edit-dialog').dialog('open');
 						}
@@ -222,7 +222,7 @@ if (!$PRIV)
 						showAddDelEmailExport(priv.edit_grower, priv.del_grower, 0, 0); // tree has no email, no export						
 						if(viewTreeClicked == 1 && $('#grower1').val()>=0){
 							viewTreeClicked = 0;
-							$('#grower1').val(-1);
+							saveGrowerDialog = 1;
 							cmd = "get_trees_from&growerID="+growerID;
 							reloadTable(cmd);							
 						}							
@@ -349,6 +349,7 @@ if (!$PRIV)
 	var forms = ['volunteer', 'grower', 'tree', 'distribution'];
 	var viewTreeClicked = 0;
 	var viewGrowerClicked = 0;
+	var saveGrowerDialog = 0;
 	var growerID = 0;
 	var pending = 0;
 	var privilegeID = 0;
@@ -672,7 +673,7 @@ if (!$PRIV)
 		text: 'Cancel',
 		click: function() {			
 			if(currentTable == 2)
-				$('#grower1').val(0);
+				saveGrowerDialog = 0;
 			$(this).dialog('close');			
 		}
 	}; 
