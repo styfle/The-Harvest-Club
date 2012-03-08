@@ -44,7 +44,7 @@ $avgHeight = $r->buildArray();
 <div id="edit-dialog" class="hidden">
 		
 	<!-- Volunteer form -->	
-	<form id="volunteer" class="hidden">
+	<form id="volunteer" class="full_width hidden">
 		<h3>Volunteer</h3>
 		<table>
 		<?php if ($PRIV['appr_volunteer']) { ?>
@@ -208,7 +208,7 @@ $avgHeight = $r->buildArray();
 	<!-- Volunteer end -->
 	
 	<!-- Grower form -->
-	<form id="grower" class="hidden">
+	<form id="grower" class="full_width hidden">
 		<h3>Grower</h3>
 		<table id="growerT">	
 		<?php if ($PRIV['appr_grower']) { ?>
@@ -316,7 +316,7 @@ $avgHeight = $r->buildArray();
 	
 	
 	<!-- Tree form -->	
-	<form id="tree" class="hidden">
+	<form id="tree" class="full_width hidden">
 		<h3>Tree</h3>
 		<table>	
 		<tr>
@@ -417,7 +417,7 @@ $avgHeight = $r->buildArray();
 	<!-- Tree end -->
 	
 	<!-- Distribution form -->
-	<form id="distribution" class="hidden">
+	<form id="distribution" class="full_width hidden">
 		<h3>Distribution Site</h3>
 		<table>
 		<tr>
@@ -551,7 +551,7 @@ $avgHeight = $r->buildArray();
 	<!-- Distribution end -->
 
 	<!-- Event form -->
-	<form id="event" class="hidden">
+	<form id="event" class="full_width hidden">
 		<h3>Event</h3>
 		<table>
 		<tr>
@@ -641,7 +641,7 @@ $avgHeight = $r->buildArray();
 
 
 	<!-- Donation form -->
-	<form id="donation" class="hidden">
+	<form id="donation" class="full_width hidden">
 		<h3>Donation</h3>
 		<table>
 		<tr>
@@ -676,7 +676,7 @@ $avgHeight = $r->buildArray();
 	<!-- Donation end -->
 
 	<!-- Email Form -->
-	<form id="email" class="hidden">
+	<form id="email" class="full_width hidden">
 		<h3>Email Selected Users</h3>
 		<div>Recipients (<span class="rcount"></span>)</div>
 		<div><input name="bcc" type="text" readonly="readonly" size="50" required="required" style="font-size:0.5em" /></div>

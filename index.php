@@ -171,6 +171,7 @@ if (!$PRIV)
 					'aaSorting': [], // disable initial sort
 					"aLengthMenu": [[10, 25, 50, 100, -1], // sort length
 									[10, 25, 50, 100, "All"]], // sort name
+					'iDisplayLength': dt_length,
 					'aoColumns': data.datatable.aoColumns,
 					'aaData': data.datatable.aaData,
 					//"sScrollX": "100%",
@@ -339,6 +340,7 @@ if (!$PRIV)
 
 	var dt; // global datatable variable
 	var currentTable = 0; // global id of current data table
+	var dt_length = 10; // show x entries
 	var forms = ['volunteer', 'grower', 'tree', 'distribution'];
 	var growerID = 0;
 	var pending = 0;
@@ -1072,7 +1074,7 @@ if (!$PRIV)
 			autoOpen: false,
 			title: 'Edit Record',
 			height: 550,
-			width: 450,
+			width: 550,
 			modal: true,
 			/*close: function() {
 				console.log('dialog closed');
@@ -1081,6 +1083,11 @@ if (!$PRIV)
 		
 		// after we force a dialog, hidden is handled by jqueryUI
 		$('#edit-dialog').removeClass('hidden');
+
+		// keep page length across tables
+		$(document).on('change', 'select[name=dt_length]', function() {
+			dt_length = this.value;
+		});
 		
 		// all rows in the table will open dialog onclick
 		// note that .live() is deprecated in favor of .on()

@@ -309,6 +309,19 @@ ul {
 	text-shadow:none;
 }
 
+.full_width table {
+	width: 100%;
+}
+
+.full_width input, textarea {
+	width: 90%;
+}
+.full_width input[type=radio],
+		input[type=checkbox],
+		input[type=button] {
+	width: auto;
+}
+
 
 
 
