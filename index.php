@@ -709,12 +709,15 @@ if (!$PRIV)
 				case 1: //volunteer
 					switchForm('volunteer');
 					$('#pending').hide();						
-					for (var i = 1; i < 18; i++)
+					for (var i = 1; i < 19; i++)
 						$('#volunteer' + i).prop('disabled', false);
 					for ( var i=1; i< 6; i++ )
 						$('#volunteerRole'+i).prop('disabled', false);
 					for ( var i=1; i< 8; ++i )
 						$('#volunteerDay'+i).prop('disabled', false);		
+
+					$('#volunteer18').val(2); // set user type to volunteer
+					$('#volunteer9').val(1); // set active = yes
 				break;
 				
 				case 2: // grower
@@ -722,10 +725,14 @@ if (!$PRIV)
 					$('#pending2').hide();
 					for (var i = 1; i < 21; i++)
 							$('#grower' + i).prop('disabled', false);
+
+					$('#view-trees').hide();
 				break;
 				
 				case 3: // tree
 					switchForm('tree');
+					$('#tree3').val(growerID); // last viewed grower
+					console.log(growerID);
 				break;
 				
 				case 4: // distribution
@@ -1204,6 +1211,8 @@ if (!$PRIV)
 								$('#grower' + i).prop('disabled', true);
 						}
 					}
+
+					$('#view-trees').show();
 				break;
 				
 				case 3: // tree

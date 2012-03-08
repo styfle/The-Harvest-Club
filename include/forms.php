@@ -217,7 +217,7 @@ $avgHeight = $r->buildArray();
 			<td><input type="button" name="approve" value="Approve" onclick="approveGrower();"/></td>
 		</tr>
 		<?php } ?>
-		<tr> 
+		<tr id="view-trees">
 			<td colspan=2">Show all his/her trees</td>
 			<td colspan="1"><input type="button" onclick="viewTrees();" value="View Trees"/></td>
 		</tr>		
