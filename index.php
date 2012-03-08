@@ -216,9 +216,9 @@ if (!$PRIV)
 
 					case 3: // Trees
 						showAddDelEmailExport(priv.edit_grower, priv.del_grower, 0, 0); // tree has no email, no export						
-						if(growerID != 0){
+						if(viewTreeClicked == 1){
+							viewTreeClicked = 0;
 							cmd = "get_trees_from&growerID="+growerID;
-							growerID = 0;
 							reloadTable(cmd);							
 						}						
 					break;
@@ -342,6 +342,7 @@ if (!$PRIV)
 	var currentTable = 0; // global id of current data table
 	var dt_length = 10; // show x entries
 	var forms = ['volunteer', 'grower', 'tree', 'distribution'];
+	var viewTreeClicked = 0;
 	var growerID = 0;
 	var pending = 0;
 	var privilegeID = 0;
@@ -1354,6 +1355,7 @@ if (!$PRIV)
 	}); // document.ready()
 
 	function viewTrees(){
+		viewTreeClicked = 1;
 		growerID = $('#grower1').val();					//get ID of grower whose trees are to be shown
 		$('#edit-dialog').dialog('close');				//Close pop-up
 		document.getElementById('get_trees').click();	//switch to Trees Tab	

@@ -99,10 +99,7 @@ function deleteTreeRow(tableID) {
 		
 function addVolunteerRow(tableID) {
 
-	        var table = document.getElementById(tableID);
-			
-			 
-			
+	        var table = document.getElementById(tableID);					
 			var rowCount = table.rows.length;
 
             var row = table.insertRow(rowCount);
@@ -112,7 +109,7 @@ function addVolunteerRow(tableID) {
 			tbl.style.backgroundColor = "#E3E4FA";
             c.appendChild(tbl);
 			
-			var row = tbl.insertRow(0);
+			 var row = tbl.insertRow(0);
 			 var cell1 = row.insertCell(0);
 			 var label1 = document.createElement("label");
 			 label1.style.width = "2em"
@@ -497,99 +494,19 @@ function loadGrowerToForm(grower_id)
 						'url': 'ajax.php?cmd=get_event_volunteer_name&event_id='+event_id, 
 						'success': function (data) {
 							//console.log(data);
-							var tbl = document.getElementById("eventVolunteer");		
+							var tbl = document.getElementById("eventVolunteer");
+							
 							if( data.datatable != null) 							
 								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
 									{
-										addVolunteerRow('eventVolunteer');
+										addVolunteerRow('eventVolunteer');										
 										var r = tbl.rows[i];
 										var table = r.cells[0].childNodes[0];										
 										table.rows[1].cells[1].childNodes[0].value = data.datatable.aaData[i][0];	
 										table.rows[1].cells[2].childNodes[0].value = data.datatable.aaData[i][3];	
 										if (data.datatable.aaData[i][2] == 1)
-										{
-											table.rows[1].cells[3].childNodes[0].checked = true;
-											var row2 = table.insertRow(2);
-											
-											var cell5 = row2.insertCell(0);
-											var element5 = document.createElement("input");
-											element5.type = "checkbox";
-											cell5.appendChild(element5);
-											element5.style.visibility="hidden";
-											  
-											var cell6 = row2.insertCell(1);
-											var label1 = document.createElement("label");
-											label1.style.width = "5em";
-											label1.style.color = 'blue';
-											label1.style.font='Arial';
-											var txt1=document.createTextNode('Tree Types');
-											label1.appendChild(txt1);
-											cell6.appendChild(label1);
-											
-											var cell7 = row2.insertCell(2);
-											var buttonnode= document.createElement('input');
-											buttonnode.setAttribute('type','button');
-											buttonnode.setAttribute('name','button'+1);
-											buttonnode.setAttribute('value','+');
-											buttonnode.onclick = function()
-																{
-																	var rowCount = table.rows.length;
-																	var r = table.insertRow(rowCount);
-																	
-																	var c1 = r.insertCell(0);									
-																	var e1 = document.createElement("input");
-																	e1.type = "checkbox";
-																	c1.appendChild(e1);
-																	e1.focus();
-																	
-																	var c2 = r.insertCell(1);
-																	var e2 = document.createElement("select");
-																	e2.innerHTML = (options(treeNames));
-																	c2.appendChild(e2);
-																	
-																	var c3 = r.insertCell(2);
-																	var e3 = document.createElement("input");
-																	e3.type = "text";
-																	e3.style.width = "4em";
-																	e3.placeholder = "Pounds";
-																	c3.appendChild(e3);
-																	
-																	var c4 = r.insertCell(3);									
-																	var e4 = document.createElement("label");
-																	var txt=document.createTextNode('------>');
-																	e4.style.textAlign="center";
-																	e4.appendChild(txt);		
-																	c4.appendChild(e4);
-																	
-																	var c5 = r.insertCell(4);
-																	var e5 = document.createElement("select");
-																	e5.innerHTML = (options(distributionNames));
-																	c5.appendChild(e5);
-																		
-																	
-																};
-											cell7.appendChild(buttonnode);
-											
-											var cell8 = row2.insertCell(3);
-											var buttonnode2= document.createElement('input');
-											buttonnode2.setAttribute('type','button');
-											buttonnode2.setAttribute('name','button'+2);
-											buttonnode2.setAttribute('value','-');
-											buttonnode2.onclick = function()
-																	{
-																		var rowCount = table.rows.length;
-																		for(var i=3; i<rowCount; i++) {
-																			var row = table.rows[i];
-																			var chkbox = row.cells[0].childNodes[0];
-																			if(null != chkbox && true == chkbox.checked) {
-																				table.deleteRow(i);
-																				rowCount--;
-																				i--;
-																			}
-																		}
-																	
-																	};
-											cell8.appendChild(buttonnode2);											
+										{											
+											table.rows[1].cells[3].childNodes[0].click();											
 										    getDriverData(data.datatable.aaData[i][0], table);										
 										}
 									}
@@ -640,7 +557,8 @@ function loadGrowerToForm(grower_id)
 										var c5 = r.insertCell(4);
 										var e5 = document.createElement("select");
 										e5.innerHTML = (options(distributionNames));
-										c5.appendChild(e5);							
+										c5.appendChild(e5);		
+										
 										tbl.rows[i+3].cells[1].childNodes[0].value = data.datatable.aaData[i][1];
 										tbl.rows[i+3].cells[2].childNodes[0].value = data.datatable.aaData[i][4];
 										tbl.rows[i+3].cells[4].childNodes[0].value = data.datatable.aaData[i][3];

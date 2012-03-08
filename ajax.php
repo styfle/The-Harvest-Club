@@ -956,7 +956,7 @@ switch ($cmd)
 		$event_id = $_REQUEST['event_id'];
 		$data['id'] = 13;
 		$data['title'] = 'Event Tree';
-		$sql = "SELECT gt.id, h.pound FROM harvests h, grower_trees gt, events e where e.grower_id = gt.grower_id AND e.id = $event_id  And gt.id = h.tree_id And gt.grower_id = $grower_id And h.event_id = $event_id";
+		$sql = "SELECT gt.id, h.number, h.pound FROM harvests h, grower_trees gt, events e where e.grower_id = gt.grower_id AND e.id = $event_id  And gt.id = h.tree_id And gt.grower_id = $grower_id And h.event_id = $event_id";
 		getName($sql);
 		break;
 	
