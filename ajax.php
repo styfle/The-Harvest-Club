@@ -957,7 +957,7 @@ switch ($cmd)
 		}
 		$data['id'] = 5;
 		$data['title'] = 'Events';		
-		$sql = "SELECT e.id, e.grower_id, e.captain_id, date(e.date) as Date, Concat(g.first_name,' ',g.middle_name,' ',g.last_name) as Grower, g.city, e.time, e.notes FROM events E, growers g Where e.grower_id = g.id;";
+		$sql = "SELECT e.id, e.grower_id, e.captain_id, date(e.date) as Date, Concat(g.first_name,' ',g.middle_name,' ',g.last_name) as Grower, g.city, e.time, e.notes FROM events e, growers g Where e.grower_id = g.id;";
 
 		getTable($sql);
 		break;
