@@ -1,6 +1,6 @@
 # The Harvest Club
 
-This is a system designed for The Harvest Club by a group of students in IN4MATX 117 at UC, Irvine.
+This is a contact management system designed for The Harvest Club by a group of students in IN4MATX 117 at UC, Irvine.
 We have permission to open source our code, but we do not offer support so use at your own risk.
 
 
@@ -9,7 +9,8 @@ You will need to create a file called `include/config.inc.php` and define some c
 
 ```php
 <?php
-define('PAGE_TITLE', 'The Harvest Club - CPanel');
+define('PAGE_TITLE', 'The Harvest Club');
+define('PAGE_QUOTE', 'Share the Bounty');
 
 define('MYSQL_SERVER', 'localhost');
 define('MYSQL_USER', 'nyan');
@@ -20,7 +21,7 @@ define('MAIL_FROM', 'admin@example.com');
 define('MAIL_TO', 'admin@example.com');
 define('MAIL_REPLYTO', 'noreply@example.com');
 
-define('SESSION_MAX_LENGTH', 60); // logout after inactive for x seconds
+define('SESSION_MAX_LENGTH', 3600); // logout after inactive for x seconds
 ?>
 ```
 

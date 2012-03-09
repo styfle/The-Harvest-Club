@@ -62,8 +62,6 @@ if (isLoggedIn()) {
 	<link rel="stylesheet" href="css/style.css"> <!-- css reset -->
 	<link rel="stylesheet" href="css/themes/smoothness/jquery-ui-1.8.4.custom.css">
 	
-	<!-- More ideas for your <head> here: h5bp.com/d/head-Tips -->
-
 	<!-- Modernizr enables HTML5 elements & feature detects for optimal performance. -->
 	<script type="text/javascript" src="js/modernizr-2.0.6.min.js"></script>
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
@@ -81,7 +79,7 @@ if (isLoggedIn()) {
 			<?php echo PAGE_TITLE; ?> - <span id="page_title">Login</span>
 			<span id="me">Welcome Guest!</span>
 		</h1>
-		<div id="quote">"The harvest is plentiful but the workers are few"</div>
+		<div id="quote">"<?php echo PAGE_QUOTE; ?>"</div>
 
 	</header>
 

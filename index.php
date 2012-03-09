@@ -80,7 +80,7 @@ if (!$PRIV)
 				<?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>
 			</span>
 		</h1>
-		<div id="quote">"Share the Bounty"</div>
+		<div id="quote">"<?php echo PAGE_QUOTE; ?>"</div>
 
 		<div id="status" class="invisible">
 			<span id="status-icon" class="ui-icon ui-icon-info"></span>
