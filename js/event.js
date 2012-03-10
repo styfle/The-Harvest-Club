@@ -423,16 +423,22 @@ function loadGrowerToForm(grower_id)
 	}
 	
 	function deleteAllVolunteerRows()
-	{
-		var table = document.getElementById("eventVolunteer");
-		var rowCount = table.rows.length;	
- 		for(var i=0; i<rowCount; i++) 
-		{
-            table.deleteRow(i);
-			rowCount--;
-			i--;
+	{		
+		var table = document.getElementById("eventVolunteer");		
+        var rowCount = table.rows.length;
+		
+		for(var i=0; i<rowCount; i++) {
+			var r = table.rows[i];
+			var tbl = r.cells[0].childNodes[0];
+			var chkbox = tbl.rows[1].cells[0].childNodes[0];
+			chkbox.click();
+			if(null != chkbox && true == chkbox.checked) {
+				table.deleteRow(i);
+				rowCount--;
+				i--;
+			}	
 		}
-		loadVolunteer = 0;
+		loadVolunteer = 0;		
 	}
 	
 	function loadTree(id, event_id)
@@ -465,7 +471,7 @@ function loadGrowerToForm(grower_id)
 		//console.log(treeNames);
 	}
 	
-	function getTreeType(grower_id, event_id){
+	function getTreeType(grower_id, event_id){		
 		$.ajax( {
 						'dataType': 'json', 
 						'type': 'GET', 
@@ -521,7 +527,7 @@ function loadGrowerToForm(grower_id)
 						'type': 'GET', 
 						'url': 'ajax.php?cmd=get_event_volunteer_name&event_id='+event_id, 
 						'success': function (data) {
-							//console.log(data);
+							console.log(data);
 							var tbl = document.getElementById("eventVolunteer");
 							
 							if( data.datatable != null) 							
@@ -968,10 +974,11 @@ function loadGrowerToForm(grower_id)
 		deleteAllTreeRows();
 		treeNames.length = 0;
 		deleteAllVolunteerRows();
+		volunteerNames.length = 0;		
 		loadDistribution = 0;
 		switchForm('event');		
-			
-						
+		$('#event4').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});				
+		$('#event5').timepicker({ampm: true});		
 						
 		if (loadDistribution == 0)
 		{
@@ -995,7 +1002,7 @@ function loadGrowerToForm(grower_id)
 		}
 		else
 			getCaptain(captain_id);
-			
+				
 		if (loadTreeType ==0)
 		{
 			loadTree(grower_id,event_id);
@@ -1013,10 +1020,7 @@ function loadGrowerToForm(grower_id)
 		else
 			getEventVolunteer(event_id);
 		
-		
-		$('#event4').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});		
-
-		
+					
 		
 	}
 

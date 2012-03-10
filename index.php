@@ -66,6 +66,7 @@ if (!$PRIV)
 	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
 	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
 	<script type="text/javascript" src="js/event.js"></script>
 </head>
@@ -492,10 +493,12 @@ if (!$PRIV)
 					break;
 					
 				case 5:  //event
-					if (checkEventForm() != -1) {						
-						row[4] = row[7] =  $('#event4').val();
+					if (checkEventForm() != -1) {		
+						row[2] = $("#event-grower-name").val();
+						row[3] = $("#event-captain-name").val();
+						row[4] = $('#event4').val();
 						row[5] = $("#event-grower-name option:selected").text();
-						row[6] = $("#event-captain-name option:selected").text();						
+						row[6] = $('#event7').val();					
 						row[7] =  $('#event5').val();
 						row[8] =  $('#event6').val();	
 						
@@ -626,7 +629,7 @@ if (!$PRIV)
 					
 				case 5:  // event
 					if (checkEventForm() != -1)
-					{
+					{			
 						createNewEvent();
 						reloadTable("get_events");									
 					}
@@ -757,6 +760,9 @@ if (!$PRIV)
                 break;
 						
 				case 5: // event
+					event_id = 0;	
+					grower_id = 0;	
+					captain_id = 0;	
 					$('#event4').val('');					
 					$('#event5').val('');					
 					$('#event6').val('');					
@@ -1089,8 +1095,7 @@ if (!$PRIV)
 		$('#nav input').click(function() {
 			reloadTable(this.id); // button id is the ajax command
 		});
-		
-		
+				
 		$('#edit-dialog').dialog({
 			autoOpen: false,
 			title: 'Edit Record',
@@ -1330,11 +1335,11 @@ if (!$PRIV)
 		$(document).on('change', '#event-grower-name', function(e) {
 			grower_id = $('#event-grower option:selected').val();
 			deleteAllTreeRows();
-			deleteAllVolunteerRows()
+			deleteAllVolunteerRows();
 			grower_id = $(this).val();
 			treeNames.length = 0;
 			volunteerNames.length = 0;
-			loadTree(grower_id, event_id);
+			loadTree(grower_id, event_id);			
 			loadVolunteerName(event_id);
 			$('#event8').val(growerPhone[grower_id-1]);
 			$('#event9').val(growerAddress[grower_id-1]);

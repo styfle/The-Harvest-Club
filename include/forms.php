@@ -572,21 +572,7 @@ $avgHeight = $r->buildArray();
 						<tr>
 							<td colspan="4" id ="event-grower"></td>										
 						</tr>	
-						<tr>
-							<td colspan="7" ><label for="event4"><b>Harvest Date</b></label></td>			
-						</tr>
-						<tr>
-							<td colspan="7" ><input id="event4" name="event-date" type="text" size="27"/></td>
-						</tr>
-						
-
-						<tr>
-							<td colspan="7" ><label for="event5"><b>Harvest Time</b></label></td>			
-						</tr>
-						<tr>
-							<td colspan="7" ><input id="event5" name="event-time" type="text" size="27"/></td>
-						</tr>
-						
+												
 
 						<tr>
 							<td colspan="7" ><label for="event7"><b>City of Harvest</b></label></td>			
@@ -608,6 +594,21 @@ $avgHeight = $r->buildArray();
 						</tr>
 						<tr>
 							<td colspan="7" ><input id="event9" name="event-grower-address" type="text" size="27" readonly /></td>
+						</tr>
+						
+						<tr>
+							<td colspan="7" ><label for="event4"><b>Harvest Date</b></label></td>			
+						</tr>
+						<tr>
+							<td colspan="7" ><input id="event4" name="event-date" type="text" size="27"/></td>
+						</tr>
+						
+
+						<tr>
+							<td colspan="7" ><label for="event5"><b>Harvest Time</b></label></td>			
+						</tr>
+						<tr>
+							<td colspan="7" ><input id="event5" name="event-time" type="text" size="27"/></td>
 						</tr>
 					</table>
 				</td>
