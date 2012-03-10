@@ -366,8 +366,8 @@ DROP TABLE IF EXISTS harvests;
 CREATE TABLE harvests (
 	event_id INT NOT NULL,
 	tree_id INT NOT NULL,
-	number INT NOT NULL,
-	pound INT NOT NULL,
+	number INT,
+	pound DOUBLE,
 	CONSTRAINT pk_harvests PRIMARY KEY (tree_id, event_id),
 	CONSTRAINT fk_harvests_tree_id FOREIGN KEY (tree_id) REFERENCES tree_types(id),
 	CONSTRAINT fk_harvests_event_id FOREIGN KEY (event_id) REFERENCES events(id)
@@ -409,7 +409,7 @@ CREATE TABLE drivings (
 	tree_id INT NOT NULL,
 	volunteer_id INT NOT NULL,
 	distribution_id INT NOT NULL,
-	pound INT NOT NULL,
+	pound DOUBLE,
 	CONSTRAINT pk_drivings PRIMARY KEY (tree_id, event_id, volunteer_id, distribution_id),
 	CONSTRAINT fk_drivings_tree_id FOREIGN KEY (tree_id) REFERENCES tree_types(id),
 	CONSTRAINT fk_drivings_event_id FOREIGN KEY (event_id) REFERENCES events(id),

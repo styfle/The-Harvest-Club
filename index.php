@@ -492,9 +492,10 @@ if (!$PRIV)
 					break;
 					
 				case 5:  //event
-					if (checkEventForm() != -1) {
-						row[2] = $('#event-grower-name').val();
-						row[3] = $('#event-captain-name').val();
+					if (checkEventForm() != -1) {						
+						row[4] = row[7] =  $('#event4').val();
+						row[5] = $("#event-grower-name option:selected").text();
+						row[6] = $("#event-captain-name option:selected").text();						
 						row[7] =  $('#event5').val();
 						row[8] =  $('#event6').val();	
 						

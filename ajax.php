@@ -1106,11 +1106,17 @@ switch ($cmd)
 		
 
 				for( $i=0; $i< count($tree_type); $i++)
-				{
+				{					
 				  $treeID = $tree_type[$i]["tree_id"];
 				  $number = $tree_type[$i]["number"];
+				  if ($number =="")				  
+				    $number = "null";				  
 				  $pound = $tree_type[$i]["pound"];
+				  if ($pound =="")				  				  
+				    $pound = "null";
+				  
 				  $dbh->exec ("Insert into harvests(event_id, tree_id, number, pound) Values ($event_id,$treeID, $number, $pound)");
+				  
 				}
 				
 				for( $i=0; $i< count($volunteers); $i++)
@@ -1118,6 +1124,8 @@ switch ($cmd)
 				  $d =0;	
 				  $volunteerID = $volunteers[$i]["volunteer_id"];
 				  $hour = $volunteers[$i]["hour"];
+				  if ($hour =="")
+				   $hour ="null"; 
 				  $driver = $volunteers[$i]["driver"];
 				  if ( $driver == 'true')
 				  {		
@@ -1126,10 +1134,12 @@ switch ($cmd)
 					for( $j=0; $j< count($distributedTree); $j++)
 					{
 						$treeID = $distributedTree[$j]["tree_id"];
-
-
 						$pound =  $distributedTree[$j]["pound"];
+						if ($pound == "")
+							$pound="null";
+						
 						$distributionID = $distributedTree[$j]["distribution_id"];
+						
 						$dbh->exec ("Insert into drivings(event_id, tree_id, volunteer_id, distribution_id, pound) Values ($event_id,$treeID,$volunteerID,$distributionID, $pound)");	
 					}
 				  }
@@ -1210,11 +1220,17 @@ switch ($cmd)
 				//$dbh->exec ("Insert into events(id, name, grower_id, captain_id, date) Values ($event_id, $event_name, $grower_id, $captain_id,'$event_date')");
 				
 				for( $i=0; $i< count($tree_type); $i++)
-				{
+				{					
 				  $treeID = $tree_type[$i]["tree_id"];
 				  $number = $tree_type[$i]["number"];
+				  if ($number =="")				  
+				    $number = "null";				  
 				  $pound = $tree_type[$i]["pound"];
+				  if ($pound =="")				  				  
+				    $pound = "null";
+				  
 				  $dbh->exec ("Insert into harvests(event_id, tree_id, number, pound) Values ($event_id,$treeID, $number, $pound)");
+				  
 				}
 				
 				for( $i=0; $i< count($volunteers); $i++)
@@ -1222,6 +1238,8 @@ switch ($cmd)
 				  $d =0;	
 				  $volunteerID = $volunteers[$i]["volunteer_id"];
 				  $hour = $volunteers[$i]["hour"];
+				  if ($hour =="")
+				   $hour ="null"; 
 				  $driver = $volunteers[$i]["driver"];
 				  if ( $driver == 'true')
 				  {		
@@ -1230,8 +1248,6 @@ switch ($cmd)
 					for( $j=0; $j< count($distributedTree); $j++)
 					{
 						$treeID = $distributedTree[$j]["tree_id"];
-
-
 						$pound =  $distributedTree[$j]["pound"];
 						$distributionID = $distributedTree[$j]["distribution_id"];
 						$dbh->exec ("Insert into drivings(event_id, tree_id, volunteer_id, distribution_id, pound) Values ($event_id,$treeID,$volunteerID,$distributionID, $pound)");	
@@ -1241,7 +1257,7 @@ switch ($cmd)
 				  
 				  
 				}
-				$dbh->commit ();                      # success
+				$dbh->commit ();                     # success
 			   }
 			   catch (PDOException $e)
 			   {

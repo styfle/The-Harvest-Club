@@ -106,7 +106,11 @@ function addVolunteerRow(tableID) {
 			// New table
 			var c = row.insertCell(0);
             var tbl = document.createElement("table");
-			tbl.style.backgroundColor = "#E3E4FA";
+			if (rowCount %2 ==0)
+				tbl.style.backgroundColor = "#E3E4FA";
+			else
+				tbl.style.backgroundColor = "#C5C6DC";
+				
             c.appendChild(tbl);
 			
 			 var row = tbl.insertRow(0);
@@ -120,7 +124,7 @@ function addVolunteerRow(tableID) {
 			 var cell2 = row.insertCell(1);
 			 var label2 = document.createElement("label");
 			 label2.style.width = "5em";
-			 var txt2=document.createTextNode('Volunteer');
+			 var txt2=document.createTextNode('Volunteer '+(rowCount+1));
 			 label2.style.fontWeight = 'bold';
 			 label2.appendChild(txt2);
 			 cell2.appendChild(label2);			 
@@ -165,7 +169,13 @@ function addVolunteerRow(tableID) {
             var element4 = document.createElement("input");
             element4.type = "checkbox";
 			element4.style.width = "4em"
-            cell4.appendChild(element4);			
+            cell4.appendChild(element4);	
+
+			var cell5 = row1.insertCell(4);
+			var e5 = document.createElement("select");
+			e5.innerHTML = (options(distributionNames));
+			e5.style.visibility="hidden";
+			cell5.appendChild(e5);	
 					
 			
 			element4.checked = false;
@@ -231,7 +241,8 @@ function addVolunteerRow(tableID) {
 											
 										
 									};
-				cell7.appendChild(buttonnode);
+				cell7.appendChild(buttonnode);				
+				buttonnode.click();
 				
 				var cell8 = row2.insertCell(3);
 				var buttonnode2= document.createElement('input');
@@ -250,6 +261,9 @@ function addVolunteerRow(tableID) {
 													i--;
 												}
 											}
+											var rowCount = tbl.rows.length;
+											if (rowCount == 3)											
+											  element4.click();											
 										
 										};
 				cell8.appendChild(buttonnode2);
@@ -287,9 +301,23 @@ function addVolunteerRow(tableID) {
                     table.deleteRow(i);
                     rowCount--;
                     i--;
-                }
+                }	
  
             }
+			
+			var rowCount = table.rows.length;
+            for(var i=0; i<rowCount; i++) 
+			{
+				var r = table.rows[i];
+				var tbl = r.cells[0].childNodes[0];
+				var label = tbl.rows[0].cells[1].childNodes[0];
+				label.innerHTML = "Volunteer "+(i+1);				
+				if (i %2 ==0)
+					tbl.style.backgroundColor = "#E3E4FA";
+				else
+					tbl.style.backgroundColor = "#C5C6DC";
+					
+			}
             }catch(e) {
                 alert(e);
             }
@@ -358,7 +386,7 @@ function loadGrowerToForm(grower_id)
 						'url': 'ajax.php?cmd=get_volunteer_name', 
 						'success': function (data) {
 							var str = '<select id="event-captain-name" name="event-captain-name">';							
-							str += '<option value=0 selected="selected"> Select a Captain...</option>';							
+							str += '<option value=0 selected="selected">Select a Captain...</option>';							
 							if( data.datatable != null) 							
 								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
 								//if ( (i+1) == row[4])
@@ -524,7 +552,8 @@ function loadGrowerToForm(grower_id)
 						'url': 'ajax.php?cmd=get_driver&id='+volunteer_id, 
 						'success': function (data) {							
 							
-							if( data.datatable != null) 							
+							if( data.datatable != null) 	
+							{							
 								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
 									{											
 										var r = tbl.insertRow(i+3);
@@ -563,8 +592,9 @@ function loadGrowerToForm(grower_id)
 										tbl.rows[i+3].cells[2].childNodes[0].value = data.datatable.aaData[i][4];
 										tbl.rows[i+3].cells[4].childNodes[0].value = data.datatable.aaData[i][3];
 									}
-							
-							
+								var r = tbl.rows.length;
+								tbl.deleteRow(r-1);
+							}
 						},
 						'error': function (e) {
 							alert('Ajax Error!\n' + e.responseText);
@@ -613,7 +643,7 @@ function loadGrowerToForm(grower_id)
 		var table = document.getElementById("eventTree");
 		var rowCount = table.rows.length;
 		for(var i=1; i<rowCount; i++)
-			if((table.rows[i].cells[1].childNodes[0].value !="") && (table.rows[i].cells[2].childNodes[0].value !="") && (table.rows[i].cells[3].childNodes[0].value !=""))
+			if (table.rows[i].cells[1].childNodes[0].value !="") 
 			{
 				var data = {
 							"tree_id": table.rows[i].cells[1].childNodes[0].value,
@@ -631,7 +661,7 @@ function loadGrowerToForm(grower_id)
 				var r = table.rows[i];
 				var tbl = r.cells[0].childNodes[0];
                 var drv = tbl.rows[1].cells[3].childNodes[0].checked;
-				if((tbl.rows[1].cells[1].childNodes[0].value !="") && (tbl.rows[1].cells[2].childNodes[0].value !=""))
+				if (tbl.rows[1].cells[1].childNodes[0].value !="") 
 				if (drv == true) 
 				{
 					var distributedTree = [];
@@ -706,7 +736,7 @@ function loadGrowerToForm(grower_id)
 		var table = document.getElementById("eventTree");
 		var rowCount = table.rows.length;
 		for(var i=1; i<rowCount; i++)
-			if((table.rows[i].cells[1].childNodes[0].value !="") && (table.rows[i].cells[2].childNodes[0].value !="") && (table.rows[i].cells[3].childNodes[0].value !=""))
+			if(table.rows[i].cells[1].childNodes[0].value !="") 
 			{
 				var data = {
 							"tree_id": table.rows[i].cells[1].childNodes[0].value,
@@ -724,8 +754,7 @@ function loadGrowerToForm(grower_id)
 				var r = table.rows[i];
 				var tbl = r.cells[0].childNodes[0];
                 var drv = tbl.rows[1].cells[3].childNodes[0].checked;
-				//if((table.rows[i].cells[1].childNodes[0].value !="") && (table.rows[i].cells[2].childNodes[0].value !=""))
-				if (drv == true) 
+				if((tbl.rows[1].cells[1].childNodes[0].value !="") && (drv == true) )
 				{
 					var distributedTree = [];
 					for(var j=3; j< tbl.rows.length; j++)
@@ -788,6 +817,17 @@ function loadGrowerToForm(grower_id)
 	}
 	
 	function checkEventForm(){	
+	
+		if( $("#event-grower-name option:selected").text() == "Select a grower...")
+		{
+			alert("Please select a grower!");
+			return -1;
+		}		
+		if( $("#event-captain-name option:selected").text() == "Select a Captain...")
+		{
+			alert("Please select a captain!");
+			return -1;
+		}
 		
 		if ($('#event4').val() =="")
 		{
@@ -797,99 +837,129 @@ function loadGrowerToForm(grower_id)
 		
 		var table = document.getElementById("eventTree");
 		var rowCount = table.rows.length;
+		var set = {};
+		for(var i=1; i<rowCount; i++)
+			if(table.rows[i].cells[1].childNodes[0].value !="")
+			{
+				if (table.rows[i].cells[1].childNodes[0].value in set)
+				{
+					alert("Tree Type are duplicated!");
+					return -1;
+				}
+				else   
+					set[""+table.rows[i].cells[1].childNodes[0].value] = true;
+			}
 		for(var i=1; i<rowCount; i++)
 		{
 			if(table.rows[i].cells[1].childNodes[0].value =="")
 			{
 				alert("Tree Type can't be empty!");
 				return -1;
-			}
+			}			
 			
-			if(table.rows[i].cells[2].childNodes[0].value =="")
+			if ( (table.rows[i].cells[2].childNodes[0].value !="") && (isNaN(parseFloat(table.rows[i].cells[2].childNodes[0].value))) )
 			{
-				alert("Tree Pound can't be empty!");
+				alert("Number of Tree must be a number!");
 				return -1;
 			}
 			
-			if (isNaN(parseFloat(table.rows[i].cells[2].childNodes[0].value)))
+			if ( (table.rows[i].cells[2].childNodes[0].value !="") && (parseFloat(table.rows[i].cells[2].childNodes[0].value) < 0) )
 			{
-				alert("Tree Pound must be a number!");
+				alert("Number of Tree must be greater than zero!");
+				return -1;
+			}
+			if ( (table.rows[i].cells[3].childNodes[0].value !="") && (isNaN(parseFloat(table.rows[i].cells[2].childNodes[0].value))) )
+			{
+				alert("Tree Pound  must be a number!");
 				return -1;
 			}
 			
-			if (parseFloat(table.rows[i].cells[2].childNodes[0].value) < 0)
+			if ( (table.rows[i].cells[3].childNodes[0].value !="") && (parseFloat(table.rows[i].cells[2].childNodes[0].value) < 0) )
 			{
 				alert("Tree Pound must be greater than zero!");
 				return -1;
 			}
+			
+			
 		}
-		/*
-		var table = document.getElementById("eventVolunteer");
-		var rowCount = table.rows.length;
-		for(var i=1; i<rowCount; i++) 
+								
+		
+		var tbl = document.getElementById("eventVolunteer");
+		var rowCount = tbl.rows.length;
+		var set = {};
+		for(var i=0; i<rowCount; i++) 
 		{
-			if((table.rows[i].cells[1].childNodes[0].value ==""))
+			var r = tbl.rows[i];
+			var table = r.cells[0].childNodes[0];
+			if((table.rows[1].cells[1].childNodes[0].value !=""))
+			if (table.rows[1].cells[1].childNodes[0].value in set)
+				{
+					alert("Volunteers are duplicated!");
+					return -1;
+				}
+				else   
+					set[""+table.rows[1].cells[1].childNodes[0].value] = true;
+		}	
+		
+		
+		
+		for(var i=0; i<rowCount; i++) 
+		{
+			var r = tbl.rows[i];
+			var table = r.cells[0].childNodes[0];
+			if((table.rows[1].cells[1].childNodes[0].value ==""))
 			{
 				alert("Volunteer Name can't be empty!");
 				return -1;
 			}
+						
 			
-			if((table.rows[i].cells[2].childNodes[0].value ==""))
-			{
-				alert("Hours can't be empty!");
-				return -1;
-			}
-			
-			if (isNaN(parseFloat(table.rows[i].cells[2].childNodes[0].value)))
+			if ((table.rows[1].cells[2].childNodes[0].value !="") &&  (isNaN(parseFloat(table.rows[1].cells[2].childNodes[0].value))))
 			{
 				alert("Hours must be a number!");
 				return -1;
 			}
 			
-			if (parseFloat(table.rows[i].cells[2].childNodes[0].value) < 0)
+			if ((table.rows[1].cells[2].childNodes[0].value !="") &&  (parseFloat(table.rows[1].cells[2].childNodes[0].value) < 0))
 			{
 				alert("Hours must be greater than zero!");
 				return -1;
-			}
+			}	
 			
-		
-			if (table.rows[i].cells[3].childNodes[0].checked)
+			var set = {};
+			for(var k=3; k<table.rows.length; k++)
+				if(table.rows[k].cells[1].childNodes[0].value!="")
+				{
+					if (table.rows[k].cells[1].childNodes[0].value in set)
+					{
+						alert("Volunteer "+(i+1)+" has duplicated Tree Type!");
+						return -1;
+					}
+					else   
+						set[""+table.rows[k].cells[1].childNodes[0].value] = true;
+				}
+			if (table.rows[1].cells[3].childNodes[0].checked) 
 			{
-			
-				if(table.rows[i].cells[4].childNodes[0].value =="")
+				var r = table.rows.length;						
+				for(var j=3; j<r; j++) 
 				{
-					alert("Tree Type can't be empty!");
-					return -1;
-				}
-				
-				
-				if(table.rows[i].cells[5].childNodes[0].value =="")
-				{
-					alert("Tree Pound can't be empty!");
-					return -1;
-				}
-				
-				if (isNaN(parseFloat(table.rows[i].cells[5].childNodes[0].value)))
-				{
-					alert("Tree Pound must be a number!");
-					return -1;
-				}
-				
-				if (parseFloat(table.rows[i].cells[5].childNodes[0].value) < 0)
-				{
-					alert("Tree Pound must be greater than zero!");
-					return -1;
-				}
-				
-				if(table.rows[i].cells[6].childNodes[0].value =="")
-				{
-					alert("Distribution can't be empty!");
-					return -1;
+					if(table.rows[j].cells[1].childNodes[0].value =="")
+					{
+						alert("Volunteer "+(i+1)+" - Tree Type can't be empty!");
+						return -1;
+					}	
+					
+					if(table.rows[j].cells[4].childNodes[0].value =="")
+					{
+						alert("Distribution Site can't be empty!");
+						return -1;
+					}	
+					
+					
 				}
 			}
-			
 		}
-		*/	
+			
 		return 0;
 	}
 	

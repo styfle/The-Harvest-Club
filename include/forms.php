@@ -646,7 +646,7 @@ $avgHeight = $r->buildArray();
 
 		<table>
 			<tr>		
-				<td><label for="event-grower-name" ><b>Tree Type</b></label></td>	
+				<td><label for="event-grower-name" ><b>Tree Types</b></label></td>	
 				<td>	
 				 <INPUT type="button" value="Add" onclick="addTreeRow('eventTree')" /> 
 				 <INPUT type="button" value="Remove" onclick="deleteTreeRow('eventTree')" /> 
