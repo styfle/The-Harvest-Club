@@ -40,7 +40,12 @@ class Mail
 	 * $bcc is comma delimited list of email addresses
 	 */
 	function sendBulk($subject, $message, $bcc, $replyto=NULL) {
-		if (is_NULL($replyto)) $replyto= $this->replyto;
+		if (is_NULL($replyto)) {
+			$replyto = $this->replyto;
+			$to = $this->to; // use defaults provided in config
+		} else {
+			$to = $replyto; // send email to self, bcc everyone else
+		}
 		//$bcc = $implode(',', $addresses);
 		//$this->headers .= 'To: ' . $this->to . "\r\n"; // not needed
 		$this->headers .= 'From: ' . $this->from . "\r\n";
@@ -48,7 +53,7 @@ class Mail
 		$this->headers .= 'Bcc: ' . $bcc . "\r\n";
 		//$this->headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 		//$this->headers .= 'X-Mailer: Microsoft Office Outlook' . "\r\n";
-		return mail($this->to, $subject, $message, $this->headers);
+		return mail($to, $subject, $message, $this->headers);
 	}
 }
 

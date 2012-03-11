@@ -938,10 +938,10 @@ switch ($cmd)
 		$bcc = $_REQUEST['bcc'];
 		$subject = $_REQUEST['subject'];
 		$message = $_REQUEST['message'];
-		$type = $_REQUEST['type'];
+		$template = $_REQUEST['template'];
 		$event_id = $_REQUEST['event_id'];
 
-		if ($type) { // has attachment
+		if ($template) { // has template attachment
 			$sql="SELECT
 				g.first_name AS grower_f,
 				g.last_name AS grower_l,
@@ -961,7 +961,7 @@ switch ($cmd)
 			$r = $db->q($sql);
 			if (!$r->isValid() || !$r->hasRows()) {
 				$data['status'] = 432;
-				$data['message'] = 'No event found with that id.';
+				$data['message'] = "No event found with id=$event_id";
 				break;
 			}
 			$params = $r->getAssoc();
@@ -972,7 +972,7 @@ switch ($cmd)
 			//print_r($params);
 		}
 
-		switch ($type) {
+		switch ($template) {
 			case 'invitation':
 				$message = invitationEmail($params) . $message;
 				break;
@@ -990,7 +990,7 @@ switch ($cmd)
 		echo $message;
 		break;
 		echo 'hasdfad';
-		*/ end debug
+		// end debug */
 
 		$sent = $mail->sendBulk($subject, $message, $bcc, $my_email);
 		if (!$sent) {

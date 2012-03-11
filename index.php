@@ -752,10 +752,7 @@ if (!$PRIV)
 				
 				case 4: // distribution
 					switchForm('distribution');
-					for (var i = 0; i < 9; i++)
-						$('#donations'+i).val('');
 					initHours();
-					
                 break;
 						
 				case 5: // event
@@ -769,8 +766,6 @@ if (!$PRIV)
                 break;
 				
 				case 6: // donation
-					for (var i = 0; i < 6; i++)
-						$('#donations'+i).val('');
 					switchForm('donation');
 					$('#donations5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
 				break;
@@ -1454,6 +1449,17 @@ if (!$PRIV)
 			'error': ajaxError
 		});			
 	}
+
+	function changeTemplate(t) {
+		var event_id = 0;
+		var event_field = $('#email input[name=event_id]');
+		if (t.value) // has template
+			event_id = prompt('Please enter the event ID:', event_field.val());
+		if (!event_id)
+			t.value = '';
+		event_field.val(event_id);
+	}
+
 	</script>
 
 	<!-- Prompt IE 6 users to install Chrome Frame. -->

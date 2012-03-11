@@ -54,7 +54,7 @@ We’ll be harvesting $p[fruit] on the property of $p[grower_f] $p[grower_l].
 
 To volunteer for this Harvest, please respond to this email.
 
-If you are a new volunteer, please click here to register as a harvester with The Harvest Club and please complete a liability waiver here.
+If you are a new volunteer, please register and complete our liability waiver on our website.
 
 We hope to see you at the harvest!
 

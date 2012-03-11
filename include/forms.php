@@ -725,13 +725,14 @@ $avgHeight = $r->buildArray();
 		<div><textarea name="message" rows="10" cols="50" required="required"></textarea></div>
 		<br/>
 		<div><b>Attach Template</b></div>
-		<select name="type" onchange="emailAttachment();">
+		<select name="template" onchange="changeTemplate(this);">
 			<option value="">&lt;&lt;None&gt;&gt;</option>
-			<option value="invitation">Invitation</option>
+			<option value="invitation">Harvest Invitation</option>
 			<option value="details">Harvest Details</option>
-			<option value="reminder">Reminder</option>
+			<option value="reminder">Harvest Reminder</option>
 		</select>
-		<input name="event_id" type="hidden"/>
+		<!-- input type="button" value="Change Event ID" onclick="changeTemplate(this);" style="font-size:0.6em;" /-->
+		<input name="event_id" type="text" value="" placeholder="event id" style="width:70px;" />
 	</form>
 	<!-- Email end -->
 </div>
