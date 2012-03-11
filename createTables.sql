@@ -343,7 +343,7 @@ CREATE TABLE events (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	grower_id INT NOT NULL,
 	captain_id INT NOT NULL,
-	date datetime,
+	date date,
 	time text,
 	notes text,
 	CONSTRAINT fk_event_grower_id FOREIGN KEY (grower_id) REFERENCES growers(id),

@@ -3,6 +3,7 @@
 require_once('include/Database.inc.php');
 require_once('include/Mail.inc.php');
 require_once('include/auth.inc.php');
+require_once('include/autoresponse.inc.php');
 
 header('Content-type: application/json');
 
@@ -450,7 +451,11 @@ function generatePassword($length=8) {
 	return $password;
 }
 
-
+function dateToStr($dateStr) {
+	date_default_timezone_set('America/Los_Angeles');
+	$a = explode('-', $dateStr); // split
+	return date("l F j, Y", mktime(0, 0, 0, $a[1], $a[2], $a[0]));
+}
 
 switch ($cmd)
 {
@@ -927,11 +932,67 @@ switch ($cmd)
 		}
 		global $data;
 		global $mail;
+		global $db;
+
 		$my_email = $_SESSION['email'];
 		$bcc = $_REQUEST['bcc'];
 		$subject = $_REQUEST['subject'];
 		$message = $_REQUEST['message'];
-		$sent = $mail->sendBulk($subject, $message, $bcc); // maybe use $my_email for replyto
+		$type = $_REQUEST['type'];
+		$event_id = $_REQUEST['event_id'];
+
+		if ($type) { // has attachment
+			$sql="SELECT
+				g.first_name AS grower_f,
+				g.last_name AS grower_l,
+				g.street, g.city, g.state, g.zip,
+				e.date, e.time,
+				v.first_name AS captain_f,
+				v.last_name AS captain_l,
+				v.phone AS captain_phone,
+				CONCAT(tt.name,' (',t.varietal, ')') AS fruit
+				FROM events e, growers g, volunteers v, harvests h, grower_trees t, tree_types tt
+				WHERE e.grower_id=g.id
+				AND e.captain_id=v.id
+				AND h.event_id = e.id
+				AND h.tree_id=t.id
+				AND t.tree_type=tt.id
+				AND e.id =$event_id";				
+			$r = $db->q($sql);
+			if (!$r->isValid() || !$r->hasRows()) {
+				$data['status'] = 432;
+				$data['message'] = 'No event found with that id.';
+				break;
+			}
+			$params = $r->getAssoc();
+			$params['me_f'] = $_SESSION['first_name'];
+			$params['me_l'] = $_SESSION['last_name'];
+			$params['date'] = dateToStr($params['date']);
+			// bug here: might have multiple fruit records
+			//print_r($params);
+		}
+
+		switch ($type) {
+			case 'invitation':
+				$message = invitationEmail($params) . $message;
+				break;
+			case 'details':
+				$message = harvestDetailsEmail($params) . $message;
+				break;
+			case 'reminder':
+				$message = reminderEmail($params) . $message;
+				break;
+			default:
+				break;
+		}
+
+		/* debug start
+		echo $message;
+		break;
+		echo 'hasdfad';
+		*/ end debug
+
+		$sent = $mail->sendBulk($subject, $message, $bcc, $my_email);
 		if (!$sent) {
 			$data['status'] = 500;
 			$data['message'] = 'Oh boy. Mail could not be sent! Maybe the server is overloaded?';

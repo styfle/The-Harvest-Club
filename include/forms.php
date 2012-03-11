@@ -218,8 +218,8 @@ $avgHeight = $r->buildArray();
 		</tr>
 		<?php } ?>
 		<tr id="view-trees">
-			<td colspan=2">Show all his/her trees</td>
-			<td colspan="1"><input type="button" onclick="viewTrees();" value="View Trees"/></td>
+			<td>Show his/her trees</td>
+			<td colspan="2"><input type="button" onclick="viewTrees();" value="View Trees"/></td>
 		</tr>		
 		
 		<tr>
@@ -334,19 +334,18 @@ $avgHeight = $r->buildArray();
 		<tr>
 			<td class="hidden"><input id="tree11" name="height_name" type="text" size="2"/></td>
 		</tr>	
-		<tr> 
-			<td>Show grower</td>
-			<td><input type="button" onclick="viewGrower();" value="View Grower"/></td>
-		</tr>
 		
 		<tr>			
 			<td colspan="4">
-			<label for="grower_id"> Owner</label>
+				<label for="grower_id"> Owner</label>
 			</td>
 		</tr>
 		<tr>			
-			<td colspan="4">				
+			<td>				
 				<?php echo options('tree3', 'grower_id', $grower_id); ?>
+			</td>
+			<td colspan="3">
+				<input id="view-grower" type="button" onclick="viewGrower();" value="View Grower"/>
 			</td>
 		</tr>		
 		<tr>
@@ -686,7 +685,7 @@ $avgHeight = $r->buildArray();
 			<td colspan="3" class="hidden"><input id="donations1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="donations2">Donation (What was donated)</label></td>	
+			<td colspan="3"><label for="donations2">Donation (What was donated)</label></td>
 		</tr>
 		<tr>
 			<td colspan="3"><input type="text" name="donation" id="donations2" size="33"/></td>			
@@ -715,13 +714,24 @@ $avgHeight = $r->buildArray();
 
 	<!-- Email Form -->
 	<form id="email" class="full_width hidden">
-		<h3>Email Selected Users</h3>
-		<div>Recipients (<span class="rcount"></span>)</div>
-		<div><input name="bcc" type="text" readonly="readonly" size="50" required="required" style="font-size:0.5em" /></div>
-		<div>Subject</div>
+		<h3>Send Email</h3>
+		<div><b>Recipients</b> (<span class="rcount"></span>)</div>
+		<div><textarea name="bcc" type="text" size="50" required="required" style="font-size:0.9em"></textarea></div>
+		<br/>
+		<div><b>Subject</b></div>
 		<div><input name="subject" type="text" size="40" required="required" /></div>
-		<div>Message</div>
+		<br/>
+		<div><b>Message</b></div>
 		<div><textarea name="message" rows="10" cols="50" required="required"></textarea></div>
+		<br/>
+		<div><b>Attach Template</b></div>
+		<select name="type" onchange="emailAttachment();">
+			<option value="">&lt;&lt;None&gt;&gt;</option>
+			<option value="invitation">Invitation</option>
+			<option value="details">Harvest Details</option>
+			<option value="reminder">Reminder</option>
+		</select>
+		<input name="event_id" type="hidden"/>
 	</form>
 	<!-- Email end -->
 </div>

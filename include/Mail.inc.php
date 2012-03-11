@@ -39,9 +39,10 @@ class Mail
 	 * Send bulk email to multiple recipients
 	 * $bcc is comma delimited list of email addresses
 	 */
-	function sendBulk($subject, $message, $bcc) {
+	function sendBulk($subject, $message, $bcc, $replyto=NULL) {
+		if (is_NULL($replyto)) $replyto= $this->replyto;
 		//$bcc = $implode(',', $addresses);
-		//$this->headers .= 'To: ' . $this->to . "\r\n";
+		//$this->headers .= 'To: ' . $this->to . "\r\n"; // not needed
 		$this->headers .= 'From: ' . $this->from . "\r\n";
 		$this->headers .= 'Reply-To: ' . $this->replyto . "\r\n";
 		$this->headers .= 'Bcc: ' . $bcc . "\r\n";

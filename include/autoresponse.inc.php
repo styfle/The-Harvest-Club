@@ -45,14 +45,12 @@ EOD;
 }
 */
 
-function invitationEmail($city, $dateStr, $time, $fruit, $grower_f, $grower_l, $me_f, $me_l)) {
-	$a = explode('-', $dateStr); // split
-	$day_date = date("l F j, Y", mktime(0, 0, 0, $a[1], $a[2], $a[0]));
+function invitationEmail($p) {
 return<<<EOD
-Hello Fellow Harvesters!
-Another Harvest Event is coming up in $city on $day_date at $time.
+Hello fellow harvesters!
+Another Harvest Event is coming up in $p[city] on $p[date] at $p[time].
 
-We’ll be harvesting $fruit on the property of $grower_f $grower_l.
+We’ll be harvesting $p[fruit] on the property of $p[grower_f] $p[grower_l].
 
 To volunteer for this Harvest, please respond to this email.
 
@@ -60,52 +58,48 @@ If you are a new volunteer, please click here to register as a harvester with Th
 
 We hope to see you at the harvest!
 
-$me_f $me_l
+$p[me_f] $p[me_l]
 
 EOD;
 }
 
-function harvestDetailsEmail($vol_f, $vol_l, $street, $city, $state, $zip, $dateStr, $time, $fruit, $grower_f, $grower_l, $captain_f, $captain_l, $captain_phone, $me_f, $me_l)) {
-	$a = explode('-', $dateStr); // split
-	$day_date = date("l F j, Y", mktime(0, 0, 0, $a[1], $a[2], $a[0]));
+function harvestDetailsEmail($p) {
 return<<<EOD
-$vol_f $vol_l,
+Hello again fellow harvesters!
 	
 Thank you for registering for our upcoming Harvest Event!
 Below are the details for this event:
 
-	Grower Name: $grower_f $grower_l
-	Grower Address: $street $city $state, $zip
-	Date: $day_date
-	Time: $time
-	Harvesting:
-	Parking:
+    Grower Name: $p[grower_f] $p[grower_l]
+    Grower Address: $p[street] $p[city] $p[state], $p[zip]
+    Date: $p[date]
+    Time: $p[time]
+    Harvesting: $p[fruit]
 
-Your Harvest Captain is $captain_f $captain_l.  You can reach him/her at $captain_phone if you run into any problems on the day of the event.
+Your Harvest Captain is $p[captain_f] $p[captain_l].  You can reach him/her at $p[captain_phone] if you run into any problems on the day of the event.
 
 We advise all harvesters to wear long sleeves and close-toed shoes.  Please bring ladders, clippers, picker poles, and sturdy fruit boxes if you have them.  They will be put to good use!
 
 Thanks again and happy harvesting!
 
-$first $last
+$p[me_f] $p[me_l]
 
 EOD;
 }
-function reminderEmail($vol_f, $vol_l, $street, $city, $state, $zip, $dateStr, $time, $fruit, $grower_f, $grower_l, $captain_f, $captain_l, $captain_phone, $me_f, $me_l)) {
-	$a = explode('-', $dateStr); // split
-	$day_date = date("l F j, Y", mktime(0, 0, 0, $a[1], $a[2], $a[0]));
+
+function reminderEmail($p) {
 return<<<EOD
-$vol_f $vol_l,
+Hello Fellow Harvesters!
 
-You are receiving this email because you have registered to volunteer at a Harvest Event with The Harvest Club!  This is a reminder that the Harvest will take place at $time on $day_date in the City of $city.
+You are receiving this email because you have registered to volunteer at a Harvest Event with The Harvest Club!  This is a reminder that the Harvest will take place at $p[time] on $p[date] in the City of $p[city].
 
-Your Harvest Captain is $captain_f $captain_l.  You can reach him/her at $captain_phone if you run into any problems on the day of the event.  
+Your Harvest Captain is $p[captain_f] $p[captain_l].  You can reach him/her at $p[captain_phone] if you run into any problems on the day of the event.  
 
 Please bring sturdy fruit boxes and tools if available and don't forget to wear long sleeves and close-toed shoes.
 
 We look forward to seeing you soon!
 
-$first $last
+$p[me_f] $p[me_l]
 
 EOD;
 }
