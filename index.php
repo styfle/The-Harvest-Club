@@ -748,7 +748,6 @@ if (!$PRIV)
 				case 3: // tree
 					switchForm('tree');
 					$('#tree3').val(growerID); // last viewed grower
-					console.log(growerID);
 				break;
 				
 				case 4: // distribution
@@ -890,7 +889,6 @@ if (!$PRIV)
 										deleted++;
 										dt.fnDeleteRow(row[0]);
 										setInfo('Deleted ' + deleted + ' items');
-										console.log(data);
 									},
 									'error': ajaxError
 								});
@@ -1133,9 +1131,13 @@ if (!$PRIV)
 					switchForm('volunteer');
 					if (priv.edit_volunteer)
 						buttonList.unshift(saveButton);
-					for (var i = 0; i < row.length; i++)
-						$('#volunteer' + i).val(row[i]);					
-					
+					for (var i = 0; i < row.length; i++) {
+						var val = row[i];
+						if (contains(val, "active"))
+							val = (val.toLowerCase()=="inactive") ? 0 : 1;
+						$('#volunteer' + i).val(val);
+					}
+			
 					$.ajax({
 						'dataType': 'json',
 						'type': 'GET',
