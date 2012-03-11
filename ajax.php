@@ -990,12 +990,6 @@ switch ($cmd)
 				break;
 		}
 
-		// debug start
-		echo $message;
-		break;
-		echo 'hasdfad';
-		// end debug */
-
 		$sent = $mail->sendBulk($subject, $message, $bcc, $my_email);
 		if (!$sent) {
 			$data['status'] = 500;
