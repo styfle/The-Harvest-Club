@@ -97,6 +97,51 @@ function deleteTreeRow(tableID) {
 	}
 }
 		
+function viewStats(){
+	var volunteer_id = $('#volunteer1').val();
+	$.ajax({
+			'dataType': 'json', 
+			'type': 'GET', 
+			'url': 'ajax.php?cmd=get_volunteer_stats&volunteer_id='+volunteer_id, 
+			'success': function (data) {
+				if (!validResponse(data))
+					return false;
+				if (!data.datatable || !data.datatable.aoColumns || !data.datatable.aaData)
+					return alert('There is no column and row data!');
+				
+				if (typeof dt2 == 'undefined') {
+				
+					dt2 = $('#volunteerStats').dataTable({
+						'bJQueryUI': true, // style using jQuery UI
+						'sPaginationType': 'full_numbers', // full pagination
+						'bProcessing': true, // show loading bar text
+						'bAutoWidth': false, // auto column size
+						'aaSorting': [], // disable initial sort
+						"sScrollX": "100%",
+						'aoColumns': data.datatable.aoColumns,
+						'aaData': data.datatable.aaData,
+					});
+				}
+				else
+				{
+					dt2.fnDestroy();
+						dt2 = $('#volunteerStats').dataTable({
+						'bJQueryUI': true, // style using jQuery UI
+						'sPaginationType': 'full_numbers', // full pagination
+						'bProcessing': true, // show loading bar text
+						'bAutoWidth': false, // auto column size
+						'aaSorting': [], // disable initial sort
+						"aLengthMenu": [[10, 25, 50, 100, -1], // sort length
+										[10, 25, 50, 100, "All"]], // sort name
+						'iDisplayLength': dt_length,
+						'aoColumns': data.datatable.aoColumns,
+						'aaData': data.datatable.aaData,
+						});			
+				}
+			}
+		});
+		$('#statsTable').show();
+}
 function addVolunteerRow(tableID) {
 
 	        var table = document.getElementById(tableID);					

@@ -340,6 +340,56 @@ function getTable($sql) {
 
 }
 
+function getTableNoCheckbox($sql) {
+	global $db;
+	global $data;
+	//$data['datatable'] = array('aoColumns', 'aaData');
+
+	$r = $db->q($sql);
+	if (getError($r))
+		return $data;
+	
+	// get result as giant array
+	$a = $r->buildArray();
+	
+	// if empty return empty result
+	if (!$a) {
+		$data['datatable']['aoColumns'][] = array('sTitle'=>'Empty Set');
+		$data['datatable']['aaData'][] = array('No results found. Maybe you should add something?');
+		return; 
+	}	
+
+	// first column is select-all checkbox
+	// $data['datatable']['aoColumns'][] = array(
+		// 'sTitle' => '<input type="checkbox" name="select-all" />',
+		// 'sWidth' => '30px',
+		// 'bSortable' => false
+	// );
+	
+	// add column data
+	foreach ($a[0] as $k => $v) {
+		$column = array();
+		$column['sTitle'] = $k;
+		if ($k == 'id' || $k == 'password' || contains($k, '_id')) {
+			$column['bSearchable'] = false;
+			$column['bVisible'] = false;
+		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip' || contains($k, '_tag') || contains($k, 'property_')) {
+			$column['bVisible'] = false; // hide but still searchable
+		} else if (contains($k,'notes') || contains($k,'phone') || contains($k,'email') || contains($k,'signed')) {
+			$column['sClass'] = 'small';
+		}
+		$data['datatable']['aoColumns'][] = $column;
+	}
+	
+	// add row data
+	foreach ($a as $v) {
+		$record = array();
+		foreach ($v as $name=>$value) {
+			$record[] = $value;
+		}
+		$data['datatable']['aaData'][] = $record;
+	}
+}
 function getDistribution_Hours($sql) {
 	global $db;
 	global $data;
@@ -502,6 +552,18 @@ switch ($cmd)
 				LEFT JOIN privileges p ON v.privilege_id = p.id;";
 		getTable($sql);
 		break;
+	case 'get_volunteer_stats':
+		if (!$PRIV['view_volunteer']) {
+			forbidden();
+			break;
+		}		
+		$data['title'] = 'Volunteer-Events';
+		$volunteer_id = $_REQUEST['volunteer_id'];
+		$sql = "SELECT ve.*
+				FROM volunteer_events ve
+				WHERE ve.volunteer_id = $volunteer_id;";
+		getTableNoCheckbox($sql);
+		break;	
 	case 'get_growers':
 		if (!$PRIV['view_grower']) {
 			forbidden();

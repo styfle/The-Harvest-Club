@@ -196,14 +196,26 @@ $avgHeight = $r->buildArray();
 				<input type="checkbox" name="volunteerDay7" id="volunteerDay7" size="28" />
 				<label for="volunteerDay7">Sunday</label>
 			</td>
-		</tr>
+			</tr>
+			<tr>
+				<td colspan="3"><label for="volunteer10"><b>Notes</b></label></tr>
+			</tr>
+			<tr>
+				<td colspan="3"><textarea name="note" id="volunteer10" rows="5" cols="48"></textarea></td>
+			</tr>
+			<tr>				
+				<td><input type="button" value="View Stats" onclick="viewStats()" /></td>
+			</tr>
+		</table>
 		
-		</table>	
-	
-	<div style="margin-top:5px;">
-		<div><label for="volunteer10"><b>Notes</b></label></div>
-		<div><textarea name="note" id="volunteer10" rows="5" cols="48"></textarea></div>
-	</div>	
+		<div id="statsTable">
+			<table id="volunteerStats" cellpadding="0" cellspacing="0" border="0" class="display">
+				<!-- table is filled dynamically -->
+				<thead><tr><th></th></tr></thead>
+				<tbody><tr><td></td></tr></tbody>
+
+			</table>
+		</div>	
 	</form>
 	<!-- Volunteer end -->
 	

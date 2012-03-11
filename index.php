@@ -300,6 +300,19 @@ if (!$PRIV)
 		$('#email').addClass('hidden');
 		$('#event').addClass('hidden');
 		$('#donation').addClass('hidden');
+		
+		$('#'+id).removeClass('hidden'); // show form
+	}
+	
+	// clear, show a specified form and hide all other forms
+	function switchNClearForm(id) {
+		$('#volunteer').addClass('hidden');
+		$('#grower').addClass('hidden');
+		$('#tree').addClass('hidden');
+		$('#distribution').addClass('hidden');
+		$('#email').addClass('hidden');
+		$('#event').addClass('hidden');
+		$('#donation').addClass('hidden');
 
 		clearForm(id);
 		$('#'+id).removeClass('hidden'); // show form
@@ -371,6 +384,7 @@ if (!$PRIV)
 	// GLOBAL VARIABLES
 
 	var dt; // global datatable variable
+	var dt2;// stat event table in volunteer form
 	var currentTable = 0; // global id of current data table
 	var dt_length = 10; // show x entries
 	var viewTreeClicked = 0;
@@ -722,7 +736,7 @@ if (!$PRIV)
 					setError('Sorry but there is no reason to add a record to this table. It is strictly informational.');
 					return;
 				case 1: //volunteer
-					switchForm('volunteer');
+					switchNClearForm('volunteer');
 					$('#pending').hide();						
 					for (var i = 1; i < 19; i++)
 						$('#volunteer' + i).prop('disabled', false);
@@ -736,7 +750,7 @@ if (!$PRIV)
 				break;
 				
 				case 2: // grower
-					switchForm('grower');
+					switchNClearForm('grower');
 					$('#pending2').hide();
 					for (var i = 1; i < 21; i++)
 							$('#grower' + i).prop('disabled', false);
@@ -745,13 +759,13 @@ if (!$PRIV)
 				break;
 				
 				case 3: // tree
-					switchForm('tree');
+					switchNClearForm('tree');
 					$('#tree3').val(growerID); // last viewed grower
 					$('#view-grower').hide();
 				break;
 				
 				case 4: // distribution
-					switchForm('distribution');
+					switchNClearForm('distribution');
 					initHours();
                 break;
 						
@@ -766,7 +780,7 @@ if (!$PRIV)
                 break;
 				
 				case 6: // donation
-					switchForm('donation');
+					switchNClearForm('donation');
 					$('#donations5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
 				break;
 			}			
@@ -982,7 +996,7 @@ if (!$PRIV)
 				setInfo('Select 1 or more checkboxes to choose email recipients.');
 				return false;
 			}
-			switchForm('email');
+			switchNClearForm('email');
 			$('#email [name=bcc]').val(emailList.join(','));
 			$('#email .rcount').text(emailList.length + ' selected');
 			$('#edit-dialog').dialog("option", "buttons", [sendEmailButton, cancelButton]);
@@ -1123,7 +1137,7 @@ if (!$PRIV)
 				break;
 
 				case 1: //volunteer
-					switchForm('volunteer');
+					switchNClearForm('volunteer');
 					if (priv.edit_volunteer)
 						buttonList.unshift(saveButton);
 					for (var i = 0; i < row.length; i++) {
@@ -1196,10 +1210,11 @@ if (!$PRIV)
 								$('#volunteerDay'+i).prop('disabled', true);
 						}
 					}
+					$('#statsTable').hide();
 				break;
 				
 				case 2: // grower
-					switchForm('grower');
+					switchNClearForm('grower');
 					if (priv.edit_grower)
 						buttonList.unshift(saveButton);
 					
@@ -1231,7 +1246,7 @@ if (!$PRIV)
 				break;
 				
 				case 3: // tree
-					switchForm('tree');
+					switchNClearForm('tree');
 					if (priv.edit_grower)
 						buttonList.unshift(saveButton);
 					for (var i = 1; i < row.length; i++)
@@ -1260,7 +1275,7 @@ if (!$PRIV)
 				
 				case 4: // distribution
 					initHours();
-					switchForm('distribution');
+					switchNClearForm('distribution');
 					if (priv.edit_distrib)
 						buttonList.unshift(saveButton);
                     for (var i = 1; i < row.length; i++)
@@ -1313,7 +1328,7 @@ if (!$PRIV)
 				break;
 				
 				case 6: // donation
-					switchForm('donation');
+					switchNClearForm('donation');
 					if (priv.edit_donor)
 						buttonList.unshift(saveButton);
 					for (var i = 1; i < row.length; i++)
