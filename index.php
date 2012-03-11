@@ -301,7 +301,32 @@ if (!$PRIV)
 		$('#event').addClass('hidden');
 		$('#donation').addClass('hidden');
 
+		clearForm(id);
 		$('#'+id).removeClass('hidden'); // show form
+	}
+
+	// clear form inputs
+	function clearForm(id) {
+		$('#'+id).find(':input').each(function() {
+			switch(this.type) {
+				case 'tel':
+				case 'text':
+				case 'password':
+				case 'textarea':
+				case 'select-one':
+				case 'select-multiple':
+					$(this).val('');
+					break;
+				case 'radio':
+				case 'checkbox':
+						this.checked = false;
+				case 'button': // Don't change value(name) for buttons								
+					break;
+				default:
+					$(this).val('');
+					break;
+			}
+		});
 	}
 
 	// check ajax response for our standard format
@@ -348,7 +373,6 @@ if (!$PRIV)
 	var dt; // global datatable variable
 	var currentTable = 0; // global id of current data table
 	var dt_length = 10; // show x entries
-	var forms = ['volunteer', 'grower', 'tree', 'distribution'];
 	var viewTreeClicked = 0;
 	var viewGrowerClicked = 0;
 	var saveGrowerDialog = 0;
@@ -690,31 +714,6 @@ if (!$PRIV)
 			icons: { primary: "ui-icon-plusthick" },
 			text: false
 		}).click(function() {
-			// Clear all forms
-			for(var i = 0; i < forms.length; i++)
-			{
-				$('#'+forms[i]).find(':input').each(function()
-				{
-					switch(this.type) {
-						case 'tel':
-						case 'text':
-						case 'password':
-						case 'textarea':
-						case 'select-one':
-						case 'select-multiple':
-							$(this).val('');
-							break;
-						case 'radio':
-						case 'checkbox':
-								this.checked = false;
-						case 'button': // Don't change value(name) for buttons								
-							break;
-						default:
-							$(this).val('');
-							break;
-					}
-				});
-			}
 			
 			//Display the form you want, hide everything else
 			switch (currentTable)
@@ -988,8 +987,9 @@ if (!$PRIV)
 				return false;
 			}
 			switchForm('email');
+			$('#email input').val('');
 			$('#email [name=bcc]').val(emailList.join(','));
-			$('#email .rcount').text(emailList.length);
+			$('#email .rcount').text(emailList.length + ' selected');
 			$('#edit-dialog').dialog("option", "buttons", [sendEmailButton, cancelButton]);
 			$('#edit-dialog').dialog({ title: 'Email Selected Users' });
 			$('#edit-dialog').dialog('open') // show dialog
