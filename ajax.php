@@ -355,7 +355,7 @@ function getTableNoCheckbox($sql) {
 	// if empty return empty result
 	if (!$a) {
 		$data['datatable']['aoColumns'][] = array('sTitle'=>'Empty Set');
-		$data['datatable']['aaData'][] = array('No results found. Maybe you should add something?');
+		$data['datatable']['aaData'][] = array('No event record exits');
 		return; 
 	}	
 
@@ -1080,6 +1080,20 @@ switch ($cmd)
 		$data['title'] = 'Events';		
 		$sql = "SELECT e.id, e.grower_id, e.captain_id, date(e.date) as Date, Concat(g.first_name,' ',g.middle_name,' ',g.last_name) as Grower, g.city, e.time, e.notes FROM events e, growers g Where e.grower_id = g.id;";
 
+		getTable($sql);
+		break;
+	
+	case 'get_an_event':
+		if (!$PRIV['view_event']) {
+			forbidden();
+			break;
+		}
+		$data['id'] = 5;
+		$data['title'] = 'Event';	
+		$eventID = $_REQUEST['eventID'];
+		$sql = "SELECT e.id, e.grower_id, e.captain_id, date(e.date) as Date, Concat(g.first_name,' ',g.middle_name,' ',g.last_name) as Grower, g.city, e.time, e.notes
+				FROM events e, growers g
+				Where e.grower_id = g.id AND e.id = $eventID;";		
 		getTable($sql);
 		break;
 		

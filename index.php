@@ -236,6 +236,11 @@ if (!$PRIV)
 
 					case 5: // events
 						showAddDelEmailExport(priv.edit_event, priv.del_event, 0, 0); // no email, no export
+						if(viewEventClicked == 1 && eventID > 0){
+							viewEventClicked = 0;
+							cmd = "get_an_event&eventID="+eventID;
+							reloadTable(cmd);					
+						}
 					break;
 
 					case 6: // donations
@@ -388,9 +393,11 @@ if (!$PRIV)
 	var currentTable = 0; // global id of current data table
 	var dt_length = 10; // show x entries
 	var viewTreeClicked = 0;
+	var viewEventClicked = 0;
 	var viewGrowerClicked = 0;
 	var saveGrowerDialog = 0;
 	var growerID = 0;
+	var eventID = 0;
 	var pending = 0;
 	var privilegeID = 0;
 	var viewActiveVol = 0;
@@ -1263,7 +1270,7 @@ if (!$PRIV)
 							
 							if( data.datatable != null) 							
 					   		 for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
-								$('#tree_month'+data.datatable.aaData[i][0]).prop("checked", true);									
+								$('#tree_month'+data.datatable.aaData[i][0]).prop("checked", true);	
 								
 							
 									
@@ -1313,9 +1320,6 @@ if (!$PRIV)
 			
 				case 5: // event				
 					if (priv.edit_event)
-
-
-
 						buttonList.unshift(saveButton);					
 					event_id = row[1];	
 
@@ -1344,6 +1348,13 @@ if (!$PRIV)
 			if(currentTable != 0) // don't show dialog for notifications
 				$('#edit-dialog').dialog('open') // show dialog
 		}); // on.click tr
+		
+		$(document).on('click', '#volunteerStats tbody tr',function(e) {
+			var eventRow = (dt2.fnGetData(this));
+			eventID = eventRow[0];			
+			viewEvent();		
+		});//on.click dt2
+		
 		
 		$(document).on('change', '#event-grower-name', function(e) {
 			grower_id = $('#event-grower option:selected').val();
@@ -1463,6 +1474,12 @@ if (!$PRIV)
 			},
 			'error': ajaxError
 		});			
+	}
+	
+	function viewEvent(){
+		viewEventClicked = 1;			
+		$('#edit-dialog').dialog('close');				//Close pop-up
+		document.getElementById('get_events').click();	//switch to Trees Tab	
 	}
 
 	function changeTemplate(t) {
