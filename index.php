@@ -68,7 +68,6 @@ if (!$PRIV)
 	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
-	<script type="text/javascript" src="js/event.js"></script>
 </head>
 
 <body>
