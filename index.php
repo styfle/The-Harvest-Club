@@ -747,6 +747,7 @@ if (!$PRIV)
 				case 3: // tree
 					switchForm('tree');
 					$('#tree3').val(growerID); // last viewed grower
+					$('#view-grower').hide();
 				break;
 				
 				case 4: // distribution
@@ -987,7 +988,6 @@ if (!$PRIV)
 				return false;
 			}
 			switchForm('email');
-			$('#email input').val('');
 			$('#email [name=bcc]').val(emailList.join(','));
 			$('#email .rcount').text(emailList.length + ' selected');
 			$('#edit-dialog').dialog("option", "buttons", [sendEmailButton, cancelButton]);
@@ -1260,6 +1260,7 @@ if (!$PRIV)
                         },
                         'error': ajaxError
                     });
+					$('#view-grower').show();
 				break;
 				
 				case 4: // distribution
