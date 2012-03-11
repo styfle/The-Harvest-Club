@@ -972,21 +972,25 @@ switch ($cmd)
 			//print_r($params);
 		}
 
+		$delim = "\r\n\r\n";
+		if (get_magic_quotes_gpc()) // See http://php.net/manual/en/function.get-magic-quotes-gpc.php
+			$message = stripslashes($message);
+
 		switch ($template) {
 			case 'invitation':
-				$message = invitationEmail($params) . $message;
+				$message = invitationEmail($params) .$delim. $message;
 				break;
 			case 'details':
-				$message = harvestDetailsEmail($params) . $message;
+				$message = harvestDetailsEmail($params) .$delim. $message;
 				break;
 			case 'reminder':
-				$message = reminderEmail($params) . $message;
+				$message = reminderEmail($params) .$delim. $message;
 				break;
 			default:
 				break;
 		}
 
-		/* debug start
+		// debug start
 		echo $message;
 		break;
 		echo 'hasdfad';
