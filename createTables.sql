@@ -305,7 +305,7 @@ CREATE TABLE volunteers (
 	signed_up DATE,
 	notes TEXT,
 	source_id INT DEFAULT 1,
-	surplus_hours INT DEFAULT 0,
+	surplus_hours DOUBLE DEFAULT 0,
 	CONSTRAINT fk_privilege_id FOREIGN KEY (privilege_id) REFERENCES privileges(id),
 	CONSTRAINT fk_source_id_volunteers FOREIGN KEY (source_id) REFERENCES sources(id)
 ) ENGINE=innodb;

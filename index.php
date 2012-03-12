@@ -1420,15 +1420,14 @@ if (!$PRIV)
 					surplus_hours = $(userInput).val();	
 					if(surplus_hours<0)
 						alert("Hours cannot be negative!");	
-					else{
-						//alert(surplus_hours);
-						//alert(volunteer_id);
+					else{						
 						$.ajax({							
 							'type': 'GET',
 							'url': 'ajax.php?cmd=update_surplus_hours&volunteer_id='+volunteer_id+'&surplus_hours='+surplus_hours,
 							'success': function (data) {
 								if (!validResponse(data))
 									return false;
+								viewStats();
 								setInfo('Information Updated');							
 							},
 							'error': ajaxError
@@ -1573,10 +1572,7 @@ if (!$PRIV)
 					});
 				}
 				else
-				{
-					//alert("re");
-					//dt2.fnReloadAjax();
-					//alert("2");
+				{					
 					dt2.fnDestroy();
 					$('#volunteerStats thead').html('');
 					$('#volunteerStats tbody').html('');
@@ -1590,8 +1586,7 @@ if (!$PRIV)
 						'aoColumns': data.datatable.aoColumns,
 						'aaData': data.datatable.aaData
 						});				
-				}
-				//dt2.fnDraw(false);
+				}				
 			},
 			'error': ajaxError
 		});

@@ -577,9 +577,9 @@ switch ($cmd)
 				SELECT '-1' AS event_id,
 						$volunteer_id AS volunteer_id,
 						'TOTAL' AS Grower,
-						CONCAT('Plus ', 
+						CONCAT('(+ ', 
 						$surplus_hours,
-						' surplus hours') AS Date,
+						' surplus):') AS Date,
 						'$total' AS Hours,
 						'$surplus_hours' AS surplus_tag;";
 		getTableNoCheckbox($sql);
