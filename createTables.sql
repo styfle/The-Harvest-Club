@@ -393,7 +393,7 @@ CREATE TABLE distributions (
 
 -- start temp insert
 INSERT INTO distributions (name, phone, email, street, city, state, zip) VALUES
-	("Rock Star",'123-546-8797','rockstar@yahoo.com',' 123 ABC St', 'ABC', 'CA', '91000');
+	('Distributing Sustenance','123-546-8797','distrib@yahoo.com','123 ABC St', 'ABC', 'CA', '91000');
 -- end temp insert
 
 DROP TABLE IF EXISTS distribution_hours;

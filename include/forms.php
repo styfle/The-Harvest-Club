@@ -401,43 +401,43 @@ $avgHeight = $r->buildArray();
 			<td colspan="3" class="hidden"><input id="distribution1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="distribution2" >Name</label></td>			
+			<td colspan="3"><label for="distribution2"><b>Name</b></label></td>			
 		</tr>
 		<tr>
 			<td colspan="3"><input id="distribution2" name="name" type="text" size="45"/></td>
 		</tr>		
 		<tr>
-			<td colspan="2"><label for="distribution6" >Agency Contact</label></td>			
-			<td><label for="distribution7">Phone</label></td>
+			<td colspan="2"><label for="distribution6"><b>Agency Contact</b></label></td>			
+			<td><label for="distribution7"><b>Phone</b></label></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input id="distribution6" name="contact" type="text" size="20"/></td>
 			<td><input type="tel" name="phone" id="distribution7" size="21" /></td>
 		</tr>
 		<tr>
-			<td colspan="2"><label for="distribution11" >Secondary Contact</label></td>			
-			<td><label for="distribution12">Secondary Phone</label></td>
+			<td colspan="2"><label for="distribution11"><b>Secondary Contact</b></label></td>			
+			<td><label for="distribution12"><b>Secondary Phone</b></label></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input id="distribution11" name="contact2" type="text" size="20"/></td>
 			<td><input type="tel" name="phone2" id="distribution12" size="21" /></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="distribution9">Email</label></td>
+			<td colspan="3"><label for="distribution9"><b>Email</b></label></td>
 		</tr>
 		<tr>
 			<td colspan="3"><input type="text" name="email" id="distribution9" size="45" /></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="distribution3">Street</label></td>			
+			<td colspan="3"><label for="distribution3"><b>Street</b></label></td>			
 		</tr>
 		<tr>
 			<td colspan="3"><input type="text" name="street" id="distribution3" size="45"/></td>			
 		</tr>
 		<tr>
-			<td><label for="distribution4">City</label></td>
-			<td><label for="distribution10">State</label></td>
-			<td><label for="distribution5">Zip</label></td>
+			<td><label for="distribution4"><b>City</b></label></td>
+			<td><label for="distribution10"><b>State</b></label></td>
+			<td><label for="distribution5"><b>Zip</b></label></td>
 		</tr>
 		<tr>			
 			<td><input type="text" name="city" id="distribution4" size="20"/></td>
@@ -450,7 +450,7 @@ $avgHeight = $r->buildArray();
 			<?php echo $empty_cell ?>
 			
 			<tr>
-				<td><b>Day</b></td>
+				<td><b>Availability</b></td>
 				<td colspan="3"><b>Time Open</b></td>
 				<td>&nbsp;</td>
 				<td colspan="3"><b>Time Close</b></td>
