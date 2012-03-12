@@ -1566,13 +1566,12 @@ if (!$PRIV)
 						'bProcessing': true, // show loading bar text
 						'bAutoWidth': false, // auto column size
 						'aaSorting': [], // disable initial sort
+						'bFilter': false, // disable search
 						"sScrollX": "100%",
 						'aoColumns': data.datatable.aoColumns,
 						'aaData': data.datatable.aaData
 					});
-				}
-				else
-				{					
+				} else {					
 					dt2.fnDestroy();
 					$('#volunteerStats thead').html('');
 					$('#volunteerStats tbody').html('');
@@ -1582,7 +1581,7 @@ if (!$PRIV)
 						'bProcessing': true, // show loading bar text
 						'bAutoWidth': false, // auto column size
 						'aaSorting': [], // disable initial sort
-						
+						'bFilter': false, // disable search
 						'aoColumns': data.datatable.aoColumns,
 						'aaData': data.datatable.aaData
 						});				
