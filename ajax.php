@@ -559,9 +559,29 @@ switch ($cmd)
 		}		
 		$data['title'] = 'Volunteer-Events';
 		$volunteer_id = $_REQUEST['volunteer_id'];
-		$sql = "SELECT ve.*
-				FROM volunteer_events ve
-				WHERE ve.volunteer_id = $volunteer_id;";
+			
+		$q = mysql_query("SELECT SUM(ve2.hour) AS event_hours FROM volunteer_events ve2 WHERE ve2.volunteer_id=$volunteer_id;");
+		while($result=mysql_fetch_array($q)){ 
+		$event_hours = $result['event_hours']; 
+		}
+		$q = mysql_query("SELECT v1.surplus_hours FROM volunteers v1 WHERE v1.id=$volunteer_id");
+		while($result=mysql_fetch_array($q)){ 
+		$surplus_hours = $result['surplus_hours']; 
+		}
+		 $total = $surplus_hours + $event_hours;
+		
+		$sql = "SELECT ve.event_id, ve.volunteer_id, CONCAT(g.first_name,' ', g.last_name) AS Grower, e.date AS Date, ve.hour AS Hours, '0' AS surplus_tag
+				FROM volunteer_events ve, events e, growers g
+				WHERE ve.volunteer_id = $volunteer_id AND ve.event_id=e.id AND e.grower_id=g.id
+				UNION 
+				SELECT '-1' AS event_id,
+						'0' AS volunteer_id,
+						'TOTAL' AS Grower,
+						CONCAT('Plus ', 
+						$surplus_hours,
+						' surplus hours') AS Date,
+						'$total' AS Hours,
+						'$surplus_hours' AS surplus_tag;";
 		getTableNoCheckbox($sql);
 		break;	
 	case 'get_growers':
@@ -934,6 +954,17 @@ switch ($cmd)
 		$sql = "SELECT month_id FROM month_harvests mh Where mh.tree_id=".$id;				
 		getTree_Months($sql);		
 		break;
+	case 'update_surplus_hours':
+		if (!$PRIV['edit_volunteer']) {
+			forbidden();
+			break;
+		}
+		$surplus_hours = $_REQUEST['surplus_hours'];
+		$volunteer_id = $_REQUEST['volunteer_id'];
+		$data['title'] = 'Surplus Hours';
+		$sql = "Update volunteers Set surplus_hours = $surplus_hours where id=$volunteer_id";	
+		$r = $db->q($sql);		
+	break;
 	case 'update_volunteer':
 		if (!$PRIV['edit_volunteer']) {
 			forbidden();
