@@ -714,6 +714,8 @@ switch ($cmd)
 					   notes as Notes,
 					   email as email_tag,
 					   state as state_tag,
+					   contact2 as contact2_tag,
+					   phone2 as phone2_tag,
 					   (	SELECT group_concat(d.name)
 						FROM	distribution_hours dh, days d
 						WHERE dh.distribution_id = dis.id AND dh.day_id = d.id) day_tag
@@ -741,13 +743,15 @@ switch ($cmd)
 		$name = $_REQUEST['name'];
 		$contact = $_REQUEST['contact'];
 		$phone = $_REQUEST['phone'];
+		$contact2 = $_REQUEST['contact2'];
+		$phone2 = $_REQUEST['phone2'];
 		$email = $_REQUEST['email'];
 		$street = $_REQUEST['street'];
 		$city = $_REQUEST['city'];
 		$state = $_REQUEST['state'];
 		$zip = $_REQUEST['zip'];
 		$notes =  $_REQUEST['note'];
-		$sql = "Update distributions Set name='$name', contact='$contact', phone='$phone', email='$email', street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";				
+		$sql = "Update distributions Set name='$name', contact='$contact', phone='$phone', contact2='$contact2', phone2='$phone2', email='$email', street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";				
 		$r = $db->q($sql);	
 		
 		for ($i=1; $i<8 ; $i++) {
@@ -795,6 +799,14 @@ switch ($cmd)
 			$phone = $_REQUEST['phone'];
 		else $phone ="";
 		
+		if (isset($_REQUEST['contact2']))
+			$contact2 = $_REQUEST['contact2'];
+		else $contact2 ="";
+
+		if (isset($_REQUEST['phone2']))
+			$phone2 = $_REQUEST['phone2'];
+		else $phone2 ="";
+	
 		if (isset($_REQUEST['email']))
 			$email = $_REQUEST['email'];
 		else $email ="";
@@ -819,7 +831,7 @@ switch ($cmd)
 			$notes = $_REQUEST['notes'];
 		else $notes ="";
 		
-		$sql = "Insert into distributions(name, contact, phone, email, street, city, state, zip, notes) Values ('$name', '$contact', '$phone', '$email','$street','$city', '$state','$zip','$notes')";				
+		$sql = "Insert into distributions(name, contact, phone, contact2, phone2, email, street, city, state, zip, notes) Values ('$name', '$contact', '$phone', '$contact2', '$phone2', '$email','$street','$city', '$state','$zip','$notes')";				
 		$r = $db->q($sql);
 		if (!$r->isValid())
 			$data = getError();

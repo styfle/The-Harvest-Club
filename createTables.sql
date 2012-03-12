@@ -379,6 +379,8 @@ CREATE TABLE distributions (
 	name nvarchar(255) NOT NULL,
 	contact nvarchar(255),
 	phone varchar(17) NOT NULL, 
+	contact2 nvarchar(255),
+	phone2 varchar(17),
 	email nvarchar(255), 
 	street nvarchar(255) NOT NULL,
 	city nvarchar(255) NOT NULL,
