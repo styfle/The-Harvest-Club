@@ -34,7 +34,7 @@ function addTreeRow(tableID) {
 	 var label3 = document.createElement("label");
 	 label3.style.width = "5em";
 	 label3.style.fontWeight = 'bold';
-	 var txt3=document.createTextNode('No.');
+	 var txt3=document.createTextNode('Number');
 	 label3.appendChild(txt3);
 	 cell3.appendChild(label3);
 	 
@@ -42,7 +42,7 @@ function addTreeRow(tableID) {
 	 var label4 = document.createElement("label");
 	 label4.style.width = "5em";
 	 label4.style.fontWeight = 'bold';
-	 var txt4=document.createTextNode('Pound');
+	 var txt4=document.createTextNode('lbs');
 	 label4.appendChild(txt4);
 	 cell4.appendChild(label4);
 	}
@@ -60,17 +60,15 @@ function addTreeRow(tableID) {
 	element2.innerHTML = (options(treeNames));
 	cell2.appendChild(element2);
 	
-	
-	
 	var cell3 = row.insertCell(2);
 	var element3 = document.createElement("input");
-	element3.type = "text";
+	element3.type = "number";
 	element3.style.width = "4em"
 	cell3.appendChild(element3);
 	
 	var cell4 = row.insertCell(3);
 	var element4 = document.createElement("input");
-	element4.type = "text";
+	element4.type = "number";
 	element4.style.width = "4em"
 	cell4.appendChild(element4);
 	
@@ -162,7 +160,7 @@ function addVolunteerRow(tableID) {
 				
             var cell3 = row1.insertCell(2);
             var element3 = document.createElement("input");
-            element3.type = "text";
+            element3.type = "number";
 			element3.style.width = "4em"
             cell3.appendChild(element3);
 			
@@ -194,7 +192,7 @@ function addVolunteerRow(tableID) {
 				var cell6 = row2.insertCell(1);
 				var label1 = document.createElement("label");
 				label1.style.width = "5em";
-				label1.style.color = 'blue';
+				label1.style.color = 'black';
 				label1.style.font='Arial';
 				var txt1=document.createTextNode('Tree Types');
 				label1.appendChild(txt1);
@@ -223,14 +221,14 @@ function addVolunteerRow(tableID) {
 										
 										var c3 = r.insertCell(2);
 										var e3 = document.createElement("input");
-										e3.type = "text";
+										e3.type = "number";
 										e3.style.width = "4em";
-										e3.placeholder = "Pounds";
+										e3.placeholder = "lbs";
 										c3.appendChild(e3);
 										
 										var c4 = r.insertCell(3);									
 										var e4 = document.createElement("label");
-										var txt=document.createTextNode('------>');
+										var txt=document.createTextNode('sent to');
 										e4.style.textAlign="center";
 										e4.appendChild(txt);		
 										c4.appendChild(e4);
@@ -579,12 +577,12 @@ function loadGrowerToForm(grower_id)
 										var e3 = document.createElement("input");
 										e3.type = "text";
 										e3.style.width = "4em";
-										e3.placeholder = "Pounds";
+										e3.placeholder = "lbs";
 										c3.appendChild(e3);
 										
 										var c4 = r.insertCell(3);									
 										var e4 = document.createElement("label");
-										var txt=document.createTextNode('------>');
+										var txt=document.createTextNode('sent to');
 										e4.style.textAlign="center";
 										e4.appendChild(txt);		
 										c4.appendChild(e4);
