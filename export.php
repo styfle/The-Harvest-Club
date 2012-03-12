@@ -14,23 +14,17 @@
 	$table = $_REQUEST['table'];
 	$arrayID = $_REQUEST['arrayID'];
 	$ids = join(',',$arrayID);
+	
+	function forbidden() {
+		return "You do not have sufficient privileges!";
+	}
  
 	if (!isLoggedIn(false)) { // if we're not logged in, tell user
-		echo json_encode(array(
-			'status'=>401, // unauthorized
-			'message'=>'Unauthorized. Please login to complete your request.'
-			)
-		);
-		exit();
+		exit('Unauthorized. Please login to complete your request.');
 	}
 
 	if (isExpired()) { // if session expired, tell user
-		echo json_encode(array(
-			'status'=>401, // unauthorized
-			'message'=>'Session expired. Please login to complete your request.'
-			)
-		);
-		exit();
+		exit('Session expired. Please login to complete your request.');
 	}
 
 	updateLastReq(); // ajax req means user is active
@@ -43,11 +37,7 @@
 			WHERE v.id=$_SESSION[id]"
 	);
 
-	$priv_error = json_encode(array(
-			'status'=>500, //  db error
-			'message'=>"An error occurred while checking your privileges.\nI cannot allow you to proceed."
-		)
-	);
+	$priv_error = "An error occurred while checking your privileges.\nI cannot allow you to proceed.";
 	if (!$r->isValid())
 		die($priv_error);
 
@@ -65,6 +55,8 @@
 	switch ($table)
 	{
 		case 1: //volunteer
+			if (!$PRIV['exp_volunteer'])
+				die(forbidden());
 			$filename = "volunteers";		
 			$res = mysql_query("SELECT first_name as 'First Name',
 									   middle_name as 'Middle Name',
@@ -81,6 +73,8 @@
 		break;
 		
 		case 2: // grower
+			if (!$PRIV['exp_grower'])
+				die(forbidden());
 			$filename = "growers";
 			$res = mysql_query("SELECT 	g.first_name AS First,
 										g.middle_name AS Middle,
@@ -104,6 +98,8 @@
 								WHERE	g.id IN($ids)");										
 		break;		
 		case 3: // tree
+			if (!$PRIV['exp_grower'])
+				die(forbidden());
 			$filename = "growers_trees";
 			$res = mysql_query("SELECT 	g.first_name AS First,
 										g.middle_name AS Middle,
@@ -138,6 +134,8 @@
 								WHERE	g.id IN($ids)");
 								break;		
 		case 4: // distribution
+			if (!$PRIV['exp_distrib'])
+				die(forbidden());
 			$filename = "distribs";
 			$res = mysql_query("SELECT name as 'Agency Name',
 									   street as 'Street Address',
@@ -155,6 +153,8 @@
 		break;
 				
 		case 6: // donation
+			if (!$PRIV['exp_donor'])
+					die(forbidden());
 			$filename = "donors";
 			$res = mysql_query("SELECT donation as Donation,
 									   donor as Donor,
