@@ -46,10 +46,9 @@ class Mail
 		} else {
 			$to = $replyto; // send email to self, bcc everyone else
 		}
-		//$bcc = $implode(',', $addresses);
 		//$this->headers .= 'To: ' . $this->to . "\r\n"; // not needed
 		$this->headers .= 'From: ' . $this->from . "\r\n";
-		$this->headers .= 'Reply-To: ' . $this->replyto . "\r\n";
+		$this->headers .= 'Reply-To: ' . $replyto . "\r\n";
 		$this->headers .= 'Bcc: ' . $bcc . "\r\n";
 		//$this->headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 		//$this->headers .= 'X-Mailer: Microsoft Office Outlook' . "\r\n";

@@ -179,31 +179,31 @@ CREATE TABLE month_harvests (
 
 -- start temp insert
 INSERT INTO grower_trees VALUES
-	(1, 1,1,'reallyorange',2,5,1);
+	(1, 1,1,'Naval',2,5,1);
 
 INSERT INTO month_harvests VALUES
 	(1,12);
 
 INSERT INTO grower_trees VALUES
-	(2, 2,3,'fernandoavocado',2,5,1);
+	(2, 2,3,'Tiny',2,5,1);
 
 INSERT INTO month_harvests VALUES
 	(2,1);
 
 INSERT INTO grower_trees VALUES
-	(3, 3,6,'apple pie',2,5,1);
+	(3, 3,6,'Key',2,5,1);
 
 INSERT INTO month_harvests VALUES
 	(3,1);
 
 INSERT INTO grower_trees VALUES
-	(4, 4,5,'peach',2,5,1);
+	(4, 4,5,'Yellow',2,5,1);
 
 INSERT INTO month_harvests VALUES
 	(4,11);
 	
 INSERT INTO grower_trees VALUES
-	(5, 4,8,'banana',2,5,1);
+	(5, 4,8,'Red',2,5,1);
 	
 INSERT INTO month_harvests VALUES
 	(5,4);
