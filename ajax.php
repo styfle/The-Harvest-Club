@@ -575,7 +575,7 @@ switch ($cmd)
 				WHERE ve.volunteer_id = $volunteer_id AND ve.event_id=e.id AND e.grower_id=g.id
 				UNION 
 				SELECT '-1' AS event_id,
-						'0' AS volunteer_id,
+						$volunteer_id AS volunteer_id,
 						'TOTAL' AS Grower,
 						CONCAT('Plus ', 
 						$surplus_hours,

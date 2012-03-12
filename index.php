@@ -1357,7 +1357,7 @@ if (!$PRIV)
 			else{
 				var current_hours = eventRow[5];
 				var volunteer_id = eventRow[1];
-				//var surplus_hours = getSurplusHours(current_hours, volunteer_id);				
+				var surplus_hours = getSurplusHours(current_hours, volunteer_id);				
 			}				
 		});//on.click dt2
 		
@@ -1419,7 +1419,8 @@ if (!$PRIV)
 					if(surplus_hours<0)
 						alert("Hours cannot be negative!");	
 					else{
-						alert(surplus_hours);
+						//alert(surplus_hours);
+						//alert(volunteer_id);
 						$.ajax({							
 							'type': 'GET',
 							'url': 'ajax.php?cmd=update_surplus_hours&volunteer_id='+volunteer_id+'&surplus_hours='+surplus_hours,
@@ -1427,14 +1428,6 @@ if (!$PRIV)
 								if (!validResponse(data))
 									return false;
 								setInfo('Information Updated');							
-								// for(var i = 1; i < row.length; i++) {
-									// if($('#volunteer'+i).val() == undefined)							
-										// row[i]='';
-									// else;									
-										// row[i]=$('#volunteer'+i).val();								
-								// }
-
-								// dt.fnUpdate(row, aPos, 0);	//Update Table -- Independent from updating db!
 							},
 							'error': ajaxError
 						});	
@@ -1565,7 +1558,7 @@ if (!$PRIV)
 				$('#volunteerStats tbody').html('');				
 				
 				if (typeof dt2 == 'undefined') {
-					alert("1");
+					//alert("1");
 					dt2 = $('#volunteerStats').dataTable({
 						'bJQueryUI': true, // style using jQuery UI
 						'sPaginationType': 'full_numbers', // full pagination
@@ -1579,9 +1572,9 @@ if (!$PRIV)
 				}
 				else
 				{
-					alert("re");
+					//alert("re");
 					//dt2.fnReloadAjax();
-					alert("2");
+					//alert("2");
 					dt2.fnDestroy();
 					$('#volunteerStats thead').html('');
 					$('#volunteerStats tbody').html('');
