@@ -305,18 +305,20 @@ CREATE TABLE volunteers (
 	signed_up DATE,
 	notes TEXT,
 	source_id INT DEFAULT 1,
+	surplus_hours INT DEFAULT 0,
 	CONSTRAINT fk_privilege_id FOREIGN KEY (privilege_id) REFERENCES privileges(id),
 	CONSTRAINT fk_source_id_volunteers FOREIGN KEY (source_id) REFERENCES sources(id)
 ) ENGINE=innodb;
 
 -- start temp insert
-INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, active_id, street, city, state, zip, privilege_id, signed_up, notes) VALUES
-('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', SHA1('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 5,'2010-05-01', 'Fearless mascot'),
-('Joanne','', 'Lolcatz', '(949) 555-3418', 'joanne@uci.edu', SHA1('password'), 1, '1 Harvest Cir', 'Irvine', 'CA', '91234', 5,'2012-03-01', 'Executive Power'),
-('Gillian','', 'Pwn', '(555) 555-1090', 'gillian@uci.edu', SHA1('password'), 1, '2 Harvest Cir', 'Irvine', 'CA', '91234', 4,'2012-03-01', 'Administrative skillz'),
-('Captain','Jack', 'Sparrow', '(949) 555-1337', 'captain@uci.edu', SHA1('password'), 1, '4 Black Pearl Rd', 'Pacific Ocean', 'CA', '99999', 3,'2012-03-01', 'Cursed'),
-('Victor','', 'Van', '(949) 555-9168', 'victor@uci.edu', SHA1('password'), 1, '2121 Ball Rd', 'Anaheim', 'CA', '92806', 2,'2012-03-01', 'Donut owner'),
-('Peter','', 'Pending', '(949) 555-0001', 'peter@uci.edu', SHA1('password'), 1, '6 Blue Nowhere', 'San Clemente', 'CA', '96539', 1,'2012-03-01', 'I am waiting...');
+INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, active_id, street, city, state, zip, privilege_id, signed_up, notes, surplus_hours) VALUES
+('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', SHA1('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 5,'2010-05-01', 'Fearless mascot','1'),
+('Joanne','', 'Lolcatz', '(949) 555-3418', 'joanne@uci.edu', SHA1('password'), 1, '1 Harvest Cir', 'Irvine', 'CA', '91234', 5,'2012-03-01', 'Executive Power','2'),
+('Gillian','', 'Pwn', '(555) 555-1090', 'gillian@uci.edu', SHA1('password'), 1, '2 Harvest Cir', 'Irvine', 'CA', '91234', 4,'2012-03-01', 'Administrative skillz','3'),
+('Captain','Jack', 'Sparrow', '(949) 555-1337', 'captain@uci.edu', SHA1('password'), 1, '4 Black Pearl Rd', 'Pacific Ocean', 'CA', '99999', 3,'2012-03-01', 'Cursed','4'),
+('Victor','', 'Van', '(949) 555-9168', 'victor@uci.edu', SHA1('password'), 1, '2121 Ball Rd', 'Anaheim', 'CA', '92806', 2,'2012-03-01', 'Donut owner','5'),
+('Peter','', 'Pending', '(949) 555-0001', 'peter@uci.edu', SHA1('password'), 1, '6 Blue Nowhere', 'San Clemente', 'CA', '96539', 1,'2012-03-01', 'I am waiting...','6');
+
 -- end temp insert
 
 -- A volunteer can have many rolls

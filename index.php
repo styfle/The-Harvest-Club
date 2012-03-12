@@ -1080,7 +1080,7 @@ if (!$PRIV)
 	});
 	
 	$(document).ready(function() {
-	
+		
 		dt = $('#dt').dataTable({
 			'bJQueryUI': true, // style using jQuery UI
 			'sPaginationType': 'full_numbers', // full pagination
@@ -1351,8 +1351,14 @@ if (!$PRIV)
 		
 		$(document).on('click', '#volunteerStats tbody tr',function(e) {
 			var eventRow = (dt2.fnGetData(this));
-			eventID = eventRow[0];			
-			viewEvent();		
+			eventID = eventRow[0];
+			if(eventID>0)
+				viewEvent();		
+			else{
+				var current_hours = eventRow[5];
+				var volunteer_id = eventRow[1];
+				//var surplus_hours = getSurplusHours(current_hours, volunteer_id);				
+			}				
 		});//on.click dt2
 		
 		
@@ -1395,6 +1401,55 @@ if (!$PRIV)
 		document.getElementById('get_notifications').click();
 	}); // document.ready()
 
+	function getSurplusHours(current_surplus, volunteer_id) {
+
+		// Build dialog markup
+		var win = $('<div><p>Enter surplus hours</p></div>');
+		var userInput = $('<input type="text" style="width:100%" value="' +current_surplus+ '"></input>');
+		userInput.appendTo(win);
+
+		var surplus_hours = '';
+
+		// Display dialog
+		$(win).dialog({
+			'modal': true,
+			'buttons': {
+				'Save': function() {
+					surplus_hours = $(userInput).val();	
+					if(surplus_hours<0)
+						alert("Hours cannot be negative!");	
+					else{
+						alert(surplus_hours);
+						$.ajax({							
+							'type': 'GET',
+							'url': 'ajax.php?cmd=update_surplus_hours&volunteer_id='+volunteer_id+'&surplus_hours='+surplus_hours,
+							'success': function (data) {
+								if (!validResponse(data))
+									return false;
+								setInfo('Information Updated');							
+								// for(var i = 1; i < row.length; i++) {
+									// if($('#volunteer'+i).val() == undefined)							
+										// row[i]='';
+									// else;									
+										// row[i]=$('#volunteer'+i).val();								
+								// }
+
+								// dt.fnUpdate(row, aPos, 0);	//Update Table -- Independent from updating db!
+							},
+							'error': ajaxError
+						});	
+				
+						$(this).dialog('close');
+					}
+				},
+				'Cancel': function() {
+					$(this).dialog('close');
+				}
+			}
+		});
+		return surplus_hours;
+}
+	
 	function viewTrees(){
 		viewTreeClicked = 1;
 		growerID = $('#grower1').val();					//get ID of grower whose trees are to be shown
@@ -1491,7 +1546,63 @@ if (!$PRIV)
 			t.value = '';
 		event_field.val(event_id);
 	}
-
+	
+	function viewStats(){
+		//var dt2;
+		$('#statsTable').show();
+		var volunteer_id = $('#volunteer1').val();
+		//alert(volunteer_id);
+		$.ajax({
+			'dataType': 'json', 
+			'type': 'GET', 
+			'url': 'ajax.php?cmd=get_volunteer_stats&volunteer_id='+volunteer_id, 
+			'success': function (data) {
+				if (!validResponse(data))
+					return false;
+				if (!data.datatable || !data.datatable.aoColumns || !data.datatable.aaData)
+					return alert('There is no column and row data!');
+				$('#volunteerStats thead').html('');
+				$('#volunteerStats tbody').html('');				
+				
+				if (typeof dt2 == 'undefined') {
+					alert("1");
+					dt2 = $('#volunteerStats').dataTable({
+						'bJQueryUI': true, // style using jQuery UI
+						'sPaginationType': 'full_numbers', // full pagination
+						'bProcessing': true, // show loading bar text
+						'bAutoWidth': false, // auto column size
+						'aaSorting': [], // disable initial sort
+						"sScrollX": "100%",
+						'aoColumns': data.datatable.aoColumns,
+						'aaData': data.datatable.aaData
+					});
+				}
+				else
+				{
+					alert("re");
+					//dt2.fnReloadAjax();
+					alert("2");
+					dt2.fnDestroy();
+					$('#volunteerStats thead').html('');
+					$('#volunteerStats tbody').html('');
+					dt2 = $('#volunteerStats').dataTable({
+						'bJQueryUI': true, // style using jQuery UI
+						'sPaginationType': 'full_numbers', // full pagination
+						'bProcessing': true, // show loading bar text
+						'bAutoWidth': false, // auto column size
+						'aaSorting': [], // disable initial sort
+						
+						'aoColumns': data.datatable.aoColumns,
+						'aaData': data.datatable.aaData
+						});				
+				}
+				//dt2.fnDraw(false);
+			},
+			'error': ajaxError
+		});
+		
+	}
+	
 	</script>
 
 	<!-- Prompt IE 6 users to install Chrome Frame. -->

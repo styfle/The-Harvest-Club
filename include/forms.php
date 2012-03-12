@@ -211,8 +211,8 @@ $avgHeight = $r->buildArray();
 		<div id="statsTable">
 			<table id="volunteerStats" cellpadding="0" cellspacing="0" border="0" class="display">
 				<!-- table is filled dynamically -->
-				<thead><tr><th></th></tr></thead>
-				<tbody><tr><td></td></tr></tbody>
+				<thead><tr><th>Loading...</th></tr></thead>
+				<tbody><tr><td>Please wait</td></tr></tbody>
 
 			</table>
 		</div>	
