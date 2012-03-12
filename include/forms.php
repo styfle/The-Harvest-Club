@@ -444,9 +444,15 @@ $avgHeight = $r->buildArray();
 			<td><input type="text" name="state" id="distribution10" size="4"/></td>
 			<td><input type="text" name="zip" id="distribution5" size="12"/></td>
 		</tr>				
+		<tr>
+			<td colspan="8"><label for="distribution8"><b>Notes (Hours of Availability)</b></label></td>
+		</tr>
+		<tr>
+			<td colspan="8"><textarea name="note" id="distribution8" rows="5" cols="43"></textarea></td>
+		</tr>
 		</table>
 		
-		<table>
+		<table class="hidden">
 			<?php echo $empty_cell ?>
 			
 			<tr>
@@ -525,26 +531,22 @@ $avgHeight = $r->buildArray();
 				<td>:</td>
 				<td><select name="distributionHour7-CloseMin" id ="distributionHour7-CloseMin"></select></td>
 			</tr>
-			<tr>
-				<td colspan="8"><label for="distribution9"><b>Notes</b></label></td>
-			</tr>
-			<tr>
-				<td colspan="8"><textarea name="note" id="distribution9" rows="5" cols="43"></textarea></td>
-			</tr>
 		</table>
 	</form>	
 	<!-- Distribution end -->
 
 	<!-- Event form -->
 	<form id="event" class="full_width hidden">
-		<h3>Event</h3>
+		<h3>Event <span id="event-id"></span></h3>
 		<table>
 			<tr>
 				<td> 
 					<table>
+					<!--
 						<tr>
-							<td colspan="7" style = "display:none"><input id="event1" name="id" type="text" size="2"/></td>
+							<td><input id="event1" name="id" type="text" onchange="document.getElementById('event-id').innerText=this.value" /></td>
 						</tr>
+						-->
 						<tr>		
 
 							<td colspan="4" ><label for="event-grower-name"><b>Grower</b></label></td>								
@@ -673,7 +675,7 @@ $avgHeight = $r->buildArray();
 			<td colspan="3"><label for="donations4"><b>Value</b> (Estimated value in dollars)</label></td>
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="value" id="donations4" size="33"/></td>			
+			<td colspan="3"><input type="text" name="value" id="donations4" pattern="[0-9]+(\.[0-9]+)?" /></td>			
 		</tr>
 		<tr>
 			<td colspan="3"><label for="donations5"><b>Date</b> (When was it donated)</label></td>

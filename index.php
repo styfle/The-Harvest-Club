@@ -780,6 +780,7 @@ if (!$PRIV)
 					event_id = 0;	
 					grower_id = 0;	
 					captain_id = 0;	
+					$('#event-id').text('');
 					$('#event4').val('');					
 					$('#event5').val('');					
 					$('#event6').val('');					
@@ -1325,6 +1326,7 @@ if (!$PRIV)
 
 					grower_id = row[2];	
 					captain_id = row[3];	
+					$('#event-id').text('#'+event_id);
 					$('#event4').val(row[4]);
 					$('#event5').val(row[7]);
 					$('#event6').val(row[8]);						

@@ -528,7 +528,6 @@ function loadGrowerToForm(grower_id)
 						'type': 'GET', 
 						'url': 'ajax.php?cmd=get_event_volunteer_name&event_id='+event_id, 
 						'success': function (data) {
-							console.log(data);
 							var tbl = document.getElementById("eventVolunteer");
 							
 							if( data.datatable != null) 							
