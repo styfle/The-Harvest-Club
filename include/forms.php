@@ -657,31 +657,31 @@ $avgHeight = $r->buildArray();
 		<h3>Donation</h3>
 		<table>
 		<tr>
-			<td colspan="3" class="hidden"><input id="donations1" name="id" type="text" size="2"/></td>
+			<td colspan="3" class="hidden"><input id="donation1" name="id" type="text" size="2"/></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="donations2"><b>Donation</b> (What was donated)</label></td>
+			<td colspan="3"><label for="donation2"><b>Donation</b> (What was donated)</label></td>
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="donation" id="donations2" size="33"/></td>			
+			<td colspan="3"><input type="text" name="donation" id="donation2" size="33" required = "required"/></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><label for="donations3"><b>Donor</b> (Who donated it)</label></td>		
+			<td colspan="3"><label for="donation3"><b>Donor</b> (Who donated it)</label></td>		
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="donor" id="donations3" size="33"/></td>			
+			<td colspan="3"><input type="text" name="donor" id="donation3" size="33" required = "required"/></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><label for="donations4"><b>Value</b> (Estimated value in dollars)</label></td>
+			<td colspan="3"><label for="donation4"><b>Value</b> (Estimated value in dollars)</label></td>
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="value" id="donations4" pattern="[0-9]+(\.[0-9]+)?" /></td>			
+			<td colspan="3"><input type="text" name="value" id="donation4" pattern="[0-9]+(\.[0-9]+)?" /></td>			
 		</tr>
 		<tr>
-			<td colspan="3"><label for="donations5"><b>Date</b> (When was it donated)</label></td>
+			<td colspan="3"><label for="donation5"><b>Date</b> (When was it donated)</label></td>
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="date" id="donations5" size="33"/></td>			
+			<td colspan="3"><input type="text" name="date" id="donation5" size="33" required = "required"/></td>			
 		</tr>
 		</table>
 	</form>
