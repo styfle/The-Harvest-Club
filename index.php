@@ -442,7 +442,11 @@ if (!$PRIV)
 								if($('#volunteer'+i).val() == undefined)							
 									row[i]='';
 								else;									
-									row[i]=$('#volunteer'+i).val();								
+									row[i]=$('#volunteer'+i).val();		
+								if($('#volunteer9').val() == 1)
+									row[9] = 'Active';
+								else
+									row[9] = 'Inactive';
 							}
 
 							dt.fnUpdate(row, aPos, 0);	//Update Table -- Independent from updating db!
