@@ -1605,9 +1605,11 @@ if (!$PRIV)
 	}
 	
 	function viewStats(){
-		//var dt2;
-		$('#statsTable').show();
+		
 		var volunteer_id = $('#volunteer1').val();
+		if (typeof volunteer_id == 'undefined' || volunteer_id <= 0)
+			return;
+		$('#statsTable').show();
 		//alert(volunteer_id);
 		$.ajax({
 			'dataType': 'json', 
