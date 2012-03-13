@@ -1098,7 +1098,37 @@ if (!$PRIV)
 						arrayID.push(id);
 					});												
 					//alert("Exporting "+exportList.length+" row(s) of data");
-					if(currentTable == 2){					
+					if(currentTable == 1){					
+						var yesButton = {
+							text: 'Yes',
+							click: function() {	
+								$(this).dialog('close');
+								window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
+								+ 'export.php?arrayID[]='+arrayID+'&table=7';								
+							}
+						};
+						
+						var noButton = {
+							text: 'No',
+							click: function() {
+								//currentTable = 2; //Export ONLY grower info
+								$(this).dialog('close');
+								window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
+								+ 'export.php?arrayID[]='+arrayID+'&table=1';
+							}
+						};
+						var buttonList = [yesButton, noButton];
+						var $exportdialog = $('<div></div>')
+								.html("Do you want to export hours of " +arrayID.length+ " volunteer(s)?")
+								.dialog({
+									autoOpen: false,
+									title: 'Grower Export'
+								});
+						$exportdialog.dialog("option", "buttons", buttonList);
+						$exportdialog.dialog('open');
+										
+					}
+					else if(currentTable == 2){					
 						var yesButton = {
 							text: 'Yes',
 							click: function() {	

@@ -571,7 +571,12 @@ switch ($cmd)
 		while($result=mysql_fetch_array($q)){ 
 		$surplus_hours = $result['surplus_hours']; 
 		}
-		 $total = $surplus_hours + $event_hours;
+		 $total = $surplus_hours + $event_hours;		 
+		
+		$sql = "UPDATE volunteers SET total_hours = $total
+				WHERE id=".$volunteer_id;
+		$r = $db->q($sql);
+		getError($r);
 		
 		$sql = "SELECT ve.event_id, ve.volunteer_id, CONCAT(g.first_name,' ', g.last_name) AS Grower, e.date AS Date, ve.hour AS Hours, '0' AS surplus_tag
 				FROM volunteer_events ve, events e, growers g
