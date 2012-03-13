@@ -1504,8 +1504,9 @@ switch ($cmd)
 		$donor = $_REQUEST['donor'];
 		$value = $_REQUEST['value'];
 		$date = $_REQUEST['date'];
-		$sql = "Update donations Set donation = '$donation', donor = '$donor', value =$value, date ='$date' where id=$id";	
+		$sql = "Update donations Set donation = '$donation', donor = '$donor', value = '$value', date ='$date' where id=$id";	
 		$r = $db->q($sql);
+		getError($r);
 		break;
 		
 	case 'add_donation':
@@ -1520,8 +1521,9 @@ switch ($cmd)
 		$donor = $_REQUEST['donor'];
 		$value = $_REQUEST['value'];
 		$date = $_REQUEST['date'];
-		$sql = "Insert into donations(donation, donor, value, date) Values('$donation','$donor', $value, '$date')";	
+		$sql = "Insert into donations(donation, donor, value, date) Values('$donation','$donor', '$value', '$date')";	
 		$r = $db->q($sql);
+		getError($r);
 		break;
 		
 	case 'remove_donation':

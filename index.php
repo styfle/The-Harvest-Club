@@ -566,7 +566,7 @@ if (!$PRIV)
 								if($('#donation'+i).val() == undefined)							
 									row[i]='';
 								else
-									row[i]=$('#donations'+i).val();								
+									row[i]=$('#donation'+i).val();								
 							}
 							dt.fnUpdate(row, aPos, 0);
 						},
@@ -688,7 +688,7 @@ if (!$PRIV)
 						'success': function (data) {
 							if (!validResponse(data))
 								return false;
-							setInfo('Information Updated');
+							setInfo('Information Added');
 							$('#edit-dialog').dialog('close');
 							reloadTable("get_donors");
 						},
@@ -789,7 +789,7 @@ if (!$PRIV)
 				
 				case 6: // donation
 					switchNClearForm('donation');
-					$('#donations5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
+					$('#donation5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
 				break;
 			}			
 
@@ -916,59 +916,104 @@ if (!$PRIV)
 				
 				case 4: // distribution
 					$('input[name=select-row]:checked').each(function(){
-						var row = $(this).parent().parent();
-						var data = dt.fnGetData(row[0]);
-						var id = data[1];
-						deleteList.push(id);
-						//TODO Ajax needs to be sent at the end
-						$.ajax({							
-							'type': 'GET',
-							'url': 'ajax.php?cmd=remove_distribution&id='+id,
-							'success': function (data) {								
-								
-							},
-							'error': ajaxError
-						});
-						row.remove();
-					});					
+						deleteList.push($(this).parent().parent());
+					});
+					if(deleteList.length > 0)
+					{
+						//pop up confirmation window
+						var x = window.confirm("Are you sure you want to delete "+deleteList.length+" items?");
+						if(x)
+						{
+							var deleted = 0;
+							$('input[name=select-row]:checked').each(function(){
+								var row = $(this).parent().parent();
+								var data = dt.fnGetData(row[0]);
+								var id = data[1];
+								deleteList.push(id);
+								//TODO Ajax needs to be sent at the end
+								$.ajax({							
+									'type': 'GET',
+									'url': 'ajax.php?cmd=remove_distribution&id='+id,
+									'success': function (data) {								
+										if (!validResponse(data))
+											return false;									
+										deleted++;
+										dt.fnDeleteRow(row[0]);
+										setInfo('Deleted ' + deleted + ' items');
+									},
+									'error': ajaxError
+								});
+							});			
+						}
+					}						
 				break;
 						
 				case 5: // event
 					$('input[name=select-row]:checked').each(function(){
-						var row = $(this).parent().parent();
-						var data = dt.fnGetData(row[0]);
-						var id = data[1];	
-						deleteList.push(id);						
-						//TODO Ajax needs to be sent at the end
-						$.ajax({							
-							'type': 'GET',
-							'url': 'ajax.php?cmd=remove_event&id='+id,
-							'success': function (data) {								
-								
-							},
-							'error': ajaxError
-						});
-						row.remove();
+						deleteList.push($(this).parent().parent());
 					});
+					if(deleteList.length > 0)
+					{
+						//pop up confirmation window
+						var x = window.confirm("Are you sure you want to delete "+deleteList.length+" items?");
+						if(x)
+						{
+							var deleted = 0;
+							$('input[name=select-row]:checked').each(function(){
+								var row = $(this).parent().parent();
+								var data = dt.fnGetData(row[0]);
+								var id = data[1];	
+								deleteList.push(id);						
+								//TODO Ajax needs to be sent at the end
+								$.ajax({							
+									'type': 'GET',
+									'url': 'ajax.php?cmd=remove_event&id='+id,
+									'success': function (data) {								
+										if (!validResponse(data))
+											return false;									
+										deleted++;
+										dt.fnDeleteRow(row[0]);
+										setInfo('Deleted ' + deleted + ' items');
+									},
+									'error': ajaxError
+								});
+							});
+						}
+					}
                 break;
 				
 				case 6: // donation
-						$('input[name=select-row]:checked').each(function(){
-						var row = $(this).parent().parent();
-						var data = dt.fnGetData(row[0]);
-						var id = data[1];
-						deleteList.push(id);
-						//TODO Ajax needs to be sent at the end
-						$.ajax({							
-							'type': 'GET',
-							'url': 'ajax.php?cmd=remove_donation&id='+id,
-							'success': function (data) {								
-								
-							},
-							'error': ajaxError
-						});
-						row.remove();
-					});					
+					$('input[name=select-row]:checked').each(function(){
+						deleteList.push($(this).parent().parent());
+					});
+					if(deleteList.length > 0)
+					{
+						//pop up confirmation window
+						var x = window.confirm("Are you sure you want to delete "+deleteList.length+" items?");
+						if(x)
+						{
+							var deleted = 0;
+							$('input[name=select-row]:checked').each(function(){
+								var row = $(this).parent().parent();
+								var data = dt.fnGetData(row[0]);
+								var id = data[1];
+								deleteList.push(id);
+								//TODO Ajax needs to be sent at the end
+								$.ajax({							
+									'type': 'GET',
+									'url': 'ajax.php?cmd=remove_donation&id='+id,
+									'success': function (data) {								
+										if (!validResponse(data))
+											return false;									
+										deleted++;
+										dt.fnDeleteRow(row[0]);
+										setInfo('Deleted ' + deleted + ' items');
+									},
+									'error': ajaxError
+								});
+							});					
+						}
+					}
 				break;
 			}			
 		});
@@ -1338,8 +1383,8 @@ if (!$PRIV)
 					if (priv.edit_donor)
 						buttonList.unshift(saveButton);
 					for (var i = 1; i < row.length; i++)
-                    	$('#donations' + i).val(row[i]);
-					$('#donations5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
+                    	$('#donation' + i).val(row[i]);
+					$('#donation5').not('.hasDatePicker').datepicker({dateFormat: 'yy-mm-dd'});
 				break;	
 
 
