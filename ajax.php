@@ -563,21 +563,6 @@ switch ($cmd)
 		$data['title'] = 'Volunteer-Events';
 		$volunteer_id = $_REQUEST['volunteer_id'];
 			
-		$q = mysql_query("SELECT SUM(ve2.hour) AS event_hours FROM volunteer_events ve2 WHERE ve2.volunteer_id=$volunteer_id;");
-		while($result=mysql_fetch_array($q)){ 
-		$event_hours = $result['event_hours']; 
-		}
-		$q = mysql_query("SELECT v1.surplus_hours FROM volunteers v1 WHERE v1.id=$volunteer_id");
-		while($result=mysql_fetch_array($q)){ 
-		$surplus_hours = $result['surplus_hours']; 
-		}
-		 $total = $surplus_hours + $event_hours;		 
-		
-		$sql = "UPDATE volunteers SET total_hours = $total
-				WHERE id=".$volunteer_id;
-		$r = $db->q($sql);
-		getError($r);
-		
 		$sql = "SELECT ve.event_id, ve.volunteer_id, CONCAT(g.first_name,' ', g.last_name) AS Grower, e.date AS Date, ve.hour AS Hours, '0' AS surplus_tag
 				FROM volunteer_events ve, events e, growers g
 				WHERE ve.volunteer_id = $volunteer_id AND ve.event_id=e.id AND e.grower_id=g.id
@@ -586,10 +571,15 @@ switch ($cmd)
 						$volunteer_id AS volunteer_id,
 						'TOTAL' AS Grower,
 						CONCAT('(+ ', 
-						$surplus_hours,
+						v.surplus_hours,
 						' surplus):') AS Date,
-						'$total' AS Hours,
-						'$surplus_hours' AS surplus_tag;";
+						(v.surplus_hours +  IF(temp.hour is null,0,temp.hour)) as Hours,
+						v.surplus_hours AS surplus_tag						
+ 						FROM volunteers v LEFT JOIN (	SELECT v2.id AS id, SUM(ve.hour ) AS hour
+														FROM volunteers v2, volunteer_events ve WHERE v2.id = ve.volunteer_id 
+														GROUP BY v2.id
+													) 	temp ON temp.id = v.id							
+						WHERE v.id=$volunteer_id;";
 		getTableNoCheckbox($sql);
 		break;	
 	case 'get_growers':

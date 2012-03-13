@@ -183,34 +183,34 @@
 				die(forbidden());
 			$filename = "volunteers_hours";	
 			
-			foreach ($arrayID as $id){			
-				$event_hours = 0;
-				$surplus_hours = 0;
+			// foreach ($arrayID as $id){			
+				// $event_hours = 0;
+				// $surplus_hours = 0;
 				
-				$q = mysql_query("SELECT SUM(ve2.hour) AS event_hours FROM volunteer_events ve2 WHERE ve2.volunteer_id=$id");
-				if ($q !== false) {
-					while($result=mysql_fetch_array($q)){ 
-						$event_hours = $result['event_hours']; 
-					}
-				}			
+				// $q = mysql_query("SELECT SUM(ve2.hour) AS event_hours FROM volunteer_events ve2 WHERE ve2.volunteer_id=$id");
+				// if ($q !== false) {
+					// while($result=mysql_fetch_array($q)){ 
+						// $event_hours = $result['event_hours']; 
+					// }
+				// }			
 				
-				$q = mysql_query("SELECT v1.surplus_hours FROM volunteers v1 WHERE v1.id=$id");
+				// $q = mysql_query("SELECT v1.surplus_hours FROM volunteers v1 WHERE v1.id=$id");
 				
-				if ($q !== false) {
-					while($result=mysql_fetch_array($q)){ 
-						$surplus_hours = $result['surplus_hours']; 
-					}				
-				}
-				$total = $surplus_hours + $event_hours;				
-				printf( $total);
-				$sql = "UPDATE volunteers SET total_hours = $total
-				WHERE id=$id";
-				$r = $db->q($sql);	
-				if ($r == false) {				
-					echo mysql_error();
-					die;    
-				}
-			} 
+				// if ($q !== false) {
+					// while($result=mysql_fetch_array($q)){ 
+						// $surplus_hours = $result['surplus_hours']; 
+					// }				
+				// }
+				// $total = $surplus_hours + $event_hours;				
+				// printf( $total);
+				// $sql = "UPDATE volunteers SET total_hours = $total
+				// WHERE id=$id";
+				// $r = $db->q($sql);	
+				// if ($r == false) {				
+					// echo mysql_error();
+					// die;    
+				// }
+			// } 
 				
 			
 			
@@ -225,8 +225,11 @@
 									   v.zip as Zip,
 									   v.signed_up as 'Signed Up',
 									   v.notes as Notes,
-									   v.total_hours as Hours
- 							    FROM volunteers v
+									   (v.surplus_hours +  IF(temp.hour is null,0,temp.hour)) as Hours
+ 							    FROM volunteers v LEFT JOIN (	SELECT v2.id AS id, SUM(ve.hour ) AS hour
+																FROM volunteers v2, volunteer_events ve WHERE v2.id = ve.volunteer_id 
+																GROUP BY v2.id
+															) 	temp ON temp.id = v.id							
 								WHERE v.id IN($ids);");
 		break;
 	}		
