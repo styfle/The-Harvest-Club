@@ -318,7 +318,7 @@ INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, passwo
 ('Gillian','', 'Pwn', '(555) 555-1090', 'gillian@uci.edu', SHA1('password'), 1, '2 Harvest Cir', 'Irvine', 'CA', '91234', 4,'2012-03-01', 'Administrative skillz','3','4'),
 ('Captain','Jack', 'Sparrow', '(949) 555-1337', 'captain@uci.edu', SHA1('password'), 1, '4 Black Pearl Rd', 'Pacific Ocean', 'CA', '99999', 3,'2012-03-01', 'Cursed','4','5'),
 ('Victor','', 'Van', '(949) 555-9168', 'victor@uci.edu', SHA1('password'), 1, '2121 Ball Rd', 'Anaheim', 'CA', '92806', 2,'2012-03-01', 'Donut owner','5','6'),
-('Peter','', 'Pending', '(949) 555-0001', 'peter@uci.edu', SHA1('password'), 1, '6 Blue Nowhere', 'San Clemente', 'CA', '96539', 1,'2012-03-01', 'I am waiting...','6','7');
+('Peter','', 'Pending', '(949) 555-0001', 'peter@uci.edu', SHA1('password'), 1, '6 Blue Nowhere', 'San Clemente', 'CA', '96539', 1,'2012-03-01', 'I am waiting...','6','7'),
 ('Do','The', 'Dew', '(949) 555-0001', 'dietpepsi@soda.coke', SHA1('password'), 1, '7 Up', 'San Clemente', 'CA', '96539', 1,'2012-03-01', 'Do The Dew. Dont Do The Drug','7','8');
 
 -- end temp insert
