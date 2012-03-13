@@ -84,7 +84,7 @@ $avgHeight = $r->buildArray();
 			<td colspan="2"><label for="volunteer5"><b>Email</b></label></td>
 		</tr>
 		<tr>
-			<td><input type="tel" name="phone" id="volunteer6" size="21" required="required"/></td>
+			<td><input type="tel" name="phone" id="volunteer6" required="required" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="(949) 555-1234" /></td>
 			<td colspan="2"><input type="email" name="email" id="volunteer5" size="28" required="required"/></td>
 		</tr>
 		<tr>
@@ -100,8 +100,8 @@ $avgHeight = $r->buildArray();
 		</tr>
 		<tr>			
 			<td><input type="text" name="city" id="volunteer4" size="21" required="required"/></td>
-			<td><input type="text" name="state" id="volunteer14" size="8" maxlength="2"/></td>
-			<td><input type="text" name="zip" id="volunteer15" size="15" maxlength="5" required="required"/></td>
+			<td><input type="text" name="state" id="volunteer14" size="8" maxlength="2" pattern="[A-Z]{2}" style="width:50px;" /></td>
+			<td><input type="text" name="zip" id="volunteer15" size="15" maxlength="5" required="required" pattern="[0-9]{5}" style="width:90px;" /></td>
 		</tr>
 		
 		<?php echo $empty_cell ?>
@@ -261,7 +261,7 @@ $avgHeight = $r->buildArray();
 			<td colspan="2"><label for="grower6"><b>Email</b></label></td>
 		</tr>
 		<tr>
-			<td><input type="tel" name="phone" id="grower5" size="15" /></td>
+			<td><input type="tel" name="phone" id="grower5" required="required" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="(949) 555-1234" /></td>
 			<td colspan="2"><input type="email" name="email" id="grower6" size="20" /></td>
 		</tr>
 		<tr>
@@ -280,12 +280,12 @@ $avgHeight = $r->buildArray();
 		<tr>
 			<td><label for="grower9"><b>City</b></label></td>
 			<td><label for="grower10"><b>State</b></label></td>
-			<td><label for="grower11"><b>Zip</b></label></td>
+			<td><label for="grower11"><b>Zip Code</b></label></td>
 		</tr>
 		<tr>			
 			<td><input type="text" name="city" id="grower9" size="15" required="required"/></td>
-			<td><input type="text" name="state" id="grower10" size="2" required="required"/></td>
-			<td><input type="text" name="zip" id="grower11" size="8" required="required"/></td>
+			<td><input type="text" name="state" id="grower10" size="8" required="required" maxlength="2" pattern="[A-Z]{2}" style="width:50px" /></td>
+			<td><input type="text" name="zip" id="grower11" size="8" required="required" maxlength="5" patter="[0-9]{5}" style="width:90px;" /></td>
 		</tr>
 		<tr>
 			<td><label for="grower13"><b>Source</b></label></td>
@@ -367,8 +367,8 @@ $avgHeight = $r->buildArray();
 		</tr>
 		<tr>			
 			<td><?php echo options('tree4', 'tree_type_id', $tree_type_id); ?></td>			
-			<td><input type="text" name="varietal" id="tree6" size="10"/></td>
-			<td><input type="text" name="number" id="tree7" size="10" required="required"/></td>
+			<td><input type="text" name="varietal" id="tree6" /></td>
+			<td><input type="number" name="number" id="tree7" required="required" style="width:50px" /></td>
 		</tr>
 		
 		<?php echo $empty_cell ?>
@@ -412,7 +412,7 @@ $avgHeight = $r->buildArray();
 		</tr>
 		<tr>
 			<td colspan="2"><input id="distribution6" name="contact" type="text" size="20"/></td>
-			<td><input type="tel" name="phone" id="distribution7" size="21" /></td>
+			<td><input type="tel" name="phone" id="distribution7" required="required" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="(949) 555-1234" /></td>
 		</tr>
 		<tr>
 			<td colspan="2"><label for="distribution11"><b>Secondary Contact</b></label></td>			
@@ -420,7 +420,7 @@ $avgHeight = $r->buildArray();
 		</tr>
 		<tr>
 			<td colspan="2"><input id="distribution11" name="contact2" type="text" size="20"/></td>
-			<td><input type="tel" name="phone2" id="distribution12" size="21" /></td>
+			<td><input type="tel" name="phone2" id="distribution12" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="(949) 555-1234" /></td>
 		</tr>
 		<tr>
 			<td colspan="3"><label for="distribution9"><b>Email</b></label></td>
@@ -437,12 +437,12 @@ $avgHeight = $r->buildArray();
 		<tr>
 			<td><label for="distribution4"><b>City</b></label></td>
 			<td><label for="distribution10"><b>State</b></label></td>
-			<td><label for="distribution5"><b>Zip</b></label></td>
+			<td><label for="distribution5"><b>Zip Code</b></label></td>
 		</tr>
 		<tr>			
-			<td><input type="text" name="city" id="distribution4" size="20"/></td>
-			<td><input type="text" name="state" id="distribution10" size="4"/></td>
-			<td><input type="text" name="zip" id="distribution5" size="12"/></td>
+			<td><input type="text" name="city" id="distribution4" required="required" /></td>
+			<td><input type="text" name="state" id="distribution10" required="required" maxlength="2" pattern="[A-Z]{2}" style="width:50px" /></td>
+			<td><input type="text" name="zip" id="distribution5" require="required" maxlength="5" pattern="[0-9]{5}" style="width:90px;" /></td>
 		</tr>				
 		<tr>
 			<td colspan="8"><label for="distribution8"><b>Notes (Hours of Availability)</b></label></td>
