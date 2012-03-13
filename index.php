@@ -748,6 +748,8 @@ if (!$PRIV)
 					return;
 				case 1: //volunteer
 					switchNClearForm('volunteer');
+					$('#statsButton').hide();
+					$('#statsTable').hide();
 					$('#pending').hide();						
 					for (var i = 1; i < 19; i++)
 						$('#volunteer' + i).prop('disabled', false);
@@ -1195,6 +1197,8 @@ if (!$PRIV)
 
 				case 1: //volunteer
 					switchNClearForm('volunteer');
+					$('#statsButton').show();
+					$('#statsTable').hide();
 					if (priv.edit_volunteer)
 						buttonList.unshift(saveButton);
 					for (var i = 0; i < row.length; i++) {
@@ -1267,7 +1271,7 @@ if (!$PRIV)
 								$('#volunteerDay'+i).prop('disabled', true);
 						}
 					}
-					$('#statsTable').hide();
+					
 				break;
 				
 				case 2: // grower

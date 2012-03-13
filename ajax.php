@@ -269,7 +269,7 @@ function updateGrower($exist){
 	}
 	else{
 		$sql = "INSERT INTO growers(first_name, middle_name, last_name, phone, email, preferred, street, city, state, zip, tools, notes, pending, property_type_id, property_relationship_id)
-				VALUES ('$firstname', '$middlename', '$lastname', '$phone', '$email', '$preferred', '$street', '$city', '$state', '$zip', '$tools', '$notes', 1, '$property_type', '$property_relationship')";				
+				VALUES ('$firstname', '$middlename', '$lastname', '$phone', '$email', '$preferred', '$street', '$city', '$state', '$zip', '$tools', '$notes', 0, '$property_type', '$property_relationship')";				
 		$r = $db->q($sql);		
 		getError($r);
 	}
@@ -517,7 +517,7 @@ switch ($cmd)
 				FROM volunteers WHERE privilege_id=1
 				UNION
 				SELECT 'Active volunteers' AS 'Table', count(*) AS 'Updates'
-				FROM volunteers WHERE active_id=1
+				FROM volunteers WHERE active_id=1 AND (privilege_id = 2 OR privilege_id = 3)
 				UNION
 				SELECT 'Pending growers' AS 'Table', count(*) AS 'Updates'
 				FROM growers WHERE pending=1;";
@@ -670,7 +670,7 @@ switch ($cmd)
 					   v.privilege_id
 				FROM volunteers v 
 				LEFT JOIN privileges p ON v.privilege_id = p.id
-				WHERE v.active_id = 1;";
+				WHERE v.active_id = 1 AND (privilege_id = 2 OR privilege_id = 3);";
 		getTable($sql);
 		break;
 	case 'get_pending_volunteers':

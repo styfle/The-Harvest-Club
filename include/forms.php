@@ -203,7 +203,7 @@ $avgHeight = $r->buildArray();
 			<tr>
 				<td colspan="3"><textarea name="note" id="volunteer10" rows="5" cols="48"></textarea></td>
 			</tr>
-			<tr>				
+			<tr id="statsButton">				
 				<td><input type="button" value="View Stats" onclick="viewStats()" /></td>
 			</tr>
 		</table>
