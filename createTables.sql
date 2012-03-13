@@ -311,7 +311,7 @@ CREATE TABLE volunteers (
 ) ENGINE=innodb;
 
 -- start temp insert
-INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, active_id, street, city, state, zip, privilege_id, signed_up, notes, surplus_hours, total_hours) VALUES
+INSERT INTO volunteers (first_name, middle_name, last_name, phone, email, password, active_id, street, city, state, zip, privilege_id, signed_up, notes, surplus_hours) VALUES
 ('Peter','', 'Anteater', '(123) 456-7890', 'admin@uci.edu', SHA1('password'), 1, '456 Fake St', 'Irvine', 'CA', '91234', 5,'2010-05-01', 'Fearless mascot','1'),
 ('Joanne','', 'Lolcatz', '(949) 555-3418', 'joanne@uci.edu', SHA1('password'), 1, '1 Harvest Cir', 'Irvine', 'CA', '91234', 5,'2012-03-01', 'Executive Power','2'),
 ('Gillian','', 'Pwn', '(555) 555-1090', 'gillian@uci.edu', SHA1('password'), 1, '2 Harvest Cir', 'Irvine', 'CA', '91234', 4,'2012-03-01', 'Administrative skillz','3'),

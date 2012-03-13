@@ -183,37 +183,6 @@
 				die(forbidden());
 			$filename = "volunteers_hours";	
 			
-			// foreach ($arrayID as $id){			
-				// $event_hours = 0;
-				// $surplus_hours = 0;
-				
-				// $q = mysql_query("SELECT SUM(ve2.hour) AS event_hours FROM volunteer_events ve2 WHERE ve2.volunteer_id=$id");
-				// if ($q !== false) {
-					// while($result=mysql_fetch_array($q)){ 
-						// $event_hours = $result['event_hours']; 
-					// }
-				// }			
-				
-				// $q = mysql_query("SELECT v1.surplus_hours FROM volunteers v1 WHERE v1.id=$id");
-				
-				// if ($q !== false) {
-					// while($result=mysql_fetch_array($q)){ 
-						// $surplus_hours = $result['surplus_hours']; 
-					// }				
-				// }
-				// $total = $surplus_hours + $event_hours;				
-				// printf( $total);
-				// $sql = "UPDATE volunteers SET total_hours = $total
-				// WHERE id=$id";
-				// $r = $db->q($sql);	
-				// if ($r == false) {				
-					// echo mysql_error();
-					// die;    
-				// }
-			// } 
-				
-			
-			
 			$res = mysql_query("SELECT v.first_name as 'First Name',
 									   v.middle_name as 'Middle Name',
 									   v.last_name as 'Last Name',
