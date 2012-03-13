@@ -1416,9 +1416,11 @@ if (!$PRIV)
 			if(eventID>0)
 				viewEvent();		
 			else{
-				var current_hours = eventRow[5];
-				var volunteer_id = eventRow[1];
-				var surplus_hours = getSurplusHours(current_hours, volunteer_id);				
+				if (priv.edit_volunteer) {
+					var current_hours = eventRow[5];
+					var volunteer_id = eventRow[1];
+					var surplus_hours = getSurplusHours(current_hours, volunteer_id);
+				}								
 			}				
 		});//on.click dt2
 		
