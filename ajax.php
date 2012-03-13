@@ -520,7 +520,10 @@ switch ($cmd)
 				FROM volunteers WHERE active_id=1 AND (privilege_id = 2 OR privilege_id = 3)
 				UNION
 				SELECT 'Pending growers' AS 'Table', count(*) AS 'Updates'
-				FROM growers WHERE pending=1;";
+				FROM growers WHERE pending=1
+				UNION
+				SELECT 'Upcoming events' AS 'Table', count(*) AS 'Updates'
+				FROM events WHERE date>=CURDATE();";
 		getTable($sql);
 		break;
 	case 'get_volunteers':
@@ -1127,8 +1130,26 @@ switch ($cmd)
 				g.city as City,
 				e.time as Time,
 				e.notes as Notes
-				FROM events e, growers g Where e.grower_id = g.id;";
+				FROM events e, growers g
+				WHERE e.grower_id = g.id;";
 
+		getTable($sql);
+		break;
+	case 'get_future_events':
+		if (!$PRIV['view_event']) {
+			forbidden();
+			break;
+		}
+		$data['id'] = 5;
+		$data['title'] = 'Future event';		
+		$sql = "SELECT e.id, e.grower_id, e.captain_id,
+				date(e.date) as Date,
+				Concat(g.first_name,' ',g.middle_name,' ',g.last_name) as Grower,
+				g.city as City,
+				e.time as Time,
+				e.notes as Notes
+				FROM events e, growers g
+				WHERE e.grower_id = g.id AND e.date>=CURDATE();";	
 		getTable($sql);
 		break;
 	

@@ -241,6 +241,11 @@ if (!$PRIV)
 							cmd = "get_an_event&eventID="+eventID;
 							reloadTable(cmd);					
 						}
+						else if(viewFutureEvents == 1){
+							viewFutureEvents = 0;
+							cmd = "get_future_events";
+							reloadTable(cmd);
+						}
 					break;
 
 					case 6: // donations
@@ -401,6 +406,7 @@ if (!$PRIV)
 	var pending = 0;
 	var privilegeID = 0;
 	var viewActiveVol = 0;
+	var viewFutureEvents = 0;
 	var aPos;
 	var row;
 	//----- These are the variables for event
@@ -1515,13 +1521,17 @@ if (!$PRIV)
 			privilegeID = 1;
 			document.getElementById('get_volunteers').click();
 		}
-		if (row == 'Active volunteers') {
+		else if (row == 'Active volunteers') {
 			viewActiveVol = 1;
 			document.getElementById('get_volunteers').click();
 		}
-		if (row == 'Pending growers') {
+		else if (row == 'Pending growers') {
 			pending = 1;
 			document.getElementById('get_growers').click();
+		}
+		else if (row == 'Upcoming events') {
+			viewFutureEvents = 1;
+			document.getElementById('get_events').click();
 		}
 		//if (row == 'Pending events') {
 			//get ID of currently logged in harvest captain
