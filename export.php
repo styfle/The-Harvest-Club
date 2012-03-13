@@ -137,18 +137,34 @@
 			if (!$PRIV['exp_distrib'])
 				die(forbidden());
 			$filename = "distribs";
+/*
 			$res = mysql_query("SELECT name as 'Agency Name',
 									   street as 'Street Address',
 									   city as City,
 									   state as State,
 									   zip as 'Zip Code',
 									   contact as 'Agency Contact',
-									   email as Email,
 									   phone as Phone,
+									   contact2 as 'Secondary Contact',
+									   phone2 as 'Secondary Phone',
+									   email as Email,
 									   notes as Notes,
 									   (	SELECT group_concat(d.name)
 										FROM	distribution_hours dh, days d
 										WHERE dh.distribution_id = dis.id AND dh.day_id = d.id) Days
+								FROM distributions dis WHERE id IN($ids) ");
+*/
+			$res = mysql_query("SELECT name as 'Agency Name',
+									   street as 'Street Address',
+									   city as City,
+									   state as State,
+									   zip as 'Zip Code',
+									   contact as 'Agency Contact',
+									   phone as Phone,
+									   contact2 as 'Secondary Contact',
+									   phone2 as 'Secondary Phone',
+									   email as Email,
+									   notes as Notes
 								FROM distributions dis WHERE id IN($ids) ");
 		break;
 				
