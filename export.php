@@ -201,6 +201,66 @@
 															) 	temp ON temp.id = v.id							
 								WHERE v.id IN($ids);");
 		break;
+		case 8: // grower per event
+			if (!$PRIV['exp_grower'])
+				die(forbidden());
+			$filename = "growers_per_event";
+			$res = mysql_query("SELECT 	g.first_name AS First,
+										g.middle_name AS Middle,
+										g.last_name AS Last,
+										g.phone AS Phone,
+										g.email AS Email,
+										g.preferred AS Preferred,
+										g.street AS Street,
+										g.city AS City,
+										g.state AS state,
+										g.zip AS Zip,
+										g.tools AS Tools,
+										s.name AS Source,
+										g.notes AS Notes,
+										IF(g.pending=1,'YES','NO') AS Pending,
+										pt.name AS 'Property Type',
+										pr.name AS 'Property Relationship',
+										e.date AS 'Event Date',
+										h.pound AS 'Pounds'
+								FROM	growers g	LEFT JOIN property_types pt ON g.property_type_id = pt.id
+													LEFT JOIN property_relationships pr ON g.property_relationship_id = pr.id
+													LEFT JOIN sources s ON g.source_id = s.id
+													LEFT JOIN events e ON g.id = e.grower_id
+													LEFT JOIN harvests h ON h.event_id = e.id
+								WHERE	g.id IN($ids)");										
+		break;
+		case 9: // grower per fruit
+			if (!$PRIV['exp_grower'])
+				die(forbidden());
+			$filename = "growers_per_fruit";
+			$res = mysql_query("SELECT 	g.first_name AS First,
+										g.middle_name AS Middle,
+										g.last_name AS Last,
+										g.phone AS Phone,
+										g.email AS Email,
+										g.preferred AS Preferred,
+										g.street AS Street,
+										g.city AS City,
+										g.state AS state,
+										g.zip AS Zip,
+										g.tools AS Tools,
+										s.name AS Source,
+										g.notes AS Notes,
+										IF(g.pending=1,'YES','NO') AS Pending,
+										pt.name AS 'Property Type',
+										pr.name AS 'Property Relationship',
+										tr.tree AS 'Tree Type',
+										tr.pounds AS Pounds
+								FROM	growers g	LEFT JOIN property_types pt ON g.property_type_id = pt.id
+													LEFT JOIN property_relationships pr ON g.property_relationship_id = pr.id
+													LEFT JOIN sources s ON g.source_id = s.id
+													LEFT JOIN (	SELECT gt.grower_id AS id, gt.tree_type AS tree_type, tt.name AS tree, SUM(h1.pound) AS pounds
+																FROM grower_trees gt, harvests h1, events e1, tree_types tt
+																WHERE e1.id = h1.event_id AND gt.id = h1.tree_id AND tt.id=gt.tree_type
+																GROUP BY gt.grower_id, gt.tree_type) tr ON tr.id = g.id									
+								WHERE	g.id IN($ids)");										
+		break;
 	}		
 	
 	header("Content-Disposition: attachment; filename=\"$filename($my_t[month]-$my_t[mday]-$my_t[year]).csv\"");

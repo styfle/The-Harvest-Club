@@ -539,7 +539,7 @@ function loadGrowerToForm(grower_id)
 										if (data.datatable.aaData[i][2] == 1)
 										{											
 											table.rows[1].cells[3].childNodes[0].click();											
-										    getDriverData(data.datatable.aaData[i][0], table);										
+										    getDriverData(data.datatable.aaData[i][0], table, event_id);										
 										}
 									}
 						},
@@ -549,11 +549,11 @@ function loadGrowerToForm(grower_id)
 					});	
 	}
 	
-	function getDriverData(volunteer_id, tbl){
+	function getDriverData(volunteer_id, tbl, event_id){
 		$.ajax( {
 						'dataType': 'json', 
 						'type': 'GET', 
-						'url': 'ajax.php?cmd=get_driver&id='+volunteer_id, 
+						'url': 'ajax.php?cmd=get_driver&id='+volunteer_id+'&event_id='+event_id, 
 						'success': function (data) {							
 							
 							if( data.datatable != null) 	

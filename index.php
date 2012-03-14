@@ -1133,17 +1133,33 @@ if (!$PRIV)
 										
 					}
 					else if(currentTable == 2){					
-						var yesButton = {
-							text: 'Yes',
+						var growerTreeButton = {
+							text: 'Grower/Tree',
 							click: function() {	
 								$(this).dialog('close');
 								window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
 								+ 'export.php?arrayID[]='+arrayID+'&table=3';								
 							}
 						};
+						var growerFruitButton = {
+							text: 'Grower/Fruit',
+							click: function() {	
+								$(this).dialog('close');
+								window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
+								+ 'export.php?arrayID[]='+arrayID+'&table=9';								
+							}
+						};
+						var growerEventButton = {
+							text: 'Grower/Event',
+							click: function() {	
+								$(this).dialog('close');
+								window.location.href = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) 
+								+ 'export.php?arrayID[]='+arrayID+'&table=8';								
+							}
+						};
 						
 						var noButton = {
-							text: 'No',
+							text: 'Just Grower',
 							click: function() {
 								//currentTable = 2; //Export ONLY grower info
 								$(this).dialog('close');
@@ -1151,9 +1167,9 @@ if (!$PRIV)
 								+ 'export.php?arrayID[]='+arrayID+'&table=2';
 							}
 						};
-						var buttonList = [yesButton, noButton];
+						var buttonList = [growerEventButton, growerFruitButton, growerTreeButton, noButton];
 						var $exportdialog = $('<div></div>')
-								.html("Do you want to export tree information of " +arrayID.length+ " selected grower(s)?")
+								.html("Select what information to export for " +arrayID.length+ " selected grower(s)?")
 								.dialog({
 									autoOpen: false,
 									title: 'Grower Export'

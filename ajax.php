@@ -598,8 +598,7 @@ switch ($cmd)
 				UNION 
 				SELECT 'TOTAL:' AS Tree, SUM(h1.pound) AS Pounds
 				FROM harvests h1, events e1
-				WHERE e1.grower_id=$grower_id
-				GROUP BY e1.grower_id;";
+				WHERE e1.grower_id=$grower_id;";
 		getTableNoCheckbox($sql);
 		break;
 	case 'get_grower_event_stats':
