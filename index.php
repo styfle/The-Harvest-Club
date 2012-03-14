@@ -1235,15 +1235,21 @@ if (!$PRIV)
 					switchNClearForm('volunteer');
 					$('#statsButton').show();
 					$('#statsTable').hide();
-					if (priv.edit_volunteer)
-						buttonList.unshift(saveButton);
+					if (priv.edit_volunteer){					
+						buttonList.unshift(saveButton);						
+					}					
 					for (var i = 0; i < row.length; i++) {
 						var val = row[i];
 						if (contains(val, "active"))
 							val = (val.toLowerCase()=="inactive") ? 0 : 1;
 						$('#volunteer' + i).val(val);
 					}
-			
+					
+					if ($('#volunteer18').val()>=4){
+						if(!priv.change_privilege)
+							buttonList.shift(saveButton);	
+					}
+					
 					$.ajax({
 						'dataType': 'json',
 						'type': 'GET',
