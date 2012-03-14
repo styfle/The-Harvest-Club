@@ -609,12 +609,13 @@ switch ($cmd)
 		$data['title'] = 'Grower-Stats';
 		$grower_id = $_REQUEST['grower_id'];
 			
-		$sql = "SELECT e.id AS id, e.date AS Date, h.pound AS Pounds
+		$sql = "SELECT e.id AS id, e.date AS Date, SUM(h.pound) AS Pounds
 				FROM harvests h, events e
 				WHERE e.grower_id = $grower_id AND e.id = h.event_id
+				GROUP BY e.id
 				UNION 
 				SELECT '' AS id, 'TOTAL:' AS Date, SUM(h1.pound) AS Pounds
-				FROM harvests h1, events e1
+				FROM `harvests` h1, `events` e1
 				WHERE e1.grower_id=$grower_id
 				GROUP BY e1.grower_id;";
 		getTableNoCheckbox($sql);
