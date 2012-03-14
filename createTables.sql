@@ -416,7 +416,7 @@ CREATE TABLE drivings (
 	distribution_id INT NOT NULL,
 	pound DOUBLE,
 	CONSTRAINT pk_drivings PRIMARY KEY (tree_id, event_id, volunteer_id, distribution_id),
-	CONSTRAINT fk_drivings_tree_id FOREIGN KEY (tree_id) REFERENCES tree_types(id),
+	CONSTRAINT fk_drivings_tree_id FOREIGN KEY (tree_id) REFERENCES grower_trees(id),
 	CONSTRAINT fk_drivings_event_id FOREIGN KEY (event_id) REFERENCES events(id),
 	CONSTRAINT fk_drivings_volunteer_id FOREIGN KEY (volunteer_id) REFERENCES volunteers(id),
 	CONSTRAINT fk_drivings_distribution_id FOREIGN KEY (distribution_id) REFERENCES distributions(id)

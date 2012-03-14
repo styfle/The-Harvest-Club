@@ -1278,7 +1278,8 @@ switch ($cmd)
 		$data['id'] = 16;
 		$data['title'] = 'Driver-Name';
 		$id = $_REQUEST['id'];
-		$sql = "SELECT * FROM drivings Where volunteer_id = $id ;";
+		$event_id = $_REQUEST['event_id'];
+		$sql = "SELECT * FROM drivings Where volunteer_id = $id And event_id =$event_id";
 		getName($sql);
 		break;
 		
