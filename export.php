@@ -228,7 +228,7 @@
 													LEFT JOIN sources s ON g.source_id = s.id
 													LEFT JOIN ( SELECT e.grower_id AS id, e.date AS date, SUM(h.pound) AS pounds
 																FROM `harvests` h, `events` e
-																WHERE e.grower_id = 21 AND e.id = h.event_id
+																WHERE e.id = h.event_id
 																GROUP BY e.id) ev ON ev.id = g.id							
 								WHERE	g.id IN($ids) ");										
 		break;
