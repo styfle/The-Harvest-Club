@@ -395,6 +395,8 @@ if (!$PRIV)
 
 	var dt; // global datatable variable
 	var dt2;// stat event table in volunteer form
+	var dt3;// stat event table in grower form
+	var growerViewMode = 0;
 	var currentTable = 0; // global id of current data table
 	var dt_length = 10; // show x entries
 	var viewTreeClicked = 0;
@@ -770,6 +772,8 @@ if (!$PRIV)
 				
 				case 2: // grower
 					switchNClearForm('grower');
+					$('#statsButton2').hide();
+					$('#statsTable2').hide();
 					$('#pending2').hide();
 					for (var i = 1; i < 21; i++)
 							$('#grower' + i).prop('disabled', false);
@@ -1318,6 +1322,8 @@ if (!$PRIV)
 				
 				case 2: // grower
 					switchNClearForm('grower');
+					$('#statsButton2').show();
+					$('#statsTable2').hide();
 					if (priv.edit_grower)
 						buttonList.unshift(saveButton);
 					
@@ -1459,6 +1465,14 @@ if (!$PRIV)
 				}								
 			}				
 		});//on.click dt2
+		
+		$(document).on('click', '#growerStats tbody tr',function(e) {
+			var eventRow = (dt3.fnGetData(this));
+			eventID = eventRow[0];					
+			if(growerViewMode == 0 && eventID>0){				
+				viewEvent();	
+			}
+		});//on.click dt3
 		
 		
 		$(document).on('change', '#event-grower-name', function(e) {
@@ -1629,7 +1643,7 @@ if (!$PRIV)
 	function viewEvent(){
 		viewEventClicked = 1;			
 		$('#edit-dialog').dialog('close');				//Close pop-up
-		document.getElementById('get_events').click();	//switch to Trees Tab	
+		document.getElementById('get_events').click();	//switch to Event Tab	
 	}
 
 	function changeTemplate(t) {
@@ -1695,6 +1709,71 @@ if (!$PRIV)
 		
 	}
 	
+	function viewGrowerStats(){
+		
+		var grower_id = $('#grower1').val();
+		if (typeof grower_id == 'undefined' || grower_id <= 0)
+			return;
+		$('#statsTable2').show();
+		var cmd = '';
+		if(growerViewMode == 0)
+			cmd = 'get_grower_event_stats';
+		else // == 1
+			cmd = 'get_grower_stats';
+		$.ajax({
+			'dataType': 'json', 
+			'type': 'GET', 
+			'url': 'ajax.php?cmd='+cmd+'&grower_id='+grower_id, 
+			'success': function (data) {
+				if (!validResponse(data))
+					return false;
+				if (!data.datatable || !data.datatable.aoColumns || !data.datatable.aaData)
+					return alert('There is no column and row data!');
+				$('#growerStats thead').html('');
+				$('#growerStats tbody').html('');				
+				
+				if (typeof dt3 == 'undefined') {
+					//alert("1");
+					dt3 = $('#growerStats').dataTable({
+						'bJQueryUI': true, // style using jQuery UI
+						'sPaginationType': 'full_numbers', // full pagination
+						'bProcessing': true, // show loading bar text
+						'bAutoWidth': false, // auto column size
+						'aaSorting': [], // disable initial sort
+						'bFilter': false, // disable search
+						"sScrollX": "100%",
+						'aoColumns': data.datatable.aoColumns,
+						'aaData': data.datatable.aaData
+					});
+				} else {					
+					dt3.fnDestroy();
+					$('#growerStats thead').html('');
+					$('#growerStats tbody').html('');
+					dt3 = $('#growerStats').dataTable({
+						'bJQueryUI': true, // style using jQuery UI
+						'sPaginationType': 'full_numbers', // full pagination
+						'bProcessing': true, // show loading bar text
+						'bAutoWidth': false, // auto column size
+						'aaSorting': [], // disable initial sort
+						'bFilter': false, // disable search
+						'aoColumns': data.datatable.aoColumns,
+						'aaData': data.datatable.aaData
+						});				
+				}				
+			},
+			'error': ajaxError
+		});		
+	}
+	
+	function switchMode(){
+		growerViewMode = 1 - growerViewMode; // toggle
+		if(growerViewMode == 0)
+			$('#modeButton').val('View Per Tree');
+		else // == 1
+			$('#modeButton').val('View Per Event');
+			cmd = 'get_grower_stats';
+		viewGrowerStats();
+	}
 	</script>
 
 	<!-- Prompt IE 6 users to install Chrome Frame. -->

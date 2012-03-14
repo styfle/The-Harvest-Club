@@ -582,6 +582,44 @@ switch ($cmd)
 						WHERE v.id=$volunteer_id;";
 		getTableNoCheckbox($sql);
 		break;	
+	case 'get_grower_stats':
+		if (!$PRIV['view_grower']) {
+			forbidden();
+			break;
+		}		
+		$data['title'] = 'Grower-Stats';
+		$grower_id = $_REQUEST['grower_id'];
+			
+		$sql = "SELECT tt.name AS Tree, SUM(h.pound) AS Pounds
+				FROM grower_trees gt, harvests h, events e, tree_types tt
+				WHERE gt.grower_id = $grower_id AND e.id = h.event_id AND
+						gt.id = h.tree_id AND tt.id=gt.tree_type
+				GROUP BY gt.tree_type													
+				UNION 
+				SELECT 'TOTAL:' AS Tree, SUM(h1.pound) AS Pounds
+				FROM harvests h1, events e1
+				WHERE e1.grower_id=$grower_id
+				GROUP BY e1.grower_id;";
+		getTableNoCheckbox($sql);
+		break;
+	case 'get_grower_event_stats':
+		if (!$PRIV['view_grower']) {
+			forbidden();
+			break;
+		}		
+		$data['title'] = 'Grower-Stats';
+		$grower_id = $_REQUEST['grower_id'];
+			
+		$sql = "SELECT e.id AS id, e.date AS Date, h.pound AS Pounds
+				FROM harvests h, events e
+				WHERE e.grower_id = $grower_id AND e.id = h.event_id
+				UNION 
+				SELECT '' AS id, 'TOTAL:' AS Date, SUM(h1.pound) AS Pounds
+				FROM harvests h1, events e1
+				WHERE e1.grower_id=$grower_id
+				GROUP BY e1.grower_id;";
+		getTableNoCheckbox($sql);
+		break;	
 	case 'get_growers':
 		if (!$PRIV['view_grower']) {
 			forbidden();

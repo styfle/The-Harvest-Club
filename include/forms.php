@@ -317,8 +317,24 @@ $avgHeight = $r->buildArray();
 		<tr>
 			<td colspan="3"><textarea name="notes" id="grower14" rows="4" cols="30"></textarea></td>
 		</tr>
+		<tr id="statsButton2">				
+				<td><input type="button" value="View Stats" onclick="viewGrowerStats()" /></td>
+			</tr>
+		</table>
 		
-		</table>	
+		<div id="statsTable2">
+			<div class="toolbar1">
+			<span id="toolbar1" class="css_right ui-widget-header ui-corner-all">
+				<input id="modeButton" type="button" value="View Per Tree" onclick="switchMode()" />				
+			</span>
+			</div><!-- End toolbar -->
+			<table id="growerStats" cellpadding="0" cellspacing="0" border="0" class="display">
+				<!-- table is filled dynamically -->
+				<thead><tr><th>Loading...</th></tr></thead>
+				<tbody><tr><td>Please wait</td></tr></tbody>
+
+			</table>
+		</div>		
 	</form>
 	<!-- Grower end -->
 	
