@@ -221,14 +221,16 @@
 										IF(g.pending=1,'YES','NO') AS Pending,
 										pt.name AS 'Property Type',
 										pr.name AS 'Property Relationship',
-										e.date AS 'Event Date',
-										h.pound AS 'Pounds'
+										ev.date AS 'Event Date',
+										ev.pounds AS 'Pounds'
 								FROM	growers g	LEFT JOIN property_types pt ON g.property_type_id = pt.id
 													LEFT JOIN property_relationships pr ON g.property_relationship_id = pr.id
 													LEFT JOIN sources s ON g.source_id = s.id
-													LEFT JOIN events e ON g.id = e.grower_id
-													LEFT JOIN harvests h ON h.event_id = e.id
-								WHERE	g.id IN($ids)");										
+													LEFT JOIN ( SELECT e.grower_id AS id, e.date AS date, SUM(h.pound) AS pounds
+																FROM `harvests` h, `events` e
+																WHERE e.grower_id = 21 AND e.id = h.event_id
+																GROUP BY e.id) ev ON ev.id = g.id							
+								WHERE	g.id IN($ids) ");										
 		break;
 		case 9: // grower per fruit
 			if (!$PRIV['exp_grower'])

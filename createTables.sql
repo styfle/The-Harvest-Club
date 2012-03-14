@@ -372,7 +372,7 @@ CREATE TABLE harvests (
 	number INT,
 	pound DOUBLE,
 	CONSTRAINT pk_harvests PRIMARY KEY (tree_id, event_id),
-	CONSTRAINT fk_harvests_tree_id FOREIGN KEY (tree_id) REFERENCES tree_types(id),
+	CONSTRAINT `fk_harvests_tree_id` FOREIGN KEY (`tree_id`) REFERENCES `grower_trees` (`id`)
 	CONSTRAINT fk_harvests_event_id FOREIGN KEY (event_id) REFERENCES events(id)
 ) ENGINE=innodb;
 
