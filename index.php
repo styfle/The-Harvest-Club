@@ -1266,8 +1266,9 @@ if (!$PRIV)
 					}
 					
 					if ($('#volunteer18').val()>=4){
-						if(!priv.change_privilege)
-							buttonList.shift(saveButton);	
+						if(!priv.change_priv){
+							buttonList.shift(saveButton);								
+						}
 					}
 					
 					$.ajax({
