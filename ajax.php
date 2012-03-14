@@ -616,8 +616,7 @@ switch ($cmd)
 				UNION 
 				SELECT '' AS id, 'TOTAL:' AS Date, SUM(h1.pound) AS Pounds
 				FROM `harvests` h1, `events` e1
-				WHERE e1.grower_id=$grower_id
-				GROUP BY e1.grower_id;";
+				WHERE e1.grower_id=$grower_id AND h1.event_id = e1.id";
 		getTableNoCheckbox($sql);
 		break;	
 	case 'get_growers':
