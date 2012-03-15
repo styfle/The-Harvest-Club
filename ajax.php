@@ -808,6 +808,7 @@ switch ($cmd)
 					   contact as 'Agency Contact',
 					   phone as Phone,
 					   notes as Notes,
+					   daytime as 'Delivery Days/Hours',
 					   email as email_tag,
 					   state as state_tag,
 					   contact2 as contact2_tag,
@@ -847,7 +848,8 @@ switch ($cmd)
 		$state = $_REQUEST['state'];
 		$zip = $_REQUEST['zip'];
 		$notes =  $_REQUEST['note'];
-		$sql = "Update distributions Set name='$name', contact='$contact', phone='$phone', contact2='$contact2', phone2='$phone2', email='$email', street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";				
+		$daytime = $_REQUEST['daytime'];
+		$sql = "Update distributions Set name='$name', contact='$contact', phone='$phone', contact2='$contact2', phone2='$phone2', email='$email', street='$street', city='$city', state='$state',zip='$zip', notes='$notes', daytime='$daytime' where id=$id";				
 		$r = $db->q($sql);	
 		
 		for ($i=1; $i<8 ; $i++) {
@@ -926,8 +928,12 @@ switch ($cmd)
 		if (isset($_REQUEST['notes']))
 			$notes = $_REQUEST['notes'];
 		else $notes ="";
+
+		if (isset($_REQUEST['daytime']))
+			$daytime = $_REQUEST['daytime'];
+		else $daytime ="";
 		
-		$sql = "Insert into distributions(name, contact, phone, contact2, phone2, email, street, city, state, zip, notes) Values ('$name', '$contact', '$phone', '$contact2', '$phone2', '$email','$street','$city', '$state','$zip','$notes')";				
+		$sql = "Insert into distributions(name, contact, phone, contact2, phone2, email, street, city, state, zip, notes, daytime) Values ('$name', '$contact', '$phone', '$contact2', '$phone2', '$email','$street','$city', '$state','$zip','$notes','$daytime')";				
 		$r = $db->q($sql);
 		if (!$r->isValid())
 			$data = getError();

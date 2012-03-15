@@ -389,7 +389,8 @@ CREATE TABLE distributions (
 	city nvarchar(255) NOT NULL,
 	state CHAR(2) NOT NULL, 
 	zip varchar(5),	
-  	notes TEXT
+  	notes TEXT,
+	daytime TEXT
 ) ENGINE=innodb;
 
 -- start temp insert

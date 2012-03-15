@@ -461,10 +461,16 @@ $avgHeight = $r->buildArray();
 			<td><input type="text" name="zip" id="distribution5" require="required" maxlength="5" pattern="[0-9]{5}" style="width:90px;" /></td>
 		</tr>				
 		<tr>
-			<td colspan="8"><label for="distribution8"><b>Notes (Hours of Availability)</b></label></td>
+			<td colspan="8"><label for="distribution8"><b>Notes</b></label></td>
 		</tr>
 		<tr>
 			<td colspan="8"><textarea name="note" id="distribution8" rows="5" cols="43"></textarea></td>
+		</tr>
+		<tr>
+			<td colspan="8"><label for="distribution12"><b>Days/Hours of Availability</b></label></td>
+		</tr>
+		<tr>
+			<td colspan="8"><textarea name="daytime" id="distribution12" rows="5" cols="43"></textarea></td>
 		</tr>
 		</table>
 		
