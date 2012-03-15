@@ -1,7 +1,7 @@
 <?php
-// Templates for sending email auto-resonses
+// Email Templates
 
-$default_phone_number = '(714) 847-8669'; //TODO change to correct number
+$default_phone_number = '(714) 847-8669';
 
 function growerResponse($first, $last) {
 return<<<EOD
@@ -9,7 +9,9 @@ Hello $first $last,
 
 Thank you for registering with The Harvest Club!
 
-By sharing your harvest with us, you are strengthening our community by providing much needed fresh fruit to our neighbors in need. The Harvest Club could not exist without your generosity!
+By sharing your harvest with us, you are strengthening our community by providing fresh, healthy food to our neighbors in need.
+
+The Harvest Club could not exist without your generosity!
 
 We will contact you during the harvest months you have listed to arrange for a harvest event.
 
@@ -32,18 +34,6 @@ We will notify you of upcoming harvests by email.
 Thank you again, and welcome to The Harvest Club!
 EOD;
 }
-
-/*
-function eventResponse() {
-return<<<EOD
-Thank you for registering to harvest with us!   Look for an email from us in the next few days with additional information about the harvest, including the address, time and what to bring.
-
-Please remember to wear long sleeves, long pants, and close-toed shoes.  If you have tools such as ladders, clippers, picker poles, and/or sturdy fruit boxes, please bring them!  They will be put to good use.  If you are a new volunteer, don’t forget to bring a completed Liability Release form (available at http://www.theharvestclub.org/waiver).
-
-Thanks again for volunteering with The Harvest Club!  Happy Harvesting!
-EOD;
-}
-*/
 
 function invitationEmail($p) {
 return<<<EOD

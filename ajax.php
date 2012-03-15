@@ -1107,6 +1107,10 @@ switch ($cmd)
 		getError($r);
 		break;
 	case 'get_template':
+		if (!$PRIV['view_event']) {
+			forbidden(); // must be able to view event to create template
+			break;
+		}
 		global $db;
 		global $data;
 		$name = $_REQUEST['name'];
