@@ -1665,12 +1665,31 @@ if (!$PRIV)
 
 	function changeTemplate(t) {
 		var event_id = 0;
-		var event_field = $('#email input[name=event_id]');
-		if (t.value) // has template
-			event_id = prompt('Please enter the event ID:', event_field.val());
-		if (!event_id)
-			t.value = '';
-		event_field.val(event_id);
+		if (!t.value) {
+			clearTemplate(t);
+		} else { // has template
+			event_id = prompt('Please enter the event number:', 0);
+
+			if (!event_id)
+				return clearTemplate(t);
+
+			$.ajax({
+				'dataType': 'json', 
+				'type': 'GET', 
+				'url': 'ajax.php?cmd=get_template&name='+t.value+'&event_id='+event_id, 
+				'success': function (data) {
+					if (!validResponse(data))
+						return clearTemplate(t);
+
+					$('#email textarea[name=message]').val(data.message);
+				}
+			});
+		}
+	}
+
+	function clearTemplate(t) {
+		t.value = ''; // clear selection
+		$('#email textarea[name=message]').val(''); // clear message
 	}
 	
 	function viewStats(){

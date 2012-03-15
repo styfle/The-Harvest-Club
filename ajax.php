@@ -1106,6 +1106,53 @@ switch ($cmd)
 		$r = $db->q($sql);
 		getError($r);
 		break;
+	case 'get_template':
+		global $db;
+		global $data;
+		$name = $_REQUEST['name'];
+		$event_id = $_REQUEST['event_id'];
+		$sql="SELECT
+			g.first_name AS grower_f,
+			g.last_name AS grower_l,
+			g.street, g.city, g.state, g.zip,
+			e.date, e.time,
+			v.first_name AS captain_f,
+			v.last_name AS captain_l,
+			v.phone AS captain_phone,
+			CONCAT(tt.name,' (',t.varietal, ')') AS fruit
+			FROM events e, growers g, volunteers v, harvests h, grower_trees t, tree_types tt
+			WHERE e.grower_id=g.id
+			AND e.captain_id=v.id
+			AND h.event_id = e.id
+			AND h.tree_id=t.id
+			AND t.tree_type=tt.id
+			AND e.id ='$event_id'";				
+		$r = $db->q($sql);
+		if (!$r->isValid() || !$r->hasRows()) {
+			$data['status'] = 432;
+			$data['message'] = "Could not create template. There is no event #$event_id!";
+			break;
+		}
+		$params = $r->getAssoc();
+		$params['me_f'] = $_SESSION['first_name'];
+		$params['me_l'] = $_SESSION['last_name'];
+		$params['date'] = dateToStr($params['date']);
+		// bug here: might have multiple fruit records
+
+		switch ($name) {
+			case 'invitation':
+				$data['message'] = invitationEmail($params);
+				break;
+			case 'details':
+				$data['message'] = harvestDetailsEmail($params);
+				break;
+			case 'reminder':
+				$data['message'] = reminderEmail($params);
+				break;
+			default:
+				break;
+		}
+		break;
 	case 'send_email':
 		if (!$PRIV['send_email']) {
 			forbidden();
@@ -1113,63 +1160,14 @@ switch ($cmd)
 		}
 		global $data;
 		global $mail;
-		global $db;
 
 		$my_email = $_SESSION['email'];
 		$bcc = $_REQUEST['bcc'];
 		$subject = $_REQUEST['subject'];
 		$message = $_REQUEST['message'];
-		$template = $_REQUEST['template'];
-		$event_id = $_REQUEST['event_id'];
 
-		if ($template) { // has template attachment
-			$sql="SELECT
-				g.first_name AS grower_f,
-				g.last_name AS grower_l,
-				g.street, g.city, g.state, g.zip,
-				e.date, e.time,
-				v.first_name AS captain_f,
-				v.last_name AS captain_l,
-				v.phone AS captain_phone,
-				CONCAT(tt.name,' (',t.varietal, ')') AS fruit
-				FROM events e, growers g, volunteers v, harvests h, grower_trees t, tree_types tt
-				WHERE e.grower_id=g.id
-				AND e.captain_id=v.id
-				AND h.event_id = e.id
-				AND h.tree_id=t.id
-				AND t.tree_type=tt.id
-				AND e.id =$event_id";				
-			$r = $db->q($sql);
-			if (!$r->isValid() || !$r->hasRows()) {
-				$data['status'] = 432;
-				$data['message'] = "No event found with id=$event_id";
-				break;
-			}
-			$params = $r->getAssoc();
-			$params['me_f'] = $_SESSION['first_name'];
-			$params['me_l'] = $_SESSION['last_name'];
-			$params['date'] = dateToStr($params['date']);
-			// bug here: might have multiple fruit records
-			//print_r($params);
-		}
-
-		$delim = "\r\n\r\n";
 		if (get_magic_quotes_gpc()) // See http://php.net/manual/en/function.get-magic-quotes-gpc.php
 			$message = stripslashes($message);
-
-		switch ($template) {
-			case 'invitation':
-				$message = invitationEmail($params) .$delim. $message;
-				break;
-			case 'details':
-				$message = harvestDetailsEmail($params) .$delim. $message;
-				break;
-			case 'reminder':
-				$message = reminderEmail($params) .$delim. $message;
-				break;
-			default:
-				break;
-		}
 
 		$sent = $mail->sendBulk($subject, $message, $bcc, $my_email);
 		if (!$sent) {
