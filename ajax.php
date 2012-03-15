@@ -808,11 +808,11 @@ switch ($cmd)
 					   contact as 'Agency Contact',
 					   phone as Phone,
 					   notes as Notes,
-					   daytime as 'Delivery Days/Hours',
 					   email as email_tag,
 					   state as state_tag,
 					   contact2 as contact2_tag,
 					   phone2 as phone2_tag,
+					   daytime as daytime_tag,
 					   (	SELECT group_concat(d.name)
 						FROM	distribution_hours dh, days d
 						WHERE dh.distribution_id = dis.id AND dh.day_id = d.id) day_tag

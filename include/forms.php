@@ -467,10 +467,10 @@ $avgHeight = $r->buildArray();
 			<td colspan="8"><textarea name="note" id="distribution8" rows="5" cols="43"></textarea></td>
 		</tr>
 		<tr>
-			<td colspan="8"><label for="distribution12"><b>Days/Hours of Availability</b></label></td>
+			<td colspan="8"><label for="distribution13"><b>Days/Hours of Availability</b></label></td>
 		</tr>
 		<tr>
-			<td colspan="8"><textarea name="daytime" id="distribution12" rows="5" cols="43"></textarea></td>
+			<td colspan="8"><textarea name="daytime" id="distribution13" rows="5" cols="43"></textarea></td>
 		</tr>
 		</table>
 		
