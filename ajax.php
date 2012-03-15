@@ -1119,7 +1119,7 @@ switch ($cmd)
 			v.first_name AS captain_f,
 			v.last_name AS captain_l,
 			v.phone AS captain_phone,
-			CONCAT(tt.name,' (',t.varietal, ')') AS fruit
+			CONCAT(t.varietal,' ',tt.name) AS fruit
 			FROM events e, growers g, volunteers v, harvests h, grower_trees t, tree_types tt
 			WHERE e.grower_id=g.id
 			AND e.captain_id=v.id

@@ -553,7 +553,7 @@ $avgHeight = $r->buildArray();
 
 	<!-- Event form -->
 	<form id="event" class="full_width hidden">
-		<h3>Event <span id="event-id"></span></h3>
+		<h3>Harvest Event <span id="event-id"></span></h3>
 		<table>
 			<tr>
 				<td> 
@@ -718,11 +718,10 @@ $avgHeight = $r->buildArray();
 				<option value="">&lt;&lt;None&gt;&gt;</option>
 				<option value="invitation">Harvest Invitation</option>
 				<option value="details">Harvest Details</option>
-				<option value="reminder">Harvest Reminder</option>
+				<!-- option value="reminder">Harvest Reminder</option -->
 			</select>
 		</div>
 		<br/>
-		<!-- input name="event_id" type="text" value="" placeholder="event id" pattern="[0-9]*" style="width:70px;" /-->
 		<div><b>Message</b></div>
 		<div><textarea name="message" rows="10" cols="50" required="required"></textarea></div>
 		<br/>

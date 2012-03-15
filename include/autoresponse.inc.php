@@ -1,7 +1,7 @@
 <?php
 // Templates for sending email auto-resonses
 
-$default_phone_number = '949-555-1234'; //TODO change to correct number
+$default_phone_number = '(714) 847-8669'; //TODO change to correct number
 
 function growerResponse($first, $last) {
 return<<<EOD
@@ -27,7 +27,7 @@ Thank you for registering with The Harvest Club!
 
 With your help, we will harvest fresh, healthy fruits and vegetables for the underserved residents of Orange County.
 
-We will notify you of upcoming harvest by email.  To sign up for an event, simply register on the Harvest Club calendar found at http://www.theharvestclub.org.  Or, send an email to theharvestclub@gmail.com.
+We will notify you of upcoming harvests by email.
 
 Thank you again, and welcome to The Harvest Club!
 EOD;
@@ -47,16 +47,15 @@ EOD;
 
 function invitationEmail($p) {
 return<<<EOD
-Hello fellow harvesters!
-Another Harvest Event is coming up in $p[city] on $p[date] at $p[time].
+Hello Fellow Harvester!
 
+Another Harvest Event is coming up in $p[city] on $p[date] at $p[time].
 We’ll be harvesting $p[fruit] on the property of $p[grower_f] $p[grower_l].
 
 To volunteer for this Harvest, please respond to this email.
+If you are a new volunteer, please complete our liability waiver at http://www.theharvestclub.org
 
-If you are a new volunteer, please register and complete our liability waiver on our website.
-
-We hope to see you at the harvest!
+We hope to see you there,
 
 $p[me_f] $p[me_l]
 
@@ -65,9 +64,8 @@ EOD;
 
 function harvestDetailsEmail($p) {
 return<<<EOD
-Hello again fellow harvesters!
-	
 Thank you for registering for our upcoming Harvest Event!
+
 Below are the details for this event:
 
     Grower Name: $p[grower_f] $p[grower_l]
