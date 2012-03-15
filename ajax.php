@@ -64,13 +64,34 @@ function contains($haystack, $needle) {
 	return stripos($haystack, $needle) !== false;
 }
 
+
+function updatePassword($volunteer_id) {
+	global $db;
+	global $PRIV;
+
+	if (!$PRIV['change_priv']) { // make sure this user can modify other users
+		return false;
+	}
+	
+	$pass = generatePassword(); // so generate
+	$sql = "UPDATE volunteers SET password = SHA1('$pass');";
+	$r = $db->q($sql);
+	if (!$r->isValid())
+		return false;
+	
+	return array(
+		'subject'=>PAGE_TITLE . ' - Password Updated',
+		'message'=>"The following password has been generated for you:\r\n$pass\r\nThis password is required to administrate ".PAGE_TITLE.". Please keep it in a safe place."
+	);
+}
+
 function updateVolunteer($exists) {
 	global $db;
 	global $data;
 	global $mail;
 	global $PRIV;
 	$id = $_REQUEST['id'];						
-	$firstName = $_REQUEST['firstname'];		
+	$firstName = $_REQUEST['firstname'];
 	$middleName = $_REQUEST['middlename'];
 	$lastName = $_REQUEST['lastname'];
 	$organization = $_REQUEST['organization'];
@@ -95,7 +116,7 @@ function updateVolunteer($exists) {
 		$priv_id = null;
 	
 	if ($exists) { // volunteer exists so just update
-		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', organization='$organization', phone='$phone', email='$email', active_id=$active_id, street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";						
+		$sql = "Update volunteers Set first_name='$firstName', middle_name='$middleName',last_name='$lastName', organization='$organization', phone='$phone', email='$email', active_id='$active_id', street='$street', city='$city', state='$state',zip='$zip', notes='$notes' where id=$id";						
 		$r = $db->q($sql);
 		getError($r);
 		
@@ -136,22 +157,32 @@ function updateVolunteer($exists) {
 				$data['message']='Are you trying to hack us? You cannot change user privileges!';
 				return;
 			}
-			$sql = "UPDATE volunteers SET privilege_id=$priv_id"; // new priv
+			$sql = "UPDATE volunteers SET privilege_id=$priv_id WHERE id=$id"; // new priv
+			$r = $db->q($sql); // execute
+			getError($r);
 			$message = "$firstName $lastName,\r\nYour privileges have changed. If you feel this is an error, please contact us.";
-			//You are no longer a(n) $old_priv_name!\r\n";
+
+			/*
 			if (empty($old_pass)) { // no password
 				$pass = generatePassword(); // so generate
 				$sql .= ", password = SHA1('$pass') "; // and add to update
 				$message .=  "\n\rThe following password has been generated for you:\r\n$pass\n\rThis password is required to administrate The Harvest Club.";
-			}
-			$sql .= " WHERE id=$id"; // only update this volunteer
-			$r = $db->q($sql); // execute
+			}*/
+
+			// always update password
+			$a = updatePassword($id);
+			if ($a) // if password updated, append message
+				$message .= "\r\n" . $a['message'];
+
 			// Send an email
-			$subject = 'The Harvest Club - Privileges Changed';
+			$subject = PAGE_TITLE . ' - Privileges Changed';
 			$mail->send($subject, $message, $email); // use default from/replyto
 		}
 	
 	} else { // adding new volunteer
+		if (!$PRIV['change_priv']) {
+			$priv_id = '2'; // if no change_priv, set as volunteer 
+		}
 		$sql = "INSERT INTO volunteers (first_name, middle_name, last_name, organization, phone, email, active_id, street, city, state, zip, privilege_id, notes, signed_up) VALUES
 		('$firstName', '$middleName', '$lastName', '$organization', '$phone', '$email', '$active_id', '$street', '$city', '$state', '$zip', '$priv_id', '$notes', CURDATE())";
 		$r = $db->q($sql);
@@ -176,6 +207,17 @@ function updateVolunteer($exists) {
 			} else { // it is unchecked			
 				$sql = "Delete From volunteer_prefers Where day_id=$i And volunteer_id=$id";					
 				$r = $db->q($sql);			
+			}
+		}
+
+		if ($priv_id > 2) { // if the new can login, generate password
+			$a = updatePassword($id);
+			if ($a) { // if password updated, send email
+				$subject = PAGE_TITLE . ' - Welcome New Administrator';
+				$mail->send($subject, $a['message'], $email); // use default from/replyto
+			} else {
+				$data['status'] = 500;
+				$data['message'] = 'New volunteer added but password could not be generated :(';
 			}
 		}
 	}
@@ -491,9 +533,8 @@ function generatePassword($length=8) {
 	for ($i=0; $i<$length; $i++) { 
 		// pick a random character from the possible ones
 		$char = substr($possible, mt_rand(0, $maxlength-1), 1);		
-		// have we already used this character in $password?
+		// only add unique chars
 		if (!strstr($password, $char)) { 
-			// no, so it's OK to add it onto the end of whatever we've already got...
 			$password .= $char;
 		}
 	}
