@@ -63,12 +63,6 @@ if (!$PRIV)
 
 	<!-- Modernizr enables HTML5 elements & feature detects for optimal performance. -->
 	<script type="text/javascript" src="js/modernizr-2.0.6.min.js"></script>
-	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
-	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-	<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
-	<script type="text/javascript" src="js/script.js"></script>
-	<script type="text/javascript" src="js/event.js"></script>
 </head>
 
 <body>
@@ -136,6 +130,11 @@ if (!$PRIV)
 	
 	
 	
+	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
+	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+	<script type="text/javascript" src="js/script.js"></script>
 	<script type="text/javascript" src="js/event.js"></script>
 	<script type="text/javascript" charset="utf-8">
 
