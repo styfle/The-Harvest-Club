@@ -364,7 +364,7 @@ function getTable($sql) {
 			$column['bVisible'] = false;
 		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip' || contains($k, '_tag') || contains($k, 'property_')) {
 			$column['bVisible'] = false; // hide but still searchable
-		} else if (contains($k,'notes') || contains($k,'phone') || contains($k,'email') || contains($k,'signed')) {
+		} else if (contains($k,'notes') || contains($k,'phone') || contains($k,'email') || contains($k,'signed') || contains($k, 'days')) {
 			$column['sClass'] = 'small';
 		}
 		$data['datatable']['aoColumns'][] = $column;
@@ -807,15 +807,12 @@ switch ($cmd)
 					   zip as 'Zip Code',
 					   contact as 'Agency Contact',
 					   phone as Phone,
-					   notes as Notes,
 					   email as email_tag,
 					   state as state_tag,
 					   contact2 as contact2_tag,
 					   phone2 as phone2_tag,
-					   daytime as 'Days/Hours Available',
-					   (	SELECT group_concat(d.name)
-						FROM	distribution_hours dh, days d
-						WHERE dh.distribution_id = dis.id AND dh.day_id = d.id) day_tag
+					   daytime as 'Days/Hours',
+					   notes as Notes
 				FROM distributions dis;";
 		getTable($sql);
 		break;
@@ -847,7 +844,7 @@ switch ($cmd)
 		$city = $_REQUEST['city'];
 		$state = $_REQUEST['state'];
 		$zip = $_REQUEST['zip'];
-		$notes =  $_REQUEST['note'];
+		$notes =  $_REQUEST['notes'];
 		$daytime = $_REQUEST['daytime'];
 		$sql = "Update distributions Set name='$name', contact='$contact', phone='$phone', contact2='$contact2', phone2='$phone2', email='$email', street='$street', city='$city', state='$state',zip='$zip', notes='$notes', daytime='$daytime' where id=$id";				
 		$r = $db->q($sql);	

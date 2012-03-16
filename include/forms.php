@@ -431,18 +431,18 @@ $avgHeight = $r->buildArray();
 			<td><input type="tel" name="phone" id="distribution7" required="required" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="(949) 555-1234" /></td>
 		</tr>
 		<tr>
-			<td colspan="2"><label for="distribution11"><b>Secondary Contact</b></label></td>			
-			<td><label for="distribution12"><b>Secondary Phone</b></label></td>
+			<td colspan="2"><label for="distribution10"><b>Secondary Contact</b></label></td>			
+			<td><label for="distribution11"><b>Secondary Phone</b></label></td>
 		</tr>
 		<tr>
-			<td colspan="2"><input id="distribution11" name="contact2" type="text" size="20"/></td>
-			<td><input type="tel" name="phone2" id="distribution12" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="(949) 555-1234" /></td>
+			<td colspan="2"><input id="distribution10" name="contact2" type="text" size="20"/></td>
+			<td><input type="tel" name="phone2" id="distribution11" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" placeholder="(949) 555-1234" /></td>
 		</tr>
 		<tr>
-			<td colspan="3"><label for="distribution9"><b>Email</b></label></td>
+			<td colspan="3"><label for="distribution8"><b>Email</b></label></td>
 		</tr>
 		<tr>
-			<td colspan="3"><input type="text" name="email" id="distribution9" size="45" /></td>
+			<td colspan="3"><input type="text" name="email" id="distribution8" size="45" /></td>
 		</tr>
 		<tr>
 			<td colspan="3"><label for="distribution3"><b>Street</b></label></td>			
@@ -452,25 +452,21 @@ $avgHeight = $r->buildArray();
 		</tr>
 		<tr>
 			<td><label for="distribution4"><b>City</b></label></td>
-			<td><label for="distribution10"><b>State</b></label></td>
+			<td><label for="distribution9"><b>State</b></label></td>
 			<td><label for="distribution5"><b>Zip Code</b></label></td>
 		</tr>
 		<tr>			
 			<td><input type="text" name="city" id="distribution4" required="required" /></td>
-			<td><input type="text" name="state" id="distribution10" required="required" maxlength="2" pattern="[A-Z]{2}" style="width:50px" /></td>
+			<td><input type="text" name="state" id="distribution9" required="required" maxlength="2" pattern="[A-Z]{2}" style="width:50px" /></td>
 			<td><input type="text" name="zip" id="distribution5" require="required" maxlength="5" pattern="[0-9]{5}" style="width:90px;" /></td>
-		</tr>				
-		<tr>
-			<td colspan="8"><label for="distribution8"><b>Notes</b></label></td>
 		</tr>
 		<tr>
-			<td colspan="8"><textarea name="note" id="distribution8" rows="5" cols="43"></textarea></td>
+			<td><label for="distribution12"><b>Days/Hours of Availability</b></label></td>
+			<td colspan="2"><label for="distribution13"><b>Notes</b></label></td>
 		</tr>
 		<tr>
-			<td colspan="8"><label for="distribution13"><b>Days/Hours of Availability</b></label></td>
-		</tr>
-		<tr>
-			<td colspan="8"><textarea name="daytime" id="distribution13" rows="5" cols="43"></textarea></td>
+			<td><textarea name="daytime" id="distribution12" rows="5" cols="43"></textarea></td>
+			<td colspan="2"><textarea name="notes" id="distribution13" rows="5" cols="43"></textarea></td>
 		</tr>
 		</table>
 		
