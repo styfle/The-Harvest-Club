@@ -1202,7 +1202,7 @@ switch ($cmd)
 		}
 		$data['id'] = 5;
 		$data['title'] = 'Events';		
-		$sql = "SELECT e.id, e.grower_id, e.captain_id,
+		$sql = "SELECT e.id as 'Number', e.grower_id, e.captain_id,
 				date(e.date) as Date,
 				Concat(g.first_name,' ',g.middle_name,' ',g.last_name) as Grower,
 				g.city as City,
