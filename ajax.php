@@ -56,7 +56,7 @@ if ($PRIV == null)
 function forbidden() {
 	global $data;
 	$data['status'] = 403; // forbidden
-	$data['message']='Whoa buddy! You do not have permisson to perform this operation.';
+	$data['message']='Oops! You do not have permission to perform this operation.';
 	return $data;
 }
 
@@ -74,7 +74,7 @@ function updatePassword($volunteer_id) {
 	}
 	
 	$pass = generatePassword(); // so generate
-	$sql = "UPDATE volunteers SET password = SHA1('$pass');";
+	$sql = "UPDATE volunteers SET password = SHA1('$pass') WHERE id='$volunteer_id';";
 	$r = $db->q($sql);
 	if (!$r->isValid())
 		return false;
@@ -695,7 +695,7 @@ switch ($cmd)
 		$data['id'] = 3;
 		$data['title'] = 'Trees';
 		
-		$sql = "SELECT gt.id AS tree_id, Concat(g.first_name,' ', g.last_name) AS Owner, g.id AS grower_id , tt.id AS 'tree_type_id', tt.name AS 'Tree type', gt.varietal AS Varietal, gt.number AS Number, gt.chemicaled AS Chemicaled_id, IF((gt.chemicaled=0),'No','Yes') AS Chemicaled, th.id AS avgHeight_id, th.name AS Height, 
+		$sql = "SELECT gt.id AS tree_id, Concat(g.first_name,' ', g.last_name) AS Owner, g.id AS grower_id , tt.id AS 'tree_type_id', tt.name AS 'Tree type', gt.varietal AS Varietal, gt.number AS Number, gt.chemicaled AS Chemicaled_id, IF((gt.chemicaled=0),'No','Yes') AS 'Chemicals Used', th.id AS avgHeight_id, th.name AS Height, 
 					(	SELECT group_concat(m.name)
 						FROM	month_harvests mh, months m
 						WHERE mh.tree_id = gt.id AND mh.month_id = m.id) month_tag
@@ -711,7 +711,7 @@ switch ($cmd)
 		$data['id'] = 3;
 		$data['title'] = 'Trees';
 		$growerID = $_REQUEST['growerID'];
-		$sql = "SELECT gt.id AS tree_id, Concat(g.first_name,' ', g.last_name) AS Owner, g.id AS grower_id , tt.id AS 'tree_type_id', tt.name AS 'Tree type', gt.varietal AS Varietal, gt.number AS Number, gt.chemicaled AS Chemicaled_id, IF((gt.chemicaled=0),'No','Yes') AS Chemicaled, th.id AS avgHeight_id, th.name AS Height, 
+		$sql = "SELECT gt.id AS tree_id, Concat(g.first_name,' ', g.last_name) AS Owner, g.id AS grower_id , tt.id AS 'tree_type_id', tt.name AS 'Tree type', gt.varietal AS Varietal, gt.number AS Number, gt.chemicaled AS Chemicaled_id, IF((gt.chemicaled=0),'No','Yes') AS 'Chemicals Used', th.id AS avgHeight_id, th.name AS Height, 
 					(	SELECT group_concat(m.name)
 						FROM	month_harvests mh, months m
 						WHERE mh.tree_id = gt.id AND mh.month_id = m.id) month_tag
