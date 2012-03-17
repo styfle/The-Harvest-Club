@@ -333,7 +333,7 @@ function getError($r) {
 	return $data;
 }
 
-function getTable($sql) {
+function getTable($sql, $checkbox=true) {
 	global $db;
 	global $data;
 	//$data['datatable'] = array('aoColumns', 'aaData');
@@ -353,11 +353,13 @@ function getTable($sql) {
 	}
 	
 	// first column is select-all checkbox
-	$data['datatable']['aoColumns'][] = array(
-		'sTitle' => '<input type="checkbox" name="select-all" />',
-		'sWidth' => '30px',
-		'bSortable' => false
-	);
+	if ($checkbox) {
+		$data['datatable']['aoColumns'][] = array(
+			'sTitle' => '<input type="checkbox" name="select-all" />',
+			'sWidth' => '30px',
+			'bSortable' => false
+		);
+	}
 
 	// add column data
 	foreach ($a[0] as $k => $v) {
@@ -386,126 +388,9 @@ function getTable($sql) {
 
 }
 
-function getTableNoCheckbox($sql) {
-	global $db;
-	global $data;
-	//$data['datatable'] = array('aoColumns', 'aaData');
-
-	$r = $db->q($sql);
-	if (getError($r))
-		return $data;
-	
-	// get result as giant array
-	$a = $r->buildArray();
-	
-	// if empty return empty result
-	if (!$a) {
-		$data['datatable']['aoColumns'][] = array('sTitle'=>'Empty Set');
-		$data['datatable']['aaData'][] = array('No event record exits');
-		return; 
-	}	
-
-	// first column is select-all checkbox
-	// $data['datatable']['aoColumns'][] = array(
-		// 'sTitle' => '<input type="checkbox" name="select-all" />',
-		// 'sWidth' => '30px',
-		// 'bSortable' => false
-	// );
-	
-	// add column data
-	foreach ($a[0] as $k => $v) {
-		$column = array();
-		$column['sTitle'] = $k;
-		if ($k == 'id' || $k == 'password' || contains($k, '_id')) {
-			$column['bSearchable'] = false;
-			$column['bVisible'] = false;
-		} else if ($k == 'middle_name' || $k == 'street' || $k == 'state' || $k == 'zip' || contains($k, '_tag') || contains($k, 'property_')) {
-			$column['bVisible'] = false; // hide but still searchable
-		} else if (contains($k,'notes') || contains($k,'phone') || contains($k,'email') || contains($k,'signed')) {
-			$column['sClass'] = 'small';
-		}
-		$data['datatable']['aoColumns'][] = $column;
-	}
-	
-	// add row data
-	foreach ($a as $v) {
-		$record = array();
-		foreach ($v as $name=>$value) {
-			$record[] = $value;
-		}
-		$data['datatable']['aaData'][] = $record;
-	}
-}
-function getDistribution_Hours($sql) {
-	global $db;
-	global $data;
-
-	$r = $db->q($sql);
-	if (getError($r))
-		return $data;
-	
-	// get result as giant array
-	$a = $r->buildArray();
-	
-	foreach ($a as $v) {
-		$record = array();
-		foreach ($v as $name=>$value) {
-			$record[] = $value;
-		}
-		$data['datatable']['aaData'][] = $record;
-	}	
-
-}
-
-function getVolunteer_Roles($sql) {
-	global $db;
-	global $data;
-	//$data['datatable'] = array('aoColumns', 'aaData');
-
-	$r = $db->q($sql);
-	if (getError($r))
-		return $data;
-	
-	// get result as giant array
-	$a = $r->buildArray();
-	
-	foreach ($a as $v) {
-		// add a checkbox to each row (might need unique names)
-		$record = array();
-		foreach ($v as $name=>$value) {
-			$record[] = $value;
-		}
-		$data['datatable']['aaData'][] = $record;
-	}	
-
-}
-function getVolunteer_Prefer($sql) {
-	global $db;
-	global $data;
-	//$data['datatable'] = array('aoColumns', 'aaData');
-
-	$r = $db->q($sql);
-	if (getError($r))
-		return $data;
-	
-	// get result as giant array
-	$a = $r->buildArray();
-	
-	foreach ($a as $v) {
-		// add a checkbox to each row (might need unique names)
-		$record = array();
-		foreach ($v as $name=>$value) {
-			$record[] = $value;
-		}
-		$data['datatable']['aaData'][] = $record;
-	}	
-
-}
-
 function getName($sql) {
 	global $db;
 	global $data;
-	//$data['datatable'] = array('aoColumns', 'aaData');
 
 	$r = $db->q($sql);
 	if (getError($r))
@@ -515,7 +400,6 @@ function getName($sql) {
 	$a = $r->buildArray();
 	
 	foreach ($a as $v) {
-		// add a checkbox to each row (might need unique names)
 		$record = array();
 		foreach ($v as $name=>$value) {
 			$record[] = $value;
@@ -625,7 +509,7 @@ switch ($cmd)
 														GROUP BY v2.id
 													) 	temp ON temp.id = v.id							
 						WHERE v.id=$volunteer_id;";
-		getTableNoCheckbox($sql);
+		getTable($sql,false);
 		break;	
 	case 'get_grower_stats':
 		if (!$PRIV['view_grower']) {
@@ -644,7 +528,7 @@ switch ($cmd)
 				SELECT 'TOTAL:' AS Tree, SUM(h1.pound) AS Pounds
 				FROM harvests h1, events e1
 				WHERE e1.grower_id=$grower_id AND h1.event_id = e1.id;";
-		getTableNoCheckbox($sql);
+		getTable($sql,false);
 		break;
 	case 'get_grower_event_stats':
 		if (!$PRIV['view_grower']) {
@@ -662,7 +546,7 @@ switch ($cmd)
 				SELECT '' AS id, 'TOTAL:' AS Date, SUM(h1.pound) AS Pounds
 				FROM `harvests` h1, `events` e1
 				WHERE e1.grower_id=$grower_id AND h1.event_id = e1.id";
-		getTableNoCheckbox($sql);
+		getTable($sql,false);
 		break;	
 	case 'get_growers':
 		if (!$PRIV['view_grower']) {
@@ -828,7 +712,7 @@ switch ($cmd)
 		$id = $_REQUEST['id'];
 		$data['title'] = 'Hours';
 		$sql = "SELECT h.* FROM distributions d, distribution_hours h WHERE h.distribution_id = d.id AND d.id=$id";				
-		getDistribution_Hours($sql);
+		getName($sql);
 		break;
 	case 'update_distribution':
 		if (!$PRIV['edit_distrib']) {
@@ -975,8 +859,8 @@ switch ($cmd)
 		}
 		$id = $_REQUEST['id'];
 		$data['title'] = 'Roles';
-		$sql = "SELECT t.id FROM volunteers v, volunteer_roles r , volunteer_types t Where v.id = r.volunteer_id And r.volunteer_type_id = t.id And v.id=".$id;			
-		getVolunteer_Roles($sql);
+		$sql = "SELECT t.id FROM volunteers v, volunteer_roles r , volunteer_types t Where v.id = r.volunteer_id And r.volunteer_type_id = t.id And v.id=$id";			
+		getName($sql);
 		break;
 		
 	case 'get_volunteer_prefer':
@@ -986,8 +870,8 @@ switch ($cmd)
 		}
 		$id = $_REQUEST['id'];
 		$data['title'] = 'Prefer';
-		$sql = "SELECT d.id FROM volunteers v, volunteer_prefers p , days d Where v.id = p.volunteer_id And p.day_id = d.id And v.id=".$id;			
-		getVolunteer_Prefer($sql);
+		$sql = "SELECT d.id FROM volunteers v, volunteer_prefers p , days d Where v.id = p.volunteer_id And p.day_id = d.id And v.id=$id";
+		getName($sql);
 		break;
 	case 'update_grower':		
 		if (!$PRIV['edit_grower']) {
@@ -1269,7 +1153,9 @@ switch ($cmd)
 		}
 		$data['id'] = 11;
 		$data['title'] = 'Volunteer-Name';
-		$sql = "SELECT id, Concat(first_name,' ',middle_name,' ',last_name) FROM volunteers ;";
+		$sql = "SELECT id, Concat(first_name,' ',middle_name,' ',last_name)
+				FROM volunteers
+				ORDER BY first_name ASC";
 		getName($sql);
 		break;	
 	
@@ -1282,7 +1168,10 @@ switch ($cmd)
 		$id = $_REQUEST['grower_id'];
 		$data['id'] = 12;
 		$data['title'] = 'Tree-Name';
-		$sql = "SELECT gt.id, Concat(tt.name,'-',gt.varietal) FROM tree_types tt, grower_trees gt Where gt.tree_type = tt.id AND gt.grower_id = $id";
+		$sql = "SELECT gt.id, Concat(tt.name,'-',gt.varietal)
+				FROM tree_types tt, grower_trees gt
+				Where gt.tree_type = tt.id AND gt.grower_id=$id
+				ORDER BY Concat(tt.name,'-',gt.varietal) ASC";
 		getName($sql);
 		break;
 		
@@ -1318,7 +1207,7 @@ switch ($cmd)
 		}
 		$data['id'] = 15;
 		$data['title'] = 'Distribution-Name';
-		$sql = "SELECT id, name FROM distributions ;";
+		$sql = "SELECT id, name FROM distributions ORDER BY name";
 		getName($sql);
 		break;
 		
