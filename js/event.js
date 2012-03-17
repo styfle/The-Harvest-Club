@@ -339,6 +339,29 @@ function addVolunteerRow(tableID) {
                 alert(e);
             }
         }
+function loadGrowerDropList(grower_id){
+	$('#tree-grower').empty();		
+		$.ajax( {
+						'dataType': 'json', 
+						'type': 'GET', 
+						'url': 'ajax.php?cmd=get_grower_name', 
+						'success': function (data) {							
+							var str = '<select id="tree-grower-name" name="tree-grower-name">';
+							str += '<option value=0 selected="selected">Select a grower...</option>';
+							if( data.datatable != null) 							
+								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
+								{
+									str += '<option value="'+data.datatable.aaData[i][0]+'">'+data.datatable.aaData[i][1]+'</option>';
+								}
+								str += '</select>';	
+								$('#tree-grower').append(str);
+								$('#tree3').val(grower_id).attr('selected',true);
+						},
+						'error': function (e) {
+							alert('Ajax Error!\n' + e.responseText);
+						}
+					});
+}
 function loadGrowerToForm(grower_id)
 	{
 		$('#event-grower').empty();

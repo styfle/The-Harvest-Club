@@ -784,6 +784,7 @@ if (!$PRIV)
 					switchNClearForm('tree');
 					$('#tree3').val(growerID); // last viewed grower
 					$('#view-grower').hide();
+					loadGrowerDropList(0);
 				break;
 				
 				case 4: // distribution
@@ -1395,6 +1396,7 @@ if (!$PRIV)
                         },
                         'error': ajaxError
                     });
+					loadGrowerDropList(row[1]);
 					$('#view-grower').show();
 				break;
 				
