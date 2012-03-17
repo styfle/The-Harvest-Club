@@ -362,7 +362,7 @@ $avgHeight = $r->buildArray();
 			<td><label for="tree10"><b>Height</b></label></td>
 		</tr>
 		<tr>			
-			<td>				
+			<td id="tree-grower">				
 				<?php echo options('tree3', 'grower_id', $grower_id); ?>
 			</td>
 			<td>
