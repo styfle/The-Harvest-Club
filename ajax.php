@@ -227,7 +227,7 @@ function updateTree($exist){
 	global $db;	
 	global $data;
 	$id = $_REQUEST['id'];
-	$grower_id = $_REQUEST['tree-grower-name'];
+	$grower_id = $_REQUEST['grower_id'];
 	$tree_type_id = $_REQUEST['tree_type_id'];
 	$varietal = $_REQUEST['varietal'];		
 	$number = $_REQUEST['number'];		

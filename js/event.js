@@ -346,7 +346,7 @@ function loadGrowerDropList(grower_id){
 						'type': 'GET', 
 						'url': 'ajax.php?cmd=get_grower_name', 
 						'success': function (data) {							
-							var str = '<select id="tree-grower-name" name="tree-grower-name">';
+							var str = '<select id="tree3" name="grower_id">';
 							str += '<option value=0 selected="selected">Select a grower...</option>';
 							if( data.datatable != null) 							
 								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
