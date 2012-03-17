@@ -372,33 +372,39 @@ function loadGrowerToForm(grower_id)
 						'dataType': 'json', 
 						'type': 'GET', 
 						'url': 'ajax.php?cmd=get_grower_name', 
-						'success': function (data) {							
+						'success': function (data) {	
+							console.log(data);
 							var str = '<select id="event-grower-name" name="event-grower-name">';
 							str += '<option value=0 selected="selected">Select a grower...</option>';
-							if( data.datatable != null) 							
+							if( data.datatable != null) 	
+							{
+								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
+								{
+									var temp;
+									growerPhone.push(temp);
+									growerAddress.push(temp);
+									growerCity.push(temp);
+								}
 								for ( var i=0, len = data.datatable.aaData.length; i< len; ++i )
 								{
 									str += '<option value="'+data.datatable.aaData[i][0]+'">'+data.datatable.aaData[i][1]+'</option>';
-									growerPhone.push(data.datatable.aaData[i][2]);
-									growerAddress.push(data.datatable.aaData[i][3]);
-									growerCity.push(data.datatable.aaData[i][4]);
+									growerPhone[data.datatable.aaData[i][0] -1] = data.datatable.aaData[i][2];
+									growerAddress[data.datatable.aaData[i][0] -1] = data.datatable.aaData[i][3];
+									growerCity[data.datatable.aaData[i][0] -1] = data.datatable.aaData[i][4];
 								}
 								str += '</select>';	
 								$('#event-grower').append(str);
-								getGrower(grower_id);
+								// get grower
+								$('#event-grower-name').val(grower_id).attr('selected',true);
+								$('#event7').val(growerCity[(grower_id)-1]);
+								$('#event8').val(growerPhone[(grower_id)-1]);
+								$('#event9').val(growerAddress[(grower_id)-1]);
+							}
 						},
 						'error': function (e) {
 							alert('Ajax Error!\n' + e.responseText);
 						}
 					});
-	}
-	
-	function getGrower(grower_id){
-		$('#event-grower-name').val(grower_id).attr('selected',true);
-		$('#event7').val(growerCity[(grower_id-1)]);
-		$('#event8').val(growerPhone[(grower_id-1)]);
-		$('#event9').val(growerAddress[(grower_id-1)]);
-		
 	}
 	
 	function loadVolunteerToForm(formName, captain_id)
