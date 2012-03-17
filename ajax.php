@@ -227,7 +227,7 @@ function updateTree($exist){
 	global $db;	
 	global $data;
 	$id = $_REQUEST['id'];
-	$grower_id = $_REQUEST['grower_id'];
+	$grower_id = $_REQUEST['tree-grower-name'];
 	$tree_type_id = $_REQUEST['tree_type_id'];
 	$varietal = $_REQUEST['varietal'];		
 	$number = $_REQUEST['number'];		
@@ -235,8 +235,10 @@ function updateTree($exist){
 	$chemicaled_id = $_REQUEST['chemicaled_id'];
 			
 	if($exist){
-		$sql = "Update grower_trees Set grower_id='".$grower_id."', tree_type='".$tree_type_id."', varietal='".$varietal."', number='".$number."',  avgHeight_id='".$avgHeight_id."',  chemicaled='".$chemicaled_id."' where id=".$id;				
+		$sql = "Update grower_trees Set grower_id='$grower_id', tree_type='$tree_type_id', varietal='$varietal', number='$number',  avgHeight_id='$avgHeight_id',  chemicaled='$chemicaled_id' where id=$id";
 		$r = $db->q($sql);	
+		if (getError($r))
+			return;
 		for ($i=1; $i<13 ; $i++) {
 			if (isset($_GET["tree_month$i"])) { //it is checked
 				$sql = "Insert into month_harvests(tree_id, month_id) Values($id,$i)";
@@ -246,12 +248,14 @@ function updateTree($exist){
 				$r = $db->q($sql);
 			}
 		}
-		
+		getError($r);	
 	}
 	else{
 		$sql = "INSERT INTO grower_trees(grower_id, tree_type, varietal, number, avgHeight_id, chemicaled)
 				VALUES ('$grower_id', '$tree_type_id', '$varietal', '$number', '$avgHeight_id', '$chemicaled_id')";				
 		$r = $db->q($sql);
+		if (getError($r))
+			return;
 		$treeID =  mysql_insert_id();
 		for ($i=1; $i<13 ; $i++) {			
 			if (isset($_GET["tree_month$i"])) { //it is checked
@@ -1252,7 +1256,9 @@ switch ($cmd)
 		}
 		$data['id'] = 10;
 		$data['title'] = 'Grower-Name';
-		$sql = "SELECT id, Concat(first_name,' ',middle_name,' ',last_name), phone, street, city FROM growers ;";
+		$sql = "SELECT id, Concat(first_name,' ',middle_name,' ',last_name), phone, street, city 
+				FROM growers
+				ORDER BY first_name ASC";
 		getName($sql);
 		break;	
 		
