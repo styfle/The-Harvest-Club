@@ -293,7 +293,7 @@ $avgHeight = $r->buildArray();
 		</tr>
 		<tr>
 			<td><?php echo options('grower13', 'source_id', $sources, true); ?></td>
-			<td colspan="2" rowspan="5"><textarea name="tools" id="grower12" rows="5" cols="30"></textarea></td>
+			<td colspan="2" rowspan="5"><textarea name="tools" id="grower12" rows="4" cols="30"></textarea></td>
 		</tr>	
 		<tr>
 			<td colspan="3"><label for="grower17"><b>Property Type</b></label></td>
