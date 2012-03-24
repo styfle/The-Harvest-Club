@@ -732,9 +732,7 @@ if (!$PRIV)
 	
 	var cancelButton = {
 		text: 'Cancel',
-		click: function() {			
-			if(currentTable == 2)
-				saveGrowerDialog = 0;
+		click: function() {		
 			$(this).dialog('close');			
 		}
 	}; 
@@ -1224,9 +1222,11 @@ if (!$PRIV)
 			height: 550,
 			width: 550,
 			modal: true,
-			/*close: function() {
-				console.log('dialog closed');
-			},*/
+			close: function() {
+				if(currentTable == 2)
+					saveGrowerDialog = 0;
+				//console.log('dialog closed');
+			},
 		});
 		
 		// after we force a dialog, hidden is handled by jqueryUI

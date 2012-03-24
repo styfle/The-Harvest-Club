@@ -379,7 +379,10 @@ function getTable($sql, $checkbox=true) {
 	// add row data
 	foreach ($a as $v) {
 		// add a checkbox to each row (might need unique names)
-		$record = array('<input type="checkbox" name="select-row" />');
+		if(!$checkbox)
+			$record = array();
+		else		
+			$record = array('<input type="checkbox" name="select-row" />');
 		foreach ($v as $name=>$value) {
 			$record[] = $value;
 		}
@@ -492,7 +495,7 @@ switch ($cmd)
 		$data['title'] = 'Volunteer-Events';
 		$volunteer_id = $_REQUEST['volunteer_id'];
 			
-		$sql = "SELECT ve.event_id, ve.volunteer_id, CONCAT(g.first_name,' ', g.last_name) AS Grower, e.date AS Date, ve.hour AS Hours, '0' AS surplus_tag
+		$sql = "SELECT ve.event_id AS event_id, ve.volunteer_id, CONCAT(g.first_name,' ', g.last_name) AS Grower, e.date AS Date, ve.hour AS Hours, '0' AS surplus_tag
 				FROM volunteer_events ve, events e, growers g
 				WHERE ve.volunteer_id = $volunteer_id AND ve.event_id=e.id AND e.grower_id=g.id
 				UNION 
