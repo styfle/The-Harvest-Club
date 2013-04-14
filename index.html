@@ -1,5 +1,84 @@
-<h1>Demo Page</h1>
-<p>This page is not a working version but rather a demo to show what the final product may look like.</p>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>The Harvest Club by styfle</title>
 
-<a href="grower-registration">Grower Registration</a>
-<a href="volunteer-registration">Volunteer Registration</a>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>The Harvest Club</h1>
+        <p>Contact Management System</p>
+
+        <p class="view"><a href="https://github.com/styfle/The-Harvest-Club">View the Project on GitHub <small>styfle/The-Harvest-Club</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/styfle/The-Harvest-Club/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/styfle/The-Harvest-Club/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/styfle/The-Harvest-Club">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>The Harvest Club</h1>
+
+<p>This is a contact management system designed for The Harvest Club by a group of students in IN4MATX 117 at UC, Irvine.
+We have permission to open source our code, but we do not offer support so use at your own risk.</p>
+
+<h2>Screenshots</h2>
+
+<ul>
+<li>Screenshot 1</li>
+<li>Screenshot 2</li>
+</ul><h2>Config</h2>
+
+<p>You will need to create a file called <code>include/config.inc.php</code> and define some constants in there. Here is an example:</p>
+
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'PAGE_TITLE'</span><span class="p">,</span> <span class="s1">'The Harvest Club'</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'PAGE_QUOTE'</span><span class="p">,</span> <span class="s1">'Share the Bounty'</span><span class="p">);</span>
+
+<span class="nb">define</span><span class="p">(</span><span class="s1">'MYSQL_SERVER'</span><span class="p">,</span> <span class="s1">'localhost'</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'MYSQL_USER'</span><span class="p">,</span> <span class="s1">'nyan'</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'MYSQL_PASS'</span><span class="p">,</span> <span class="s1">'d4x9S0Pyo'</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'MYSQL_DB'</span><span class="p">,</span> <span class="s1">'harvest'</span><span class="p">);</span>
+
+<span class="nb">define</span><span class="p">(</span><span class="s1">'MAIL_FROM'</span><span class="p">,</span> <span class="s1">'admin@example.com'</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'MAIL_TO'</span><span class="p">,</span> <span class="s1">'admin@example.com'</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'MAIL_REPLYTO'</span><span class="p">,</span> <span class="s1">'noreply@example.com'</span><span class="p">);</span>
+
+<span class="nb">define</span><span class="p">(</span><span class="s1">'SESSION_MAX_LENGTH'</span><span class="p">,</span> <span class="mi">3600</span><span class="p">);</span> <span class="c1">// logout after inactive for x seconds</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+
+<h2>Issues</h2>
+
+<p>Look at <a href="https://github.com/styfle/The-Harvest-Club/issues">issues</a> to find out what you need to work on</p>
+
+<h2>Getting started with git</h2>
+
+<pre><code>git clone git@github.com:styfle/The-Harvest-Club.git
+git add some-file.php
+git commit -m "Added some-file.php that is used for something."
+git push origin master
+</code></pre>
+
+<p>This will clone the repo. Then you add your file to the repo. Commit changes. Then you can push all your changes to github (origin) from your master branch.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/styfle">styfle</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
