@@ -34,8 +34,11 @@
       <section>
         <h1>The Harvest Club</h1>
 
-<p>This is a contact management system designed for The Harvest Club by a group of students in IN4MATX 117 at UC, Irvine.
-We have permission to open source our code, but we do not offer support so use at your own risk.</p>
+<p>The Harvest Club software is a contact management system designed for The Harvest Club by a group of students in IN4MATX 117 at UC, Irvine. It is a web application front end for their database backend.</p>
+
+<p>The system is designed to allow the staff and volunteers of The Harvest Club to register new growers, harvesters, trees, distribution sites, etc. Events can be scheduled and emails are automatically sent out to the invited parties.</p>
+
+<p>This has allowed The Harvest Club staff to finally move away from Excel, Google Contacts, and email clients because this software can do all of that and more.</p>
 
 <h2>Screenshots</h2>
 
@@ -49,7 +52,7 @@ We have permission to open source our code, but we do not offer support so use a
 	for (var i =0; i < ss.length; i++) {
 		var img = ss[i];
 		img.onclick = function() {
-			window.open(img.src, '_blank')
+			window.open(this.src, '_blank')
 		};
 	}
 </script>
