@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<style>
+		.screenshot { cursor: pointer; border: 3px solid white; border-radius: 3px; }
+		.screenshot:hover { border: 3px solid #FEB; }
+	</style>
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -35,10 +39,22 @@ We have permission to open source our code, but we do not offer support so use a
 
 <h2>Screenshots</h2>
 
-<ul>
-<li>Screenshot 1</li>
-<li>Screenshot 2</li>
-</ul><h2>Config</h2>
+<img src="images/harvest1.png" alt="" class="screenshot" />
+<img src="images/harvest2.png" alt="" class="screenshot" />
+<img src="images/harvest3.png" alt="" class="screenshot" />
+<img src="images/harvest4.png" alt="" class="screenshot" />
+
+<script type="text/javascript">
+	var ss = document.getElementsByClassName('screenshot');
+	for (var i =0; i < ss.length; i++) {
+		var img = ss[i];
+		img.onclick = function() {
+			window.open(img.src, '_blank')
+		};
+	}
+</script>
+
+<h2>Config</h2>
 
 <p>You will need to create a file called <code>include/config.inc.php</code> and define some constants in there. Here is an example:</p>
 
